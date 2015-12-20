@@ -8,13 +8,14 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <link rel="icon" href="../../favicon.ico">
-  <title>Bitwise</title>
+  <title>Mygig</title>
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <!-- Custom styles for this template -->
   <link href="../static/css/base.css" rel="stylesheet">
   <link href="../static/css/index.css" rel="stylesheet">
   <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" type="text/css" href="../static/css/jquery.fullPage.css" />
   <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
   <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -40,23 +41,12 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li class="active"><a href="">Home</a></li>
-            <li> <a href="showSignUp">Users</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Performers<span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="showCompetition1">Bands</a></li>
-                <li><a href="#">Solo artists</a></li>
-                <li><a href="#">Comedians</a></li>
-                <li><a href="#">Dancers</a></li>
-                <li><a href="#">Magicians</a></li>
-                <li><a href="#">Photographers</a></li>
-                <li><a href="#">Anchors/Hosts</a></li>
-                <li><a href="#">Stuntmen</a></li>
-                <li><a href="#">More..</a></li>
-              </ul>
-            </li>
-            <li> <a href="showSignUp">Featured</a></li>
-            <li> <a href="showSignUp"> Login/Sign Up </a></li>
+            <li> <a href="#">Explore</a></li>
+            <li> <a href="#">Suggest Artist</a></li>
+            <li> <a href="showLogin">login</a></li>
+            <li> <a href="showSignUp" id="username-box">Sign Up
+              <script type="text/babel" src="../static/js/profile.js"></script>
+            </a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div><!--/.container-fluid -->
@@ -64,47 +54,25 @@
 
 
     <div id="fullpage">
-      <div class="section" id="jumbotron-section1">
+      <div class="section fp-auto-height" id="jumbotron-section1">
         <div class="jumbotron">
           <div id="outer-box">
             <div id="box">
               <h1>Hola Folks!</h1>
               <p>Bitwise is an annual programming, application and web development fest organised by CodeClub, the CSE Department Society of IIT Kharagpur.</p>
               <p>
-                <a class="btn btn-lg btn-primary" href="showSignUp" role="button">Sign In/Sign Up &raquo;</a>
+                <a class="btn btn-lg btn-primary" href="showSignUp" role="button">How It Works</a>
               </p>
             </div>
           </div>
         </div>
       </div>
-      <div class="section" id="jumbotron-section2">
-        <div class="jumbotron">
-          <div id="outer-box">
-            <div id="box">
-              <h1>Hola Folks!</h1>
-              <p>Bitwise is an annual programming, application and web development fest organised by CodeClub, the CSE Department Society of IIT Kharagpur.</p>
-              <p>
-                <a class="btn btn-lg btn-primary" href="showSignUp" role="button">Sign In/Sign Up &raquo;</a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="section" id="jumbotron-section3">
-        <div class="jumbotron">
-          <div id="outer-box">
-            <div id="box">
-              <h1>Hola Folks!</h1>
-              <p>Bitwise is an annual programming, application and web development fest organised by CodeClub, the CSE Department Society of IIT Kharagpur.</p>
-              <p>
-                <a class="btn btn-lg btn-primary" href="showSignUp" role="button">Sign In/Sign Up &raquo;</a>
-              </p>
-            </div>
-          </div>
+      <div class="section" id = "featured-box" >
+        <div class="container">
         </div>
       </div>
       <div class="section fp-auto-height">
-      <div class="intro footer" style="display:table; width:inherit;">
+        <div class="intro footer">
           <div class="container " style="height: 100%; display:table-cell; vertical-align:middle;" >
             <ul class="list-inline text-center">
               <li>
@@ -139,9 +107,16 @@
 <script src="../static/js/vendors/jquery.easings.min.js"></script>
 <script type="text/javascript" src="../static/js/jquery.fullPage.min.js"></script>
 <script src="../static/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.com/libraries/fullPage.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
     $('#fullpage').fullpage();
   });
 </script>
+
 </html>
