@@ -1,5 +1,5 @@
 import json
-from flask import Flask, make_response, request, url_for, jsonify, render_template, request
+from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect, session
 import MySQLdb
 from flask.ext.httpauth import HTTPBasicAuth
 import os
@@ -14,47 +14,39 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.secret_key = "shubham12345"
 auth = HTTPBasicAuth()
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:shubham123@localhost/MYGIG"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
-# db = MySQLdb.connect(host="localhost", user="root", passwd="shubham123",
-#     db="MYGIG")
 
-# cursor = db.cursor()
+# @auth.get_password
+# def get_password(username):
+#     user = User.query.filter_by(name = username)
+#     if not user:
+#         return user.get(password)
+#     else:
+#         return None
 
-
-
-@auth.get_password
-def get_password(username):
-    if username == 'miguel':
-        return 'python'
-    return None
-
-@auth.error_handler
-def unauthorized():
-    return make_response(jsonify( { 'error': 'Unauthorized access' } ), 403)
-    # return 403 instead of 401 to prevent browsers from displaying the default auth dialog
+# @auth.error_handler
+# def unauthorized():
+#     return make_response(jsonify( { 'error': 'Unauthorized access' } ), 403)
+#     # return 403 instead of 401 to prevent browsers from displaying the default auth dialog
     
-@app.errorhandler(400)
-def not_found(error):
-    return make_response(jsonify( { 'error': 'Bad request' } ), 400)
+# @app.errorhandler(400)
+# def not_found(error):
+#     return make_response(jsonify( { 'error': 'Bad request' } ), 400)
 
-@app.errorhandler(404)
-def not_found(error):
-    return make_response(jsonify( { 'error': 'Not found' } ), 404)
+# @app.errorhandler(404)
+# def not_found(error):
+#     return make_response(jsonify( { 'error': 'Not found' } ), 404)
 
 
 @app.route("/")
-def main():
+@app.route("/home")
+def home():
     return render_template('index.html')
 
-@app.route('/showSignUp')
-def showSignUp():
-    return render_template('signup.html')
-
-@app.route('/showLogin')
-def showLogin():
-    return render_template('login.html')
     
 class User(db.Model):
   __tablename__ = 'db_user'
@@ -78,21 +70,39 @@ class User(db.Model):
   def check_password(self, password_):
     return check_password_hash(self.password, password_)
 
-@app.route('/user', methods = ['GET','POST'])
-def add_user():
 
+@app.route('/login', methods = ['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+
+        if not request.form:
+            print("error")
+            return redirect(url_for('login'))
+        email_ = request.form['email']
+        pwd = request.form['password']
+
+        user = User.query.filter_by(email = email_).first()
+
+        if user and user.check_password(pwd):
+            session['email'] = email_
+            print redirect("http://127.0.0.1:5000/home", 302)
+            return redirect("http://127.0.0.1:5000/home", 302)
+        else:
+            return jsonify({'status':'error'})
+            # session['email'] = email
+            
+    if request.method == 'GET':
+        return render_template('login.html')
+
+@app.route('/signUp', methods = ['GET','POST'])
+def add_user():
     if request.method == 'POST':
         if not request.form:
             print("error")
-            return jsonify({'error': 'bad request'})
-        query = """INSERT INTO `db_user` 
-        (name, email, password, link_to_dp, type_flag) 
-        VALUES 
-        ("{name_}", "{email_}", "{password_}", "{link_}", "{flag_}");"""
+            return redirect(url_for('add_user'))
         name = request.form['name']
         email = request.form['email']
         pwd = request.form['password']
-        print pwd
         link = "link"
         # file = request.files['file']
         # if file and allowed_file(file.filename):
@@ -104,8 +114,32 @@ def add_user():
         newuser = User(name, email, pwd, link, flag)
         db.session.add(newuser)
         db.session.commit()
-        return jsonify({'name' : name}), 200
+        return redirect(url_for('profile'))
 
+    if request.method == 'GET':
+        return render_template('signup.html')
+
+@app.route('/profile')
+# @auth.login_required
+def profile():
+    # if 'email' not in session:
+    #     return redirect(url_for('login'))
+
+    user = User.query.filter_by(email = (session['email']))
+
+    if user is None:
+        return redirect(url_for('signup'))
+    else:
+        return render_template('profile.html')
+
+@app.route('/logout')
+def logout():
+
+    if 'email' not in session:
+        return redirect(url_for('login'))
+
+    session.pop('email', None)
+    return redirect(url_for('home'))
 # @app.route('/user/<int:user_id>' methods = ['GET'])
 # @auth.login_required
 # def get_profile(user_id):

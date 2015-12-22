@@ -19,7 +19,7 @@ $('#btnSignUp').click(function() {
     $("#status").html('waiting...');
 
     $.ajax({
-        url: 'http://127.0.0.1:5000/user',
+        url: 'http://127.0.0.1:5000/signUp',
         dataType: 'json',
         type: 'POST',
         success: function(response) {
@@ -31,6 +31,11 @@ $('#btnSignUp').click(function() {
         data: user
     });
 });
+
+
+
+
+
 
 function getBase64Image(imgElem) {
 // imgElem must be on the same server otherwise a cross-origin error will be thrown "SECURITY_ERR: DOM Exception 18"
