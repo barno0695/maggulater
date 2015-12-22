@@ -3,6 +3,10 @@ from flask import Flask, make_response, request, url_for, jsonify, render_templa
 import MySQLdb
 from flask.ext.httpauth import HTTPBasicAuth
 import os
+from flask.ext.sqlalchemy import SQLAlchemy
+from werkzeug import generate_password_hash, check_password_hash
+from sqlalchemy import create_engine
+
 
 
 UPLOAD_FOLDER = '/home/shubham/Desktop/web_development/tutplus/data/user_dp/'
@@ -11,6 +15,14 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 auth = HTTPBasicAuth()
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:shubham123@localhost/MYGIG"
+db = SQLAlchemy(app)
+# db = MySQLdb.connect(host="localhost", user="root", passwd="shubham123",
+#     db="MYGIG")
+
+# cursor = db.cursor()
+
+
 
 @auth.get_password
 def get_password(username):
@@ -44,35 +56,55 @@ def showSignUp():
 def showLogin():
     return render_template('login.html')
     
-# connect
-db=MySQLdb.connect(host="localhost", user="root", passwd="shubham123",
-    db="MYGIG")
+class User(db.Model):
+  __tablename__ = 'db_user'
+  user_id = db.Column(db.Integer, primary_key = True)
+  name = db.Column(db.String(30))
+  email = db.Column(db.String(100), unique=True)
+  password = db.Column(db.String(128))
+  link_to_dp = db.Column(db.String(1000))
+  type_flag = db.Column(db.Integer)
+   
+  def __init__(self, name, email, password, link_to_dp, type_flag_):
+    self.name = name.title()
+    self.email = email.lower()
+    self.set_password(password)
+    self.link_to_dp = link_to_dp
+    self.type_flag = type_flag_
+     
+  def set_password(self, password_):
+    self.password = generate_password_hash(password_)
+   
+  def check_password(self, password_):
+    return check_password_hash(self.password, password_)
 
-cursor = db.cursor()
-
-@app.route('/user', methods = ['POST'])
+@app.route('/user', methods = ['GET','POST'])
 def add_user():
-    if not request.form:
-        print("error")
-        return jsonify({'error': 'bad request'})
-    query = """INSERT INTO `db_user` 
-    (name, email, password, link_to_dp, type_flag) 
-    VALUES 
-    ("{name_}", "{email_}", "{password_}", "{link_}", "{flag_}");"""
-    name = request.form['name']
-    email = request.form['email']
-    password = request.form['password']
-    link = ""
-    # file = request.files['file']
-    # if file and allowed_file(file.filename):
-    #     filename = secure_filename(file.filename)
-    #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    #     link = url_for('uploaded_file',filename=filename)
-    # print link
-    flag = request.form['flag']
-    cursor.execute(query.format(name_=name,email_= email,password_= password,link_= link,flag_= flag))
-    db.commit()
-    return jsonify({'name' : name}), 200
+
+    if request.method == 'POST':
+        if not request.form:
+            print("error")
+            return jsonify({'error': 'bad request'})
+        query = """INSERT INTO `db_user` 
+        (name, email, password, link_to_dp, type_flag) 
+        VALUES 
+        ("{name_}", "{email_}", "{password_}", "{link_}", "{flag_}");"""
+        name = request.form['name']
+        email = request.form['email']
+        pwd = request.form['password']
+        print pwd
+        link = "link"
+        # file = request.files['file']
+        # if file and allowed_file(file.filename):
+        #     filename = secure_filename(file.filename)
+        #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        #     link = url_for('uploaded_file',filename=filename)
+        # print link
+        flag = request.form['flag']
+        newuser = User(name, email, pwd, link, flag)
+        db.session.add(newuser)
+        db.session.commit()
+        return jsonify({'name' : name}), 200
 
 # @app.route('/user/<int:user_id>' methods = ['GET'])
 # @auth.login_required
