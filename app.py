@@ -6,7 +6,7 @@ import os
 from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug import generate_password_hash, check_password_hash
 from sqlalchemy import create_engine
-
+from functools import wraps
 
 
 UPLOAD_FOLDER = '/home/shubham/Desktop/web_development/tutplus/data/user_dp/'
@@ -19,6 +19,24 @@ auth = HTTPBasicAuth()
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:shubham123@localhost/MYGIG"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
+
+def template_or_json(template=None):
+    """"Return a dict from your view and this will either 
+    pass it to a template or render json. Use like:
+ 
+    @template_or_json('template.html')
+ 
+    """
+    def decorated(f):
+        @wraps(f)
+        def decorated_fn(*args, **kwargs):
+            ctx = f(*args, **kwargs)
+            if request.is_xhr or not template:
+                return jsonify(ctx)
+            else:
+                return render_template(template, **ctx)
+        return decorated_fn
+    return decorated
 
 # @auth.get_password
 # def get_password(username):
@@ -74,21 +92,20 @@ class User(db.Model):
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     if request.method == 'POST':
-
-        if not request.form:
+        json_data = request.get_json(force=True)
+        if not json_data:
             print("error")
             return redirect(url_for('login'))
-        email_ = request.form['email']
-        pwd = request.form['password']
+        email_ = json_data['email']
+        pwd = json_data['password']
 
         user = User.query.filter_by(email = email_).first()
 
         if user and user.check_password(pwd):
             session['email'] = email_
-            print redirect("http://127.0.0.1:5000/home", 302)
-            return redirect("http://127.0.0.1:5000/home", 302)
+            return redirect(url_for('profile'))
         else:
-            return jsonify({'status':'error'})
+            return redirect(url_for('login'))
             # session['email'] = email
             
     if request.method == 'GET':
@@ -97,40 +114,44 @@ def login():
 @app.route('/signUp', methods = ['GET','POST'])
 def add_user():
     if request.method == 'POST':
-        if not request.form:
+        json_data = request.get_json(force=True)
+
+        if not json_data:
             print("error")
             return redirect(url_for('add_user'))
-        name = request.form['name']
-        email = request.form['email']
-        pwd = request.form['password']
+        name = json_data['name']
+        email = json_data['email']
+        pwd = json_data['password']
         link = "link"
+        print json_data['photo']
         # file = request.files['file']
         # if file and allowed_file(file.filename):
         #     filename = secure_filename(file.filename)
         #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         #     link = url_for('uploaded_file',filename=filename)
         # print link
-        flag = request.form['flag']
+        flag = json_data['flag']
         newuser = User(name, email, pwd, link, flag)
         db.session.add(newuser)
         db.session.commit()
-        return redirect(url_for('profile'))
+        return redirect(url_for('profile'), 302)
 
     if request.method == 'GET':
         return render_template('signup.html')
 
-@app.route('/profile')
-# @auth.login_required
-def profile():
-    # if 'email' not in session:
-    #     return redirect(url_for('login'))
 
-    user = User.query.filter_by(email = (session['email']))
+# @view(app, '/profile', render_html('profile.html'))
+# @view(app, '/profile', render_json)
+@app.route('/profile', methods=['GET'])
+@template_or_json('profile.html')
+def profile():
+
+    user = User.query.filter_by(email = (session['email'])).first()
 
     if user is None:
         return redirect(url_for('signup'))
     else:
-        return render_template('profile.html')
+        return { 'username' : user.name, 'link' : '/profile', 'dp_link': user.link_to_dp, 'flag' : user.type_flag }
 
 @app.route('/logout')
 def logout():
@@ -143,6 +164,7 @@ def logout():
 # @app.route('/user/<int:user_id>' methods = ['GET'])
 # @auth.login_required
 # def get_profile(user_id):
+
 
 
 if __name__ == "__main__":

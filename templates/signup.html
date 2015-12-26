@@ -62,11 +62,12 @@
         <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email address" required autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Password" required>
-        Profile picture : <input type="file" id="image" name="img" accept="image/*">
+        Profile picture : <input type="file" id="image" name="img" accept="image/*" onchange="previewFile()">
         <div class="checkbox">
         </div>
         <button id="btnSignUp" class="btn btn-lg btn-primary btn-block" type="button">Sign Up</button>
       </form>
+      <img id='profile-pic' height ="200">
 
       <h1 id="status"> Waiting</h1>
 
