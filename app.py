@@ -16,16 +16,16 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = "shubham12345"
 auth = HTTPBasicAuth()
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:shubham123@localhost/MYGIG"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://13CS30030:cse12@10.5.18.68/13CS30030"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
 def template_or_json(template=None):
-    """"Return a dict from your view and this will either 
+    """"Return a dict from your view and this will either
     pass it to a template or render json. Use like:
- 
+
     @template_or_json('template.html')
- 
+
     """
     def decorated(f):
         @wraps(f)
@@ -50,7 +50,7 @@ def template_or_json(template=None):
 # def unauthorized():
 #     return make_response(jsonify( { 'error': 'Unauthorized access' } ), 403)
 #     # return 403 instead of 401 to prevent browsers from displaying the default auth dialog
-    
+
 # @app.errorhandler(400)
 # def not_found(error):
 #     return make_response(jsonify( { 'error': 'Bad request' } ), 400)
@@ -65,7 +65,7 @@ def template_or_json(template=None):
 def home():
     return render_template('index.html')
 
-    
+
 class User(db.Model):
   __tablename__ = 'db_user'
   user_id = db.Column(db.Integer, primary_key = True)
@@ -74,17 +74,17 @@ class User(db.Model):
   password = db.Column(db.String(128))
   link_to_dp = db.Column(db.String(1000))
   type_flag = db.Column(db.Integer)
-   
+
   def __init__(self, name, email, password, link_to_dp, type_flag_):
     self.name = name.title()
     self.email = email.lower()
     self.set_password(password)
     self.link_to_dp = link_to_dp
     self.type_flag = type_flag_
-     
+
   def set_password(self, password_):
     self.password = generate_password_hash(password_)
-   
+
   def check_password(self, password_):
     return check_password_hash(self.password, password_)
 
@@ -107,7 +107,7 @@ def login():
         else:
             return redirect(url_for('login'))
             # session['email'] = email
-            
+
     if request.method == 'GET':
         return render_template('login.html')
 
@@ -168,4 +168,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)
