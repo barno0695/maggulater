@@ -65,11 +65,8 @@ def template_or_json(template=None):
 def home():
     return render_template('index.html')
 
-<<<<<<< HEAD
-# User Table
-=======
 
->>>>>>> 56b3be6a70393f6fd63ec6eb30197706699fbd49
+# User Table
 class User(db.Model):
   __tablename__ = 'db_user'
   user_id = db.Column(db.Integer, primary_key = True)
