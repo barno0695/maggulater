@@ -16,7 +16,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = "shubham12345"
 auth = HTTPBasicAuth()
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:shubham123@localhost/MYGIG"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://13CS30030:cse12@10.5.18.68/13CS30030"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
@@ -65,7 +65,11 @@ def template_or_json(template=None):
 def home():
     return render_template('index.html')
 
+<<<<<<< HEAD
 # User Table
+=======
+
+>>>>>>> 56b3be6a70393f6fd63ec6eb30197706699fbd49
 class User(db.Model):
   __tablename__ = 'db_user'
   user_id = db.Column(db.Integer, primary_key = True)
@@ -243,4 +247,4 @@ def enroll():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)
