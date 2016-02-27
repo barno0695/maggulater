@@ -66,6 +66,7 @@ def home():
     return render_template('index.html')
 
 
+# User Table
 class User(db.Model):
   __tablename__ = 'db_user'
   user_id = db.Column(db.Integer, primary_key = True)
@@ -89,6 +90,48 @@ class User(db.Model):
     return check_password_hash(self.password, password_)
 
 
+# Enrolls relationship
+class Enrolls(db.Model):
+    __tablename__= 'db_enrolls'
+    enrolls_id = db.Column(db.Integer, primary_key = True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.user_id'))
+    course_id = db.Column(db.Integer, db.ForeignKey('course.course_id'))
+
+    def __init__(self, sid, cid):
+        self.student_id = sid
+        self.course_id = cid
+
+
+# Course Table
+class Course(db.Model):
+    __tablename__= 'db_course'
+    course_id = db.Column(db.Integer, primary_key = True)
+    course_name = db.Column(db.String(30))
+    prereq = db.Column(db.Integer)
+    syllabus = db.Column(db.String(500))
+    notices = db.relationship('Notice', backref='course', lazy='dynamic')
+
+    def __init__(self, cid, cname, pre):
+        self.course_id = cid
+        self.course_name = cname
+        self.prereq = pre
+        # self.syllabus = NULL
+
+
+# Notice Table
+class Notice(db.Model):
+    __tablename__= 'db_notice'
+    notice_id = db.Column(db.Integer, primary_key = True)
+    timestamp = db.Column(db.DateTime)
+    message = db.Column(db.String(500))
+    c_id = db.Column(db.Integer, db.ForeignKey('course.course_id'))
+
+    def __init__(self, time, msg, cid):
+        self.timestamp = time
+        self.message = msg
+        self.c_id = cid
+
+
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -103,6 +146,7 @@ def login():
 
         if user and user.check_password(pwd):
             session['email'] = email_
+            session['user_id'] = user.user_id
             return redirect(url_for('profile'))
         else:
             return redirect(url_for('login'))
@@ -110,6 +154,7 @@ def login():
 
     if request.method == 'GET':
         return render_template('login.html')
+
 
 @app.route('/signUp', methods = ['GET','POST'])
 def add_user():
@@ -165,6 +210,37 @@ def logout():
 # @auth.login_required
 # def get_profile(user_id):
 
+
+# API for searching a course
+@app.route('/searchresults', methods = ['GET','POST'])
+def search_course():
+    if request.method == 'POST':
+        json_data = request.get_json(force=True)
+        if not json_data:
+            print("error")
+            return redirect(url_for('search_course'))
+        cid = json_data['course_id']
+
+        course = Course.query.filter_by(course_id = cid).first()
+
+        if course:
+            session['course_id'] = cid
+            return redirect(url_for('course_home'))
+        else:
+            return redirect(url_for('search_course'))
+            # session['email'] = email
+
+    if request.method == 'GET':
+        return render_template('student_home.html')
+
+
+# API for enrolling a student in a course
+@app.route('/enroll')
+def enroll():
+    newenroll = Enrolls(session['user_id'],session['course_id'])
+    db.session.add(newenroll)
+    db.session.commit()
+    return redirect(url_for('course_home'), 302)
 
 
 if __name__ == "__main__":
