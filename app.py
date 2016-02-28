@@ -6,6 +6,7 @@ import os
 from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug import generate_password_hash, check_password_hash
 from sqlalchemy import create_engine
+from sqlalchemy import text
 from functools import wraps
 from Models import db
 
@@ -194,6 +195,67 @@ def enroll():
     db.session.add(newenroll)
     db.session.commit()
     return redirect(url_for('course_home'), 302)
+
+
+# API to add a new notice
+@app.route('/addnotice', methods = ['GET','POST'])
+def add_notice():
+    if request.method == 'POST':
+        json_data = request.get_json(force=True)
+        if not json_data:
+            print("error")
+            return redirect(url_for('search_course'))
+        cid = json_data['c_id']
+        msg = json_data['message']
+
+        newnotice = Notice(cid,msg)
+        db.session.add(newnotice)
+        db.session.commit()
+        return redirect(url_for('course_home'), 302)
+
+
+# API to add a new course
+@app.route('/addcourse', methods = ['GET','POST'])
+def add_course():
+    if request.method == 'POST':
+        json_data = request.get_json(force=True)
+        if not json_data:
+            print("error")
+            return redirect(url_for('search_course'))
+        cid = json_data['c_id']
+        cname = json_data['course_name']
+        pre = json_data['prereq']
+
+        course = Course.query.filter_by(course_id = cid).first()
+
+        if course:
+            perror("error")
+            return redirect(url_for('add_course'))
+
+        newcourse = Course(cid,cname,pre)
+        db.session.add(newcourse)
+        db.session.commit()
+        return redirect(url_for('faculty_home'), 302)
+
+
+# API to approve a course
+@app.route('/approve', methods = ['GET','POST'])
+def approve():
+    if request.method == 'POST':
+        json_data = request.get_json(force=True)
+        if not json_data:
+            print("error")
+            return redirect(url_for('approve'))
+        cid = json_data['c_id']
+
+        course = Course.query.filter_by(course_id = cid).first()
+
+        if course:
+            course.approve()
+            return redirect(url_for('course_home'))
+        else:
+            perror("error")
+            return redirect(url_for('error'))
 
 
 if __name__ == "__main__":
