@@ -6,6 +6,7 @@ import os
 from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug import generate_password_hash, check_password_hash
 from sqlalchemy import create_engine
+from sqlalchemy import text
 from functools import wraps
 
 
@@ -34,19 +35,19 @@ class User(db.Model):
     return check_password_hash(self.password, password_)
 
 
-# Lecture Model 
+# Lecture Model
 class Lecture(db.Model):
     __tablename__ = 'db_Lecture'
     Lecture_Id = db.Column(db.Integer, primary_key = True)
     Notes = db.Column(db.Text)
     Date_Time = db.Column(db.DateTime)
-    Topic = db.Column(db.Text)  
+    Topic = db.Column(db.Text)
     Test = db.relationship('Test', backref = 'Lecture' , lazy = 'dynamic')
 
     # Initialization func
     def __init__ (self, lec_id, notes , timestamp , topic):
-        self.Lecture_Id = lec_id 
-        self.Notes = notes 
+        self.Lecture_Id = lec_id
+        self.Notes = notes
         self.Date_Time = timestamp
         self.Topic = topic
 
@@ -85,12 +86,19 @@ class Course(db.Model):
     prereq = db.Column(db.Integer)
     syllabus = db.Column(db.String(500))
     notices = db.relationship('Notice', backref='Course', lazy='dynamic')
+    approved = db.Column(db.Integer) # 1 after admin approves the course
 
     def __init__(self, cid, cname, pre):
         self.course_id = cid
         self.course_name = cname
         self.prereq = pre
-        # self.syllabus = NULL
+        self.approved = 0 # Initially unapproved
+
+    def approve(self):
+        self.approve = 1
+
+    def setSyllabus(self, syl):
+        self.syllabus = syl
 
 
 # Enrolls relationship
@@ -109,11 +117,10 @@ class Enrolls(db.Model):
 class Notice(db.Model):
     __tablename__= 'db_notice'
     notice_id = db.Column(db.Integer, primary_key = True)
-    timestamp = db.Column(db.DateTime)
+    timestamp = db.Column(db.DateTime,server_default=text('now()'))
     message = db.Column(db.String(500))
     c_id = db.Column(db.Integer, db.ForeignKey(Course.course_id))
 
-    def __init__(self, time, msg, cid):
-        self.timestamp = time
+    def __init__(self, cid, msg):
         self.message = msg
         self.c_id = cid
