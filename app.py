@@ -258,5 +258,19 @@ def approve():
             return redirect(url_for('error'))
 
 
+# API to get list of all courses
+@app.route('/allcourses')
+def getAllCourses():
+    course = Course.query.all()
+    return json.dumps(course)
+
+
+# API to get list of all courses of a faculty
+@app.route('/facultycourses')
+def getFacultyCourses():
+    course = Course.query.filter_by(faculty = session['user_id']).all()
+    return json.dumps(course)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port = 5001, debug=True)

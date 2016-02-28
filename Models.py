@@ -62,6 +62,10 @@ class Student(db.Model):
   Student_Id = db.Column(db.Integer , db.ForeignKey(User.user_id), primary_key = True)
   Performance_Sheet = db.relationship('Performance_Sheet' , backref = 'Student' , lazy = 'dynamic')
 
+class Faculty(db.Model):
+  __tablename__ = 'db_Faculty'
+  Faculty_Id = db.Column(db.Integer , db.ForeignKey(User.user_id), primary_key = True)
+
 class Question(db.Model):
     __tablename__ = 'db_Questions'
     Question_Id = db.Column(db.Integer, db.ForeignKey(Test.Lecture_Id))
@@ -82,13 +86,15 @@ class Performance_Sheet(db.Model):
 class Course(db.Model):
     __tablename__= 'db_course'
     course_id = db.Column(db.Integer, primary_key = True)
+    faculty = db.Column(db.Integer, db.ForeignKey(Faculty.Faculty_Id))
     course_name = db.Column(db.String(30))
     prereq = db.Column(db.Integer)
     syllabus = db.Column(db.String(500))
     notices = db.relationship('Notice', backref='Course', lazy='dynamic')
     approved = db.Column(db.Integer) # 1 after admin approves the course
 
-    def __init__(self, cid, cname, pre):
+    def __init__(self, fid, cid, cname, pre):
+        self.faculty = session['user_id']
         self.course_id = cid
         self.course_name = cname
         self.prereq = pre
