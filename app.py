@@ -7,6 +7,8 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug import generate_password_hash, check_password_hash
 from sqlalchemy import create_engine
 from functools import wraps
+from Models import db
+
 
 
 UPLOAD_FOLDER = '/home/shubham/Desktop/web_development/tutplus/data/user_dp/'
@@ -18,7 +20,9 @@ app.secret_key = "shubham12345"
 auth = HTTPBasicAuth()
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://13CS30030:cse12@10.5.18.68/13CS30030"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-db = SQLAlchemy(app)
+db.init_app(app)
+with app.app_context():
+    db.create_all()
 
 def template_or_json(template=None):
     """"Return a dict from your view and this will either
@@ -66,27 +70,8 @@ def home():
     return render_template('index.html')
 
 
-class User(db.Model):
-  __tablename__ = 'db_user'
-  user_id = db.Column(db.Integer, primary_key = True)
-  name = db.Column(db.String(30))
-  email = db.Column(db.String(100), unique=True)
-  password = db.Column(db.String(128))
-  link_to_dp = db.Column(db.String(1000))
-  type_flag = db.Column(db.Integer)
 
-  def __init__(self, name, email, password, link_to_dp, type_flag_):
-    self.name = name.title()
-    self.email = email.lower()
-    self.set_password(password)
-    self.link_to_dp = link_to_dp
-    self.type_flag = type_flag_
 
-  def set_password(self, password_):
-    self.password = generate_password_hash(password_)
-
-  def check_password(self, password_):
-    return check_password_hash(self.password, password_)
 
 
 @app.route('/login', methods = ['GET', 'POST'])
@@ -103,6 +88,7 @@ def login():
 
         if user and user.check_password(pwd):
             session['email'] = email_
+            session['user_id'] = user.user_id
             return redirect(url_for('profile'))
         else:
             return redirect(url_for('login'))
@@ -110,6 +96,7 @@ def login():
 
     if request.method == 'GET':
         return render_template('login.html')
+
 
 @app.route('/signUp', methods = ['GET','POST'])
 def add_user():
@@ -127,7 +114,7 @@ def add_user():
         # file = request.files['file']
         # if file and allowed_file(file.filename):
         #     filename = secure_filename(file.filename)
-        #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         #     link = url_for('uploaded_file',filename=filename)
         # print link
         flag = json_data['flag']
@@ -138,6 +125,17 @@ def add_user():
 
     if request.method == 'GET':
         return render_template('signup.html')
+
+@app.route('/parentPortal', methods = ['GET' , 'POST'])
+def parentPortal():
+    if request.method == 'POST' :
+        json_data = request.get_json(force = True)
+        if not json_data :
+            print ("Error !! No credentials Given !! ")
+            return redirect(url_for('parentPortal'))
+        rollno = json_data['RollNo']
+        dob = json_data['DOB']
+
 
 
 # @view(app, '/profile', render_html('profile.html'))
@@ -165,6 +163,37 @@ def logout():
 # @auth.login_required
 # def get_profile(user_id):
 
+
+# API for searching a course
+@app.route('/searchresults', methods = ['GET','POST'])
+def search_course():
+    if request.method == 'POST':
+        json_data = request.get_json(force=True)
+        if not json_data:
+            print("error")
+            return redirect(url_for('search_course'))
+        cid = json_data['course_id']
+
+        course = Course.query.filter_by(course_id = cid).first()
+
+        if course:
+            session['course_id'] = cid
+            return redirect(url_for('course_home'))
+        else:
+            return redirect(url_for('search_course'))
+            # session['email'] = email
+
+    if request.method == 'GET':
+        return render_template('student_home.html')
+
+
+# API for enrolling a student in a course
+@app.route('/enroll')
+def enroll():
+    newenroll = Enrolls(session['user_id'],session['course_id'])
+    db.session.add(newenroll)
+    db.session.commit()
+    return redirect(url_for('course_home'), 302)
 
 
 if __name__ == "__main__":
