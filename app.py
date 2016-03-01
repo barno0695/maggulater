@@ -14,7 +14,6 @@ from Models import *
 
 UPLOAD_FOLDER = '/home/shubham/Desktop/web_development/tutplus/data/user_dp/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
-
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = "shubham12345"
@@ -100,8 +99,10 @@ def login():
         if user and user.check_password(pwd):
             session['email'] = email_
             session['user_id'] = user.user_id
+            print "In profile redirect"
             return redirect(url_for('profile'))
         else:
+            print "IN login wala !! "
             return redirect(url_for('login'))
             # session['email'] = email
 
@@ -131,8 +132,10 @@ def add_user():
         # print link
         flag = json_data['flag']
         newuser = User(name, email, pwd, link, flag)
-        db.session.add(newuser)
-        db.session.commit()
+        session['email'] = email 
+        # db.session.add(newuser)
+        session['user_id'] = name 
+        # db.session.commit()
         return redirect(url_for('profile'), 302)
 
     if request.method == 'GET':
@@ -182,6 +185,7 @@ def forgotPassword():
 @app.route('/profile', methods=['GET'])
 @template_or_json('profile.html')
 def profile():
+    print session
 
     user = User.query.filter_by(email = (session['email'])).first()
 
