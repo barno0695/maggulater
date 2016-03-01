@@ -71,13 +71,16 @@ def home():
         user = User.query.filter_by(email = (session['email'])).first()
         if user:
             if user.type_flag == 0:
+                print "Zero"
                 return render_template('admin.html')
             elif user.type_flag == 1:
+                print "One"
                 return render_template('student.html')
             elif user.type_flag == 2:
+                print "two"
                 return render_template('faculty.html')
     # else:
-    return render_template('login.html')
+    return redirect(url_for('login'), code=302)
 
 
 @app.route('/login', methods = ['GET', 'POST'])
@@ -106,6 +109,10 @@ def login():
     if request.method == 'GET':
         return render_template('login.html')
 
+
+@app.route('/student', methods = ['GET'])
+def student():
+    return render_template('student.html')
 
 @app.route('/signUp', methods = ['GET','POST'])
 def add_user():
