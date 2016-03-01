@@ -1,3 +1,4 @@
+import datetime
 import json
 from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect, session , escape 
 import MySQLdb
@@ -125,6 +126,7 @@ def add_user():
         name = json_data['name']
         email = json_data['email']
         pwd = json_data['password']
+        DOB = str(json_data['dob'])
         print "*****" + pwd
         link = "link"
         # print json_data['photo']
@@ -135,7 +137,7 @@ def add_user():
         #     link = url_for('uploaded_file',filename=filename)
         # print link
         flag = json_data['flag']
-        newuser = User(name, email, pwd, link, flag)
+        newuser = User(name, email, pwd, link, flag , DOB)
         session['email'] = email 
         db.session.add(newuser)
         session['user_id'] = name 
