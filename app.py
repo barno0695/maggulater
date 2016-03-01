@@ -195,7 +195,7 @@ def profile():
     if user is None:
         return redirect(url_for('signup'))
     else:
-        return { 'username' : user.name, 'link' : '/profile', 'dp_link': user.link_to_dp, 'flag' : user.type_flag }
+        return json.dupms({ 'username' : user.name, 'link' : '/profile', 'dp_link': user.link_to_dp, 'flag' : user.type_flag })
 
 @app.route('/logout')
 def logout():
