@@ -8,7 +8,7 @@ from werkzeug import generate_password_hash, check_password_hash
 from sqlalchemy import create_engine
 from sqlalchemy import text
 from functools import wraps
-from Models import db
+from Models import *
 
 
 
@@ -19,7 +19,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = "shubham12345"
 auth = HTTPBasicAuth()
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:shubham123@10.109.25.26/dbms"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://13CS30030:cse12@10.5.18.68/13CS30030"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db.init_app(app)
 with app.app_context():
@@ -68,10 +68,9 @@ def template_or_json(template=None):
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template('index.html')
 
-
-
+    if request.method == 'GET':
+        return render_template('index.html')
 
 
 
@@ -111,7 +110,7 @@ def add_user():
         email = json_data['email']
         pwd = json_data['password']
         link = "link"
-        print json_data['photo']
+        # print json_data['photo']
         # file = request.files['file']
         # if file and allowed_file(file.filename):
         #     filename = secure_filename(file.filename)

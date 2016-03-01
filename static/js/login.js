@@ -15,7 +15,7 @@ $('#btnLogin').click(function() {
         type: 'POST',
         processData: 'false',
         success: function(response) {
-            window.open(response.link, '_self')
+            // window.open(response.link, '_self')
             console.log(response);
         },
         error: function(error) {

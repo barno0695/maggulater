@@ -10,5 +10,5 @@ var Profilename = React.createClass({
 
 ReactDOM.render(
 	<Profilename user="shubham"/>,
-	document.getElementById('username-box')
+	document.getElementById('namediv')
 	);
