@@ -35,6 +35,8 @@ class User(db.Model):
 
   def check_password(self, password_):
     return check_password_hash(self.password, password_)
+
+
 # Lecture Model
 class Lecture(db.Model):
     __tablename__ = 'db_Lecture'
@@ -50,34 +52,53 @@ class Lecture(db.Model):
         self.Notes = notes
         self.Date_Time = timestamp
         self.Topic = topic
+
+
 # Test Model
 class Test(db.Model):
     __tablename__ = 'db_Test'
     Test_Id = db.Column(db.Integer, primary_key = True)
     Lecture_Id = db.Column(db.Integer, db.ForeignKey(Lecture.Lecture_Id))
     Question_Paper = db.relationship('Question', backref = 'Test' , lazy = 'dynamic')
+
+
 # Student Model
 class Student(db.Model):
   __tablename__ = 'db_Student'
   Student_Id = db.Column(db.Integer , db.ForeignKey(User.user_id), primary_key = True)
   Performance_Sheet = db.relationship('Performance_Sheet' , backref = 'Student' , lazy = 'dynamic')
+
+
 # Faculty Model
 class Faculty(db.Model):
   __tablename__ = 'db_Faculty'
   Faculty_Id = db.Column(db.Integer , db.ForeignKey(User.user_id), primary_key = True)
+
+  def __init__(self,facid):
+      self.Faculty_Id = facid
+
+
 # Admin Model
 class Admin(db.Model):
     __tablename__ = 'db_Admin'
     Admin_Id = db.Column(db.Integer, db.ForeignKey(User.user_id), primary_key = True)
+
+    def __init__(self,admid):
+        self.Admin_Id = admid
+
+
 # Question Model
 class Question(db.Model):
     __tablename__ = 'db_Questions'
     Question_Id = db.Column(db.Integer, db.ForeignKey(Test.Lecture_Id))
     text = db.Column(db.String(200) , primary_key = True)
     answ = db.Column(db.String(200))
+
     def __init__ (self , qtext ,qansw):
         self.text = qtext
         self.answ = qansw
+
+
 #Performance Model
 class Performance_Sheet(db.Model):
     __tablename__ = 'db_Performance_Sheet'
@@ -85,6 +106,14 @@ class Performance_Sheet(db.Model):
     Test_Id = db.Column(db.Integer , db.ForeignKey(Test.Test_Id), primary_key = True)
     Marks_Obtained = db.Column(db.Float)
     Marks_Total = db.Column(db.Float)
+
+    def __init__(self, sid, tid, mark_obt, mark_tot):
+        self.Student_Id = sid
+        self.Test_Id = tid
+        self.Marks_Obtained = mark_obt
+        self.Marks_Total = mark_tot
+
+
 # Course Table
 class Course(db.Model):
     __tablename__= 'db_course'
