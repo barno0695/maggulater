@@ -131,11 +131,11 @@ span.term a:hover{
 	border-right: none;
 	border-top: none;
 }
-.lable input[type="text"]:hover,.lable-2 input[type="text"]:hover,input[type="Password"]:hover,#active {
+.lable input[type="text"]:hover,.lable-2 input[type="text"]:hover,input[type="Password"]:hover,input[type="date"]:hover,#active {
 	color:#DCDCDC;
 	border-left:6px solid#40A46F;
 }
-.lable-2 input[type="text"],input[type="Password"] {
+.lable-2 input[type="text"],input[type="Password"],input[type="date"] {
 	padding: 14px;
 	width: 94%;
 	font-size: 1em;
@@ -260,7 +260,7 @@ i.fb, i.tw {
 .col_1_of_2 {
 	margin:0;
 }
-.lable-2 input[type="text"], input[type="Password"] {
+.lable-2 input[type="text"], input[type="Password"], input[type="date"] {
 	padding: 14px;
 	width: 89%;
 }
@@ -278,7 +278,7 @@ width:70%;
 .lable input[type="text"] {
 	width: 83%;
 }
-.lable-2 input[type="text"], input[type="Password"] {
+.lable-2 input[type="text"], input[type="Password"], input[type="date"] {
 	width: 84%;
 }
 }
