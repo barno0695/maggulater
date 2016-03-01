@@ -1,5 +1,5 @@
 import json
-from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect
+from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect, session
 import MySQLdb
 from flask.ext.httpauth import HTTPBasicAuth
 import os
@@ -28,13 +28,15 @@ class User(db.Model):
     self.set_password(password)
     self.link_to_dp = link_to_dp
     self.type_flag = type_flag_
-    self.DOB = dob 
+    self.DOB = dob
 
   def set_password(self, password_):
     self.password = generate_password_hash(password_)
 
   def check_password(self, password_):
     return check_password_hash(self.password, password_)
+
+
 # Lecture Model
 class Lecture(db.Model):
     __tablename__ = 'db_Lecture'
@@ -50,34 +52,53 @@ class Lecture(db.Model):
         self.Notes = notes
         self.Date_Time = timestamp
         self.Topic = topic
+
+
 # Test Model
 class Test(db.Model):
     __tablename__ = 'db_Test'
     Test_Id = db.Column(db.Integer, primary_key = True)
     Lecture_Id = db.Column(db.Integer, db.ForeignKey(Lecture.Lecture_Id))
     Question_Paper = db.relationship('Question', backref = 'Test' , lazy = 'dynamic')
+
+
 # Student Model
 class Student(db.Model):
   __tablename__ = 'db_Student'
   Student_Id = db.Column(db.Integer , db.ForeignKey(User.user_id), primary_key = True)
   Performance_Sheet = db.relationship('Performance_Sheet' , backref = 'Student' , lazy = 'dynamic')
+
+
 # Faculty Model
 class Faculty(db.Model):
   __tablename__ = 'db_Faculty'
   Faculty_Id = db.Column(db.Integer , db.ForeignKey(User.user_id), primary_key = True)
+
+  def __init__(self,facid):
+      self.Faculty_Id = facid
+
+
 # Admin Model
 class Admin(db.Model):
     __tablename__ = 'db_Admin'
     Admin_Id = db.Column(db.Integer, db.ForeignKey(User.user_id), primary_key = True)
+
+    def __init__(self,admid):
+        self.Admin_Id = admid
+
+
 # Question Model
 class Question(db.Model):
     __tablename__ = 'db_Questions'
     Question_Id = db.Column(db.Integer, db.ForeignKey(Test.Lecture_Id))
     text = db.Column(db.String(200) , primary_key = True)
     answ = db.Column(db.String(200))
+
     def __init__ (self , qtext ,qansw):
         self.text = qtext
         self.answ = qansw
+
+
 #Performance Model
 class Performance_Sheet(db.Model):
     __tablename__ = 'db_Performance_Sheet'
@@ -85,6 +106,14 @@ class Performance_Sheet(db.Model):
     Test_Id = db.Column(db.Integer , db.ForeignKey(Test.Test_Id), primary_key = True)
     Marks_Obtained = db.Column(db.Float)
     Marks_Total = db.Column(db.Float)
+
+    def __init__(self, sid, tid, mark_obt, mark_tot):
+        self.Student_Id = sid
+        self.Test_Id = tid
+        self.Marks_Obtained = mark_obt
+        self.Marks_Total = mark_tot
+
+
 # Course Table
 class Course(db.Model):
     __tablename__= 'db_course'
@@ -93,7 +122,7 @@ class Course(db.Model):
     course_name = db.Column(db.String(30))
     prereq = db.Column(db.Integer)
     syllabus = db.Column(db.String(500))
-    notices = db.relationship('Notice', backref='Course', lazy='dynamic')
+    # notices = db.relationship('Notice', backref='Course', lazy='dynamic')
     approved = db.Column(db.Integer) # 1 after admin approves the course
 
     def __init__(self, fid, cid, cname, pre):
@@ -108,6 +137,29 @@ class Course(db.Model):
 
     def setSyllabus(self, syl):
         self.syllabus = syl
+
+    @property
+    def serialize(self):
+       """Return object data in easily serializeable format"""
+       return {
+           'course_id' : self.course_id,
+           'faculty' : self.faculty,
+           'course_name' : self.course_name,
+           'prereq' : self.prereq,
+           'syllabus' : self.syllabus,
+           'approved' : self.approved
+           # This is an example how to deal with Many2Many relations
+        #    'many2many'  : self.serialize_many2many
+       }
+    @property
+    def serialize_many2many(self):
+       """
+       Return object's relations in easily serializeable format.
+       NB! Calls many2many's serialize property.
+       """
+       return [ item.serialize for item in self.many2many]
+
+
 # Enrolls relationship
 class Enrolls(db.Model):
     __tablename__= 'db_enrolls'

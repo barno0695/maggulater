@@ -137,10 +137,20 @@ def add_user():
         # print link
         flag = json_data['flag']
         newuser = User(name, email, pwd, link, flag , DOB)
+
         session['email'] = email
         db.session.add(newuser)
         session['user_id'] = name
         db.session.commit()
+
+        user = User.query.filter_by(email = (session['email'])).first()
+        if flag == 2:
+            newfac = Faculty(user.id)
+            db.session.commit()
+        elif flag == 0:
+            newfac = Faculty(user.id)
+            db.session.commit()
+
         return redirect(url_for('profile'), 302)
 
     if request.method == 'GET':
@@ -278,7 +288,7 @@ def add_course():
             perror("error")
             return redirect(url_for('add_course'))
 
-        newcourse = Course(cid,cname,pre)
+        newcourse = Course(cid,cname,pre,fac_id)
         db.session.add(newcourse)
         db.session.commit()
         return redirect(url_for('faculty_home'), 302)
@@ -307,9 +317,8 @@ def approve():
 # API to get list of all courses
 @app.route('/allcourses')
 def getAllCourses():
-    course = Course.query.all()
-    return json.dumps(course)
-    
+    return jsonify(json_data = [i.serialize for i in Course.query.all()])
+
 
 # API to get list of all courses of a faculty
 @app.route('/facultycourses')
