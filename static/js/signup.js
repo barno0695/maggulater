@@ -33,7 +33,7 @@ $('#btnSignUp').click(function() {
     $("#status").html('waiting...');
 
     $.ajax({
-        url: 'http://127.0.0.1:5001/signUp',
+        url: 'http://127.0.0.1:5000/signUp',
         dataType: 'json',
         contentType:'application/json',
         type: 'POST',
