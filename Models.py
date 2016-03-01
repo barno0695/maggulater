@@ -28,7 +28,7 @@ class User(db.Model):
     self.set_password(password)
     self.link_to_dp = link_to_dp
     self.type_flag = type_flag_
-    self.DOB = dob 
+    self.DOB = dob
 
   def set_password(self, password_):
     self.password = generate_password_hash(password_)
@@ -108,6 +108,29 @@ class Course(db.Model):
 
     def setSyllabus(self, syl):
         self.syllabus = syl
+
+    @property
+    def serialize(self):
+       """Return object data in easily serializeable format"""
+       return {
+           'course_id' : self.course_id,
+           'faculty' : self.faculty,
+           'course_name' : self.course_name,
+           'prereq' : self.prereq,
+           'syllabus' : self.syllabus,
+           'approved' : self.approved
+           # This is an example how to deal with Many2Many relations
+        #    'many2many'  : self.serialize_many2many
+       }
+    @property
+    def serialize_many2many(self):
+       """
+       Return object's relations in easily serializeable format.
+       NB! Calls many2many's serialize property.
+       """
+       return [ item.serialize for item in self.many2many]
+
+
 # Enrolls relationship
 class Enrolls(db.Model):
     __tablename__= 'db_enrolls'

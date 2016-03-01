@@ -307,8 +307,7 @@ def approve():
 # API to get list of all courses
 @app.route('/allcourses')
 def getAllCourses():
-    course = Course.query.all()
-    return json.dumps(course)
+    return jsonify(json_data = [i.serialize for i in Course.query.all()])
 
 
 # API to get list of all courses of a faculty
