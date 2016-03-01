@@ -1,6 +1,6 @@
 import datetime
 import json
-from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect, session , escape 
+from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect, session , escape
 import MySQLdb
 from flask.ext.httpauth import HTTPBasicAuth
 import os
@@ -138,10 +138,20 @@ def add_user():
         # print link
         flag = json_data['flag']
         newuser = User(name, email, pwd, link, flag , DOB)
-        session['email'] = email 
+
+        session['email'] = email
         db.session.add(newuser)
-        session['user_id'] = name 
+        session['user_id'] = name
         db.session.commit()
+
+        user = User.query.filter_by(email = (session['email'])).first()
+        if flag == 2:
+            newfac = Faculty(user.id)
+            db.session.commit()
+        elif flag == 0:
+            newfac = Faculty(user.id)
+            db.session.commit()
+
         return redirect(url_for('profile'), 302)
 
     if request.method == 'GET':
