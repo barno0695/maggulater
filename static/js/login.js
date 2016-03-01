@@ -14,7 +14,8 @@ $('#btnLogin').click(function() {
         type: 'POST',
         processData: 'false',
         success: function(response) {
-            // window.open(response.link, '_self')
+            var data = JSON.parse(response)
+            window.location.href = data.link;
             console.log(response);
         },
         error: function(error) {

@@ -1,6 +1,6 @@
 import datetime
 import json
-from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect, session , escape 
+from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect, session , escape
 import MySQLdb
 from flask.ext.httpauth import HTTPBasicAuth
 import os
@@ -99,13 +99,12 @@ def login():
         if user and user.check_password(pwd):
             session['email'] = email_
             session['user_id'] = user.user_id
-            print session
             print "In profile redirect"
             return redirect(url_for('profile'))
         else:
             print "IN login wala !! "
+            session['email'] = email
             return redirect(url_for('login'))
-            # session['email'] = email
 
     if request.method == 'GET':
         return render_template('login.html')
@@ -138,9 +137,9 @@ def add_user():
         # print link
         flag = json_data['flag']
         newuser = User(name, email, pwd, link, flag , DOB)
-        session['email'] = email 
+        session['email'] = email
         db.session.add(newuser)
-        session['user_id'] = name 
+        session['user_id'] = name
         db.session.commit()
         return redirect(url_for('profile'), 302)
 
@@ -189,16 +188,15 @@ def forgotPassword():
 # @view(app, '/profile', render_html('profile.html'))
 # @view(app, '/profile', render_json)
 @app.route('/profile', methods=['GET'])
-@template_or_json('profile.html')
+# @template_or_json('profile.html')
 def profile():
-    print session
-    # if session :
-    user = User.query.filter_by(email = (session['email'])).first()
+    if session :
+        user = User.query.filter_by(email = (session['email'])).first()
 
     if user is None:
         return redirect(url_for('signup'))
     else:
-        return json.dupms({ 'username' : user.name, 'link' : '/profile', 'dp_link': user.link_to_dp, 'flag' : user.type_flag })
+        return jsonify({'username' : user.name, 'link' : '/profile'})
 
 @app.route('/logout')
 def logout():
@@ -322,4 +320,4 @@ def getFacultyCourses():
 
 if __name__ == "__main__":
     app.secret_key = "shubham12345"
-    app.run(host="0.0.0.0", port = 5000, debug=True)
+    app.run(host="0.0.0.0", port = 5000, debug=True, threaded=True)
