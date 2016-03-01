@@ -29,14 +29,16 @@
 
         <form>
             <div class="lable-2">
-                <input type="text" class="text" id="inputName" value="Your Name" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Your Name ';}">
-            </div>
-            <div class="lable-2">
+				<input type="text" class="text" id="inputName" value="Your Name" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Your Name ';}">
                 <input type="text" class="text" id="inputEmail" value="your@email.com " onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'your@email.com ';}">
+				<input type="date" class="text" id="inputDOB" value="1900-01-01" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '1900-01-01';}">
                 <input type="password" class="text" id="inputPassword" value="Password " onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password ';}">
+				<input type="radio" class="text" name="inputUserType" id="inputUserType" value="student" checked> Student
+				<input type="radio" class="text" name="inputUserType" id="inputUserType" value="faculty"> Faculty
 
             </div>
-            <h3 style="margin-top:20px">By creating an account, you agree to our <span class="term"><a href="#">Terms & Conditions</a></span></h3>
+			<br>
+            <h3 style="margin-top:20px"> By creating an account, you agree to our <span class="term"><a href="#">Terms & Conditions</a></span></h3>
             <div class="submit">
                 <input type="submit" id="btnSignUp" value="Create account" >
             </div>

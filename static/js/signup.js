@@ -20,12 +20,16 @@
 
 $('#btnSignUp').click(function() {
 
-
+	// console.log($("input[name=inputUserType]:checked").val());
+	var flag = 0;
+	if($("input[name=inputUserType]:checked").val() === "student") flag = 1;
+	else if($("input[name=inputUserType]:checked").val() === "faculty") flag = 2;
     user = {
         'name' : $("#inputName").val(),
         'email' : $("#inputEmail").val(),
         'password' : $("#inputPassword").val(),
-        'flag' : "1"
+		'dob' : $("#inputDOB").val(),
+        'flag' : flag
     }
 
     console.log(user);
