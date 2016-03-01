@@ -9,7 +9,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import text
 from functools import wraps
 from Models import db
-
+from Models import User , Lecture , Test , Student , Faculty ,Question , Performance_Sheet , Course, Enrolls ,Notice
 
 
 UPLOAD_FOLDER = '/home/shubham/Desktop/web_development/tutplus/data/user_dp/'
@@ -19,7 +19,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = "shubham12345"
 auth = HTTPBasicAuth()
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:shubham123@10.109.25.26/dbms"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://13CS30030:cse12@10.5.18.68/13CS30030"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db.init_app(app)
 with app.app_context():
@@ -65,8 +65,8 @@ def template_or_json(template=None):
 #     return make_response(jsonify( { 'error': 'Not found' } ), 404)
 
 
-@app.route("/")
-@app.route("/home")
+@app.route("/" , methods = ['GET', 'POST'])
+@app.route("/home" , methods = ['GET', 'POST'])
 def home():
     return render_template('index.html')
 
@@ -110,6 +110,7 @@ def add_user():
         name = json_data['name']
         email = json_data['email']
         pwd = json_data['password']
+        print "*****" + pwd
         link = "link"
         print json_data['photo']
         # file = request.files['file']
@@ -273,4 +274,4 @@ def getFacultyCourses():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port = 5001, debug=True)
+    app.run(host="0.0.0.0", port = 5000, debug=True)
