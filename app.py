@@ -1,5 +1,5 @@
 import json
-from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect, session
+from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect, session , escape 
 import MySQLdb
 from flask.ext.httpauth import HTTPBasicAuth
 import os
@@ -95,6 +95,7 @@ def login():
         if user and user.check_password(pwd):
             session['email'] = email_
             session['user_id'] = user.user_id
+            print session
             print "In profile redirect"
             return redirect(url_for('profile'))
         else:
@@ -129,9 +130,9 @@ def add_user():
         flag = json_data['flag']
         newuser = User(name, email, pwd, link, flag)
         session['email'] = email 
-        # db.session.add(newuser)
+        db.session.add(newuser)
         session['user_id'] = name 
-        # db.session.commit()
+        db.session.commit()
         return redirect(url_for('profile'), 302)
 
     if request.method == 'GET':
@@ -182,7 +183,7 @@ def forgotPassword():
 @template_or_json('profile.html')
 def profile():
     print session
-
+    # if session :
     user = User.query.filter_by(email = (session['email'])).first()
 
     if user is None:
@@ -263,7 +264,7 @@ def add_course():
         cid = json_data['c_id']
         cname = json_data['course_name']
         pre = json_data['prereq']
-
+        fac_id = json_data['faculty_id']
         course = Course.query.filter_by(course_id = cid).first()
 
         if course:
@@ -311,4 +312,5 @@ def getFacultyCourses():
 
 
 if __name__ == "__main__":
+    app.secret_key = "shubham12345"
     app.run(host="0.0.0.0", port = 5000, debug=True)

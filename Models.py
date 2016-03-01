@@ -1,5 +1,5 @@
 import json
-from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect, session
+from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect
 import MySQLdb
 from flask.ext.httpauth import HTTPBasicAuth
 import os
@@ -11,7 +11,7 @@ from functools import wraps
 
 
 db = SQLAlchemy()
-
+#User Model
 class User(db.Model):
   __tablename__ = 'db_user'
   user_id = db.Column(db.Integer, primary_key = True)
@@ -33,8 +33,6 @@ class User(db.Model):
 
   def check_password(self, password_):
     return check_password_hash(self.password, password_)
-
-
 # Lecture Model
 class Lecture(db.Model):
     __tablename__ = 'db_Lecture'
@@ -50,22 +48,26 @@ class Lecture(db.Model):
         self.Notes = notes
         self.Date_Time = timestamp
         self.Topic = topic
-
+# Test Model
 class Test(db.Model):
     __tablename__ = 'db_Test'
     Test_Id = db.Column(db.Integer, primary_key = True)
     Lecture_Id = db.Column(db.Integer, db.ForeignKey(Lecture.Lecture_Id))
     Question_Paper = db.relationship('Question', backref = 'Test' , lazy = 'dynamic')
-
+# Student Model
 class Student(db.Model):
   __tablename__ = 'db_Student'
   Student_Id = db.Column(db.Integer , db.ForeignKey(User.user_id), primary_key = True)
   Performance_Sheet = db.relationship('Performance_Sheet' , backref = 'Student' , lazy = 'dynamic')
-
+# Faculty Model
 class Faculty(db.Model):
   __tablename__ = 'db_Faculty'
   Faculty_Id = db.Column(db.Integer , db.ForeignKey(User.user_id), primary_key = True)
-
+# Admin Model
+class Admin(db.Model):
+    __tablename__ = 'db_Admin'
+    Admin_Id = db.Column(db.Integer, db.ForeignKey(User.user_id), primary_key = True)
+# Question Model
 class Question(db.Model):
     __tablename__ = 'db_Questions'
     Question_Id = db.Column(db.Integer, db.ForeignKey(Test.Lecture_Id))
@@ -74,14 +76,13 @@ class Question(db.Model):
     def __init__ (self , qtext ,qansw):
         self.text = qtext
         self.answ = qansw
-
+#Performance Model
 class Performance_Sheet(db.Model):
     __tablename__ = 'db_Performance_Sheet'
     Student_Id = db.Column(db.Integer , db.ForeignKey(Student.Student_Id) , primary_key = True)
     Test_Id = db.Column(db.Integer , db.ForeignKey(Test.Test_Id), primary_key = True)
     Marks_Obtained = db.Column(db.Float)
     Marks_Total = db.Column(db.Float)
-
 # Course Table
 class Course(db.Model):
     __tablename__= 'db_course'
@@ -105,8 +106,6 @@ class Course(db.Model):
 
     def setSyllabus(self, syl):
         self.syllabus = syl
-
-
 # Enrolls relationship
 class Enrolls(db.Model):
     __tablename__= 'db_enrolls'
@@ -117,8 +116,6 @@ class Enrolls(db.Model):
     def __init__(self, sid, cid):
         self.student_id = sid
         self.course_id = cid
-
-
 # Notice Table
 class Notice(db.Model):
     __tablename__= 'db_notice'
