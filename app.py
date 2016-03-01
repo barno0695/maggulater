@@ -8,8 +8,8 @@ from werkzeug import generate_password_hash, check_password_hash
 from sqlalchemy import create_engine
 from sqlalchemy import text
 from functools import wraps
+from Models import db
 from Models import *
-
 
 
 UPLOAD_FOLDER = '/home/shubham/Desktop/web_development/tutplus/data/user_dp/'
@@ -65,13 +65,24 @@ def template_or_json(template=None):
 #     return make_response(jsonify( { 'error': 'Not found' } ), 404)
 
 
-@app.route("/")
-@app.route("/home")
+@app.route("/" , methods = ['GET', 'POST'])
+# @app.route("/home" , methods = ['GET', 'POST'])
 def home():
 
     if request.method == 'GET':
         return render_template('index.html')
 
+    if session:
+        user = User.query.filter_by(email = (session['email'])).first()
+        if user:
+            if user.type_flag == 0:
+                return render_template('admin.html')
+            elif user.type_flag == 1:
+                return render_template('student.html')
+            elif user.type_flag == 2:
+                return render_template('faculty.html')
+    # else:
+    return redirect(url_for('login'))
 
 
 @app.route('/login', methods = ['GET', 'POST'])
@@ -109,6 +120,7 @@ def add_user():
         name = json_data['name']
         email = json_data['email']
         pwd = json_data['password']
+        print "*****" + pwd
         link = "link"
         # print json_data['photo']
         # file = request.files['file']
@@ -134,8 +146,35 @@ def parentPortal():
             print ("Error !! No credentials Given !! ")
             return redirect(url_for('parentPortal'))
         rollno = json_data['RollNo']
-        dob = json_data['DOB']
+        _email = json_data['Email']
+        user = User.query.filter_by(user_id = rollno)
+        if user is None or user.email != _email :
+        	print("Sorry Wrong Credentials !! ")
+        	return redirect(url_for('parentPortal'))
+        else:
+        	Performance = Performance_Sheet.query.filter_by(Student_Id = rollno)
+        	return render_template('Parent_Portal.html')
 
+
+@app.route('/forgotPassword', methods = ['GET' , 'POST'])
+def forgotPassword():
+	if request.method == 'POST' :j
+        json_data = request.get_json(force = True)
+        if not json_data :
+            print ("Error !! No credentials Given !! ")
+            return redirect(url_for('forgotPassword'))
+    	rollno = json_data['RollNo']
+        _email = json_data['Email']
+        user = User.query.filter_by(user_id = rollno)
+        if user is None or user.email != _email :
+            print("Sorry Wrong Credentials !! ")
+            return redirect(url_for('forgotPassword'))
+        else:
+            password = user.password
+            context = {
+            'Password' : password
+            }
+            return context
 
 
 # @view(app, '/profile', render_html('profile.html'))
@@ -272,4 +311,4 @@ def getFacultyCourses():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port = 5001, debug=True)
+    app.run(host="0.0.0.0", port = 5000, debug=True)
