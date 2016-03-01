@@ -9,7 +9,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import text
 from functools import wraps
 from Models import db
-from Models import User , Lecture , Test , Student , Faculty ,Question , Performance_Sheet , Course, Enrolls ,Notice
+from Models import *
 
 
 UPLOAD_FOLDER = '/home/shubham/Desktop/web_development/tutplus/data/user_dp/'
@@ -136,8 +136,35 @@ def parentPortal():
             print ("Error !! No credentials Given !! ")
             return redirect(url_for('parentPortal'))
         rollno = json_data['RollNo']
-        dob = json_data['DOB']
+        _email = json_data['Email']
+        user = User.query.filter_by(user_id = rollno)
+        if user is None or user.email != _email :
+        	print("Sorry Wrong Credentials !! ")
+        	return redirect(url_for('parentPortal'))
+        else:
+        	Performance = Performance_Sheet.query.filter_by(Student_Id = rollno)
+        	return render_template('Parent_Portal.html')
 
+
+@app.route('/forgotPassword', methods = ['GET' , 'POST'])
+def forgotPassword():
+	if request.method == 'POST' :j
+        json_data = request.get_json(force = True)
+        if not json_data :
+            print ("Error !! No credentials Given !! ")
+            return redirect(url_for('forgotPassword'))
+    	rollno = json_data['RollNo']
+        _email = json_data['Email']
+        user = User.query.filter_by(user_id = rollno)
+        if user is None or user.email != _email :
+            print("Sorry Wrong Credentials !! ")
+            return redirect(url_for('forgotPassword'))
+        else:
+            password = user.password
+            context = {
+            'Password' : password
+            }
+            return context
 
 
 # @view(app, '/profile', render_html('profile.html'))
