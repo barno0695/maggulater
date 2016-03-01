@@ -20,6 +20,7 @@ class User(db.Model):
   password = db.Column(db.String(128))
   link_to_dp = db.Column(db.String(1000))
   type_flag = db.Column(db.Integer)
+  DOB = db.Column(db.Date)
 
   def __init__(self, name, email, password, link_to_dp, type_flag_):
     self.name = name.title()
@@ -120,7 +121,7 @@ class Enrolls(db.Model):
 class Notice(db.Model):
     __tablename__= 'db_notice'
     notice_id = db.Column(db.Integer, primary_key = True)
-    timestamp = db.Column(db.DateTime,server_default=text('now()'))
+    timestamp = db.Column(db.DateTime)
     message = db.Column(db.String(500))
     c_id = db.Column(db.Integer, db.ForeignKey(Course.course_id))
 
