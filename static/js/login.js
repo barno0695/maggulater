@@ -5,8 +5,7 @@ $('#btnLogin').click(function() {
         'password' : $("#inputPassword").val(),
     }
 
-    $("#status").html('waiting...');
-
+        console.log(user);
 
     $.ajax({
         url: 'http://127.0.0.1:5000/login',
@@ -15,7 +14,8 @@ $('#btnLogin').click(function() {
         type: 'POST',
         processData: 'false',
         success: function(response) {
-            // window.open(response.link, '_self')
+            var data = JSON.parse(response)
+            window.location.href = data.link;
             console.log(response);
         },
         error: function(error) {

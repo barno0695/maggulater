@@ -99,13 +99,12 @@ def login():
         if user and user.check_password(pwd):
             session['email'] = email_
             session['user_id'] = user.user_id
-            print session
             print "In profile redirect"
             return redirect(url_for('profile'))
         else:
             print "IN login wala !! "
+            session['email'] = email
             return redirect(url_for('login'))
-            # session['email'] = email
 
     if request.method == 'GET':
         return render_template('login.html')
@@ -199,16 +198,15 @@ def forgotPassword():
 # @view(app, '/profile', render_html('profile.html'))
 # @view(app, '/profile', render_json)
 @app.route('/profile', methods=['GET'])
-@template_or_json('profile.html')
+# @template_or_json('profile.html')
 def profile():
-    print session
-    # if session :
-    user = User.query.filter_by(email = (session['email'])).first()
+    if session :
+        user = User.query.filter_by(email = (session['email'])).first()
 
     if user is None:
         return redirect(url_for('signup'))
     else:
-        return { 'username' : user.name, 'link' : '/profile', 'dp_link': user.link_to_dp, 'flag' : user.type_flag }
+        return jsonify({'username' : user.name, 'link' : '/profile'})
 
 @app.route('/logout')
 def logout():
@@ -332,4 +330,4 @@ def getFacultyCourses():
 
 if __name__ == "__main__":
     app.secret_key = "shubham12345"
-    app.run(host="0.0.0.0", port = 5000, debug=True)
+    app.run(host="0.0.0.0", port = 5000, debug=True, threaded=True)
