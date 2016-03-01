@@ -20,14 +20,15 @@ class User(db.Model):
   password = db.Column(db.String(128))
   link_to_dp = db.Column(db.String(1000))
   type_flag = db.Column(db.Integer)
-  DOB = db.Column(db.Date)
+  DOB = db.Column(db.String(1000))
 
-  def __init__(self, name, email, password, link_to_dp, type_flag_):
+  def __init__(self, name, email, password, link_to_dp, type_flag_, dob):
     self.name = name.title()
     self.email = email.lower()
     self.set_password(password)
     self.link_to_dp = link_to_dp
     self.type_flag = type_flag_
+    self.DOB = dob 
 
   def set_password(self, password_):
     self.password = generate_password_hash(password_)
