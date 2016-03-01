@@ -317,16 +317,16 @@ def approve():
 # API to get list of all courses
 @app.route('/allcourses')
 def getAllCourses():
-    return jsonify(json_data = [i.serialize for i in Course.query.all()])
+    j = Course.query.all()
+    for notice in j.notices :
+        print notice 
+    return jsonify(json_data = [i.serialize for i in j])
 
 
 # API to get list of all courses of a faculty
 @app.route('/facultycourses')
 def getFacultyCourses():
-    course = Course.query.filter_by(faculty = session['user_id']).all()
-    # return json.dumps(course)
-    
-
+    return jsonify(json_data = [i.serialize for i in Course.query.filter_by(faculty = session['user_id']).all()])
 
 
 if __name__ == "__main__":
