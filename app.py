@@ -323,8 +323,7 @@ def getAllCourses():
 # API to get list of all courses of a faculty
 @app.route('/facultycourses')
 def getFacultyCourses():
-    course = Course.query.filter_by(faculty = session['user_id']).all()
-    return json.dumps(course)
+    return jsonify(json_data = [i.serialize for i in Course.query.filter_by(faculty = session['user_id']).all()])
 
 
 if __name__ == "__main__":
