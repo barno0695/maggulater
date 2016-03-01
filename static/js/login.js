@@ -5,8 +5,7 @@ $('#btnLogin').click(function() {
         'password' : $("#inputPassword").val(),
     }
 
-    $("#status").html('waiting...');
-
+        console.log(user);
 
     $.ajax({
         url: 'http://127.0.0.1:5000/login',
