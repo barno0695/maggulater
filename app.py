@@ -67,21 +67,20 @@ def template_or_json(template=None):
 @app.route("/" , methods = ['GET', 'POST'])
 # @app.route("/home" , methods = ['GET', 'POST'])
 def home():
-
-    if request.method == 'GET':
-        return render_template('index.html')
-
     if session:
         user = User.query.filter_by(email = (session['email'])).first()
         if user:
             if user.type_flag == 0:
+                print "Zero"
                 return render_template('admin.html')
             elif user.type_flag == 1:
+                print "One"
                 return render_template('student.html')
             elif user.type_flag == 2:
+                print "two"
                 return render_template('faculty.html')
     # else:
-    return redirect(url_for('login'))
+    return redirect(url_for('login'), code=302)
 
 
 @app.route('/login', methods = ['GET', 'POST'])
@@ -110,6 +109,10 @@ def login():
         return render_template('login.html')
 
 
+@app.route('/student', methods = ['GET'])
+def student():
+    return render_template('student.html')
+
 @app.route('/signUp', methods = ['GET','POST'])
 def add_user():
     if request.method == 'POST':
@@ -132,9 +135,9 @@ def add_user():
         # print link
         flag = json_data['flag']
         newuser = User(name, email, pwd, link, flag)
-        session['email'] = email 
+        session['email'] = email
         # db.session.add(newuser)
-        session['user_id'] = name 
+        session['user_id'] = name
         # db.session.commit()
         return redirect(url_for('profile'), 302)
 
