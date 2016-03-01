@@ -1,5 +1,5 @@
 import json
-from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect
+from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect, session
 import MySQLdb
 from flask.ext.httpauth import HTTPBasicAuth
 import os
@@ -75,6 +75,20 @@ class Lecture(db.Model):
         self.Date_Time = timestamp
         self.Topic = topic
 
+    @property
+    def serialize(self):
+        return {
+            'Lecture_Id' : self.Lecture_Id,
+            'Notes' : self.Notes ,
+            'Date_Time' : self.Date_Time,
+            'Topic' : self.Topic,
+        }
+    
+    @property
+    def serialize_many2many(self):
+        return [item.serialize for item in self.many2many]
+    
+
 
 # Test Model
 class Test(db.Model):
@@ -83,12 +97,32 @@ class Test(db.Model):
     Lecture_Id = db.Column(db.Integer, db.ForeignKey(Lecture.Lecture_Id))
     Question_Paper = db.relationship('Question', backref = 'Test' , lazy = 'dynamic')
 
+    def __init__ (self, test_id , lec_id ):
+        self.Test_Id = test_id 
+        self.Lecture_Id = lec_id
+
+    @property
+    def serialize(self):
+        return {
+            'Test_Id' : self.Test_Id,
+            'Lecture_Id' : self.Lecture_Id
+        }
+    
+    @property
+    def serialize_many2many(self):
+        return [item.serialize for item in self.many2many]
+    
+
 
 # Student Model
 class Student(db.Model):
     __tablename__ = 'db_Student'
     Student_Id = db.Column(db.Integer , db.ForeignKey(User.user_id), primary_key = True)
     Performance_Sheet = db.relationship('Performance_Sheet' , backref = 'Student' , lazy = 'dynamic')
+
+    def __init__(self,s_id):
+        self.Student_Id = s_id
+
 
     @property
     def serialize(self):

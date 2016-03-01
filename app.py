@@ -288,7 +288,7 @@ def add_course():
             perror("error")
             return redirect(url_for('add_course'))
 
-        newcourse = Course(cid,cname,pre)
+        newcourse = Course(cid,cname,pre,fac_id)
         db.session.add(newcourse)
         db.session.commit()
         return redirect(url_for('faculty_home'), 302)
@@ -317,7 +317,10 @@ def approve():
 # API to get list of all courses
 @app.route('/allcourses')
 def getAllCourses():
-    return jsonify(json_data = [i.serialize for i in Course.query.all()])
+    j = Course.query.all()
+    for notice in j.notices :
+        print notice 
+    return jsonify(json_data = [i.serialize for i in j])
 
 
 # API to get list of all courses of a faculty
