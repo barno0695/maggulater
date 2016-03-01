@@ -66,13 +66,19 @@ def template_or_json(template=None):
 
 
 @app.route("/" , methods = ['GET', 'POST'])
-@app.route("/home" , methods = ['GET', 'POST'])
+# @app.route("/home" , methods = ['GET', 'POST'])
 def home():
-    return render_template('index.html')
-
-
-
-
+    if session:
+        user = User.query.filter_by(email = (session['email'])).first()
+        if user:
+            if user.type_flag == 0:
+                return render_template('admin.html')
+            elif user.type_flag == 1:
+                return render_template('student.html')
+            elif user.type_flag == 2:
+                return render_template('faculty.html')
+    # else:
+    return render_template('login.html')
 
 
 @app.route('/login', methods = ['GET', 'POST'])
