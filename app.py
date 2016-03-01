@@ -309,13 +309,15 @@ def approve():
 def getAllCourses():
     course = Course.query.all()
     return json.dumps(course)
-
+    
 
 # API to get list of all courses of a faculty
 @app.route('/facultycourses')
 def getFacultyCourses():
     course = Course.query.filter_by(faculty = session['user_id']).all()
-    return json.dumps(course)
+    # return json.dumps(course)
+    
+
 
 
 if __name__ == "__main__":
