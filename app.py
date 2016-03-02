@@ -146,10 +146,17 @@ def add_user():
         user = User.query.filter_by(email = (session['email'])).first()
         if flag == 2:
             newfac = Faculty(user.id)
+            db.session.add(newfac)
             db.session.commit()
         elif flag == 0:
-            newfac = Faculty(user.id)
+            newadm = Admin(user.id)
+            db.session.add(newadm)
             db.session.commit()
+        elif flag == 1:
+            newst = Student(user.id)
+            db.session.add(newst)
+            db.session.commit()
+
 
         return redirect(url_for('profile'), 302)
 
@@ -324,6 +331,32 @@ def getAllCourses():
 @app.route('/facultycourses')
 def getFacultyCourses():
     return jsonify(json_data = [i.serialize for i in Course.query.filter_by(faculty = session['user_id']).all()])
+
+
+# API to get all notices
+@app.route('/allnotices')
+def getAllNotices():
+    for i in Notice.query.all():
+        print i.serialize
+    return jsonify(json_data = [i.serialize for i in Notice.query.all()])
+
+
+# API to get all notices of a course
+@app.route('/allcoursenotices')
+def getCourseNotices():
+    return jsonify(json_data = [i.serialize for i in Notice.query.filter_by(c_id = session['course_id']).all()])
+
+
+# API to get all notices of a student
+@app.route('/allstudentnotices')
+def getStudentNotices():
+    enrolled_courses = []
+    for c in Enrolls.query.filter_by(student_id = session['user_id']).all():
+        p = c.course_id
+        enrolled_courses.append(p)
+
+    return jsonify(json_data = [i.serialize for i in Notice.query.all() if i.c_id in enrolled_courses])
+
 
 
 if __name__ == "__main__":
