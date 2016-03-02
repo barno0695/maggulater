@@ -117,7 +117,6 @@ $.ajax({
     contentType:'application/json',
     type: 'GET',
     success: function(response) {
-        // console.log(response);
         for(var i = 0; i<response['json_data'].length;i++)
         {
           libraries.push({course_id: response['json_data'][i]['course_id'], course_name: response['json_data'][i]['course_name']});
@@ -134,7 +133,7 @@ $.ajax({
         console.log(error);
     },
 });
-// var abc = libraries;
+
 console.log("yo");
 console.log(libraries);
 

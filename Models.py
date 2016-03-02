@@ -11,6 +11,7 @@ from functools import wraps
 
 
 db = SQLAlchemy()
+
 #User Model
 class User(db.Model):
     __tablename__ = 'db_user'
@@ -83,11 +84,11 @@ class Lecture(db.Model):
             'Date_Time' : self.Date_Time,
             'Topic' : self.Topic,
         }
-    
+
     @property
     def serialize_many2many(self):
         return [item.serialize for item in self.many2many]
-    
+
 
 
 # Test Model
@@ -98,7 +99,7 @@ class Test(db.Model):
     Question_Paper = db.relationship('Question', backref = 'Test' , lazy = 'dynamic')
 
     def __init__ (self, test_id , lec_id ):
-        self.Test_Id = test_id 
+        self.Test_Id = test_id
         self.Lecture_Id = lec_id
 
     @property
@@ -107,11 +108,11 @@ class Test(db.Model):
             'Test_Id' : self.Test_Id,
             'Lecture_Id' : self.Lecture_Id
         }
-    
+
     @property
     def serialize_many2many(self):
         return [item.serialize for item in self.many2many]
-    
+
 
 
 # Student Model

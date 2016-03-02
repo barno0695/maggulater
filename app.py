@@ -43,30 +43,8 @@ def template_or_json(template=None):
         return decorated_fn
     return decorated
 
-# @auth.get_password
-# def get_password(username):
-#     user = User.query.filter_by(name = username)
-#     if not user:
-#         return user.get(password)
-#     else:
-#         return None
-
-# @auth.error_handler
-# def unauthorized():
-#     return make_response(jsonify( { 'error': 'Unauthorized access' } ), 403)
-#     # return 403 instead of 401 to prevent browsers from displaying the default auth dialog
-
-# @app.errorhandler(400)
-# def not_found(error):
-#     return make_response(jsonify( { 'error': 'Bad request' } ), 400)
-
-# @app.errorhandler(404)
-# def not_found(error):
-#     return make_response(jsonify( { 'error': 'Not found' } ), 404)
-
-
+# Home API
 @app.route("/" , methods = ['GET', 'POST'])
-# @app.route("/home" , methods = ['GET', 'POST'])
 def home():
     if session:
         user = User.query.filter_by(email = (session['email'])).first()
@@ -80,10 +58,11 @@ def home():
             elif user.type_flag == 2:
                 print "two"
                 return render_template('faculty.html')
-    # else:
+
     return redirect(url_for('login'), code=302)
 
 
+# API for login
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -128,13 +107,6 @@ def add_user():
         DOB = str(json_data['dob'])
         print "*****" + pwd
         link = "link"
-        # print json_data['photo']
-        # file = request.files['file']
-        # if file and allowed_file(file.filename):
-        #     filename = secure_filename(file.filename)
-            #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        #     link = url_for('uploaded_file',filename=filename)
-        # print link
         flag = json_data['flag']
         newuser = User(name, email, pwd, link, flag , DOB)
 
@@ -202,11 +174,8 @@ def forgotPassword():
             return context
 
 
-# @view(app, '/profile', render_html('profile.html'))
-# @view(app, '/profile', render_json)
+
 @app.route('/profile', methods=['GET'])
-# @template_or_json('profile.html')
-def profile():
     if session :
         user = User.query.filter_by(email = (session['email'])).first()
 
@@ -223,9 +192,6 @@ def logout():
 
     session.pop('email', None)
     return redirect(url_for('home'))
-# @app.route('/user/<int:user_id>' methods = ['GET'])
-# @auth.login_required
-# def get_profile(user_id):
 
 
 # API for searching a course
@@ -326,7 +292,6 @@ def approve():
 def getAllCourses():
     j = Course.query.all()
     d = jsonify(json_data = [i.serialize for i in j])
-    # d = "abc"
     return d
 
 
@@ -359,7 +324,6 @@ def getStudentNotices():
         enrolled_courses.append(p)
 
     d = jsonify(json_data = [i.serialize for i in Notice.query.all() if i.c_id in enrolled_courses])
-    # d = "a"
     return d
 
 
