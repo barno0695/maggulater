@@ -65,8 +65,8 @@ def template_or_json(template=None):
 
 
 
+# Home API
 @app.route("/" , methods = ['GET', 'POST'])
-# @app.route("/home" , methods = ['GET', 'POST'])
 def home():
     # if session:
     #     # user = User.query.filter_by(email = (session['email'])).first()
@@ -81,9 +81,11 @@ def home():
     #             print "two"
     #             return render_template('faculty.html')
     # else:
+
     return redirect(url_for('login'), code=302)
 
 
+# API for login
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -131,13 +133,6 @@ def add_user():
         DOB = str(json_data['dob'])
         print "*****" + pwd
         link = "link"
-        # print json_data['photo']
-        # file = request.files['file']
-        # if file and allowed_file(file.filename):
-        #     filename = secure_filename(file.filename)
-            #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        #     link = url_for('uploaded_file',filename=filename)
-        # print link
         flag = json_data['flag']
         newuser = User(name, email, pwd, link, flag , DOB)
 
@@ -149,10 +144,17 @@ def add_user():
         user = User.query.filter_by(email = (session['email'])).first()
         if flag == 2:
             newfac = Faculty(user.id)
+            db.session.add(newfac)
             db.session.commit()
         elif flag == 0:
-            newfac = Faculty(user.id)
+            newadm = Admin(user.id)
+            db.session.add(newadm)
             db.session.commit()
+        elif flag == 1:
+            newst = Student(user.id)
+            db.session.add(newst)
+            db.session.commit()
+
 
         return redirect(url_for('profile'), 302)
 
@@ -212,9 +214,6 @@ def profile():
 def logout():
     logout_user()
     return redirect(url_for('home'))
-# @app.route('/user/<int:user_id>' methods = ['GET'])
-# @auth.login_required
-# def get_profile(user_id):
 
 
 # API for searching a course
@@ -284,7 +283,7 @@ def add_course():
             perror("error")
             return redirect(url_for('add_course'))
 
-        newcourse = Course(cid,cname,pre)
+        newcourse = Course(cid,cname,pre,fac_id)
         db.session.add(newcourse)
         db.session.commit()
         return redirect(url_for('faculty_home'), 302)
@@ -313,14 +312,47 @@ def approve():
 # API to get list of all courses
 @app.route('/allcourses')
 def getAllCourses():
-    return jsonify(json_data = [i.serialize for i in Course.query.all()])
+    j = Course.query.all()
+    d = jsonify(json_data = [i.serialize for i in j])
+    return d
 
 
 # API to get list of all courses of a faculty
 @app.route('/facultycourses')
 def getFacultyCourses():
-    course = Course.query.filter_by(faculty = session['user_id']).all()
-    return json.dumps(course)
+    return jsonify(json_data = [i.serialize for i in Course.query.filter_by(faculty = session['user_id']).all()])
+
+
+# API to get all notices
+@app.route('/allnotices')
+def getAllNotices():
+    for i in Notice.query.all():
+        print i.serialize
+    return jsonify(json_data = [i.serialize for i in Notice.query.all()])
+
+
+# API to get all notices of a course
+@app.route('/allcoursenotices')
+def getCourseNotices():
+    return jsonify(json_data = [i.serialize for i in Notice.query.filter_by(c_id = session['course_id']).all()])
+
+
+# API to get all notices of a student
+@app.route('/allstudentnotices')
+def getStudentNotices():
+    enrolled_courses = []
+    for c in Enrolls.query.filter_by(student_id = session['user_id']).all():
+        p = c.course_id
+        enrolled_courses.append(p)
+
+    d = jsonify(json_data = [i.serialize for i in Notice.query.all() if i.c_id in enrolled_courses])
+    return d
+
+
+# API for listing
+@app.route('/listcourses', methods = ['GET'])
+def list_course():
+    return render_template('course_list.html')
 
 
 if __name__ == "__main__":
