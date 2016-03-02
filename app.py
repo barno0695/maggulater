@@ -1,6 +1,6 @@
 import datetime
 import json
-from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect, session , escape
+from flask import Flask, make_response, request, url_for, jsonify, render_template, request, redirect, session , escape, g
 import MySQLdb
 from flask.ext.httpauth import HTTPBasicAuth
 import os
@@ -11,19 +11,39 @@ from sqlalchemy import text
 from functools import wraps
 from Models import db
 from Models import *
-
+from flask.ext.login import login_user, logout_user, current_user, \
+    login_required, LoginManager
 
 UPLOAD_FOLDER = '/home/shubham/Desktop/web_development/tutplus/data/user_dp/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.secret_key = "shubham12345"
-auth = HTTPBasicAuth()
+app.secret_key = "A0Zr98j/3yX R~XHH!jmN]LWX/,?RT"
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://13CS30030:cse12@10.5.18.68/13CS30030"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db.init_app(app)
+
+login_manager = LoginManager()
+login_manager.session_protection = "strong"
+# login_serializer = URLSafeTimedSerializer(app.secret_key)
+
+login_manager.init_app(app)
 with app.app_context():
     db.create_all()
+
+
+@app.before_request
+def before_request():
+    g.user = current_user
+
+
+@login_manager.user_loader
+def user_loader(user_id):
+    """Given *user_id*, return the associated User object.
+
+    :param unicode user_id: user_id (email) user to retrieve
+    """
+    return User.query.get(int(user_id))
 
 def template_or_json(template=None):
     """"Return a dict from your view and this will either
@@ -43,43 +63,23 @@ def template_or_json(template=None):
         return decorated_fn
     return decorated
 
-# @auth.get_password
-# def get_password(username):
-#     user = User.query.filter_by(name = username)
-#     if not user:
-#         return user.get(password)
-#     else:
-#         return None
-
-# @auth.error_handler
-# def unauthorized():
-#     return make_response(jsonify( { 'error': 'Unauthorized access' } ), 403)
-#     # return 403 instead of 401 to prevent browsers from displaying the default auth dialog
-
-# @app.errorhandler(400)
-# def not_found(error):
-#     return make_response(jsonify( { 'error': 'Bad request' } ), 400)
-
-# @app.errorhandler(404)
-# def not_found(error):
-#     return make_response(jsonify( { 'error': 'Not found' } ), 404)
 
 
 @app.route("/" , methods = ['GET', 'POST'])
 # @app.route("/home" , methods = ['GET', 'POST'])
 def home():
-    if session:
-        user = User.query.filter_by(email = (session['email'])).first()
-        if user:
-            if user.type_flag == 0:
-                print "Zero"
-                return render_template('admin.html')
-            elif user.type_flag == 1:
-                print "One"
-                return render_template('student.html')
-            elif user.type_flag == 2:
-                print "two"
-                return render_template('faculty.html')
+    # if session:
+    #     # user = User.query.filter_by(email = (session['email'])).first()
+    #     if user:
+    #         if user.type_flag == 0:
+    #             print "Zero"
+    #             return render_template('admin.html')
+    #         elif user.type_flag == 1:
+    #             print "One"
+    #             return render_template('student.html')
+    #         elif user.type_flag == 2:
+    #             print "two"
+    #             return render_template('faculty.html')
     # else:
     return redirect(url_for('login'), code=302)
 
@@ -94,16 +94,19 @@ def login():
         email_ = json_data['email']
         pwd = json_data['password']
 
+        if g.user is not None and g.user.is_authenticated:
+            return redirect(url_for('profile'))
+
         user = User.query.filter_by(email = email_).first()
 
         if user and user.check_password(pwd):
-            session['email'] = email_
-            session['user_id'] = user.user_id
+            # session['email'] = email_
+            # session['user_id'] = user.user_id
             print "In profile redirect"
+            login_user(user)
             return redirect(url_for('profile'))
         else:
             print "IN login wala !! "
-            session['email'] = email
             return redirect(url_for('login'))
 
     if request.method == 'GET':
@@ -194,27 +197,20 @@ def forgotPassword():
             }
             return context
 
-
 # @view(app, '/profile', render_html('profile.html'))
 # @view(app, '/profile', render_json)
 @app.route('/profile', methods=['GET'])
-# @template_or_json('profile.html')
+@template_or_json('profile.html')
 def profile():
-    if session :
-        user = User.query.filter_by(email = (session['email'])).first()
 
-    if user is None:
+    if g is None:
         return redirect(url_for('signup'))
     else:
-        return jsonify({'username' : user.name, 'link' : '/profile'})
+        return jsonify({'redirect': 'True', 'link' : '/profile'})
 
 @app.route('/logout')
 def logout():
-
-    if 'email' not in session:
-        return redirect(url_for('login'))
-
-    session.pop('email', None)
+    logout_user()
     return redirect(url_for('home'))
 # @app.route('/user/<int:user_id>' methods = ['GET'])
 # @auth.login_required

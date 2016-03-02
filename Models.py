@@ -13,31 +13,50 @@ from functools import wraps
 db = SQLAlchemy()
 #User Model
 class User(db.Model):
-  __tablename__ = 'db_user'
-  user_id = db.Column(db.Integer, primary_key = True)
-  name = db.Column(db.String(30))
-  email = db.Column(db.String(100), unique=True)
-  password = db.Column(db.String(128))
-  link_to_dp = db.Column(db.String(1000))
-  type_flag = db.Column(db.Integer)
-  DOB = db.Column(db.String(1000))
+    __tablename__ = 'db_user'
+    user_id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(30))
+    email = db.Column(db.String(100), unique=True)
+    password = db.Column(db.String(128))
+    link_to_dp = db.Column(db.String(1000))
+    type_flag = db.Column(db.Integer)
+    DOB = db.Column(db.String(1000))
 
-  def __init__(self, name, email, password, link_to_dp, type_flag_, dob):
-    self.name = name.title()
-    self.email = email.lower()
-    self.set_password(password)
-    self.link_to_dp = link_to_dp
-    self.type_flag = type_flag_
-    self.DOB = dob
+    def __init__(self, name, email, password, link_to_dp, type_flag_, dob):
+        self.name = name.title()
+        self.email = email.lower()
+        self.set_password(password)
+        self.link_to_dp = link_to_dp
+        self.type_flag = type_flag_
+        self.DOB = dob
 
-  def set_password(self, password_):
-    self.password = generate_password_hash(password_)
+    def set_password(self, password_):
+        self.password = generate_password_hash(password_)
 
-  def check_password(self, password_):
-    return check_password_hash(self.password, password_)
+    def check_password(self, password_):
+        return check_password_hash(self.password, password_)
 
 
-# Lecture Model
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        try:
+            return unicode(self.user_id)  # python 2
+        except NameError:
+            return str(self.user_id)  # python 3
+
+#           Lecture Model
 class Lecture(db.Model):
     __tablename__ = 'db_Lecture'
     Lecture_Id = db.Column(db.Integer, primary_key = True)
@@ -64,18 +83,18 @@ class Test(db.Model):
 
 # Student Model
 class Student(db.Model):
-  __tablename__ = 'db_Student'
-  Student_Id = db.Column(db.Integer , db.ForeignKey(User.user_id), primary_key = True)
-  Performance_Sheet = db.relationship('Performance_Sheet' , backref = 'Student' , lazy = 'dynamic')
+    __tablename__ = 'db_Student'
+    Student_Id = db.Column(db.Integer , db.ForeignKey(User.user_id), primary_key = True)
+    Performance_Sheet = db.relationship('Performance_Sheet' , backref = 'Student' , lazy = 'dynamic')
 
 
 # Faculty Model
 class Faculty(db.Model):
-  __tablename__ = 'db_Faculty'
-  Faculty_Id = db.Column(db.Integer , db.ForeignKey(User.user_id), primary_key = True)
+    __tablename__ = 'db_Faculty'
+    Faculty_Id = db.Column(db.Integer , db.ForeignKey(User.user_id), primary_key = True)
 
-  def __init__(self,facid):
-      self.Faculty_Id = facid
+    def __init__(self,facid):
+        self.Faculty_Id = facid
 
 
 # Admin Model
@@ -180,4 +199,4 @@ class Notice(db.Model):
 
     def __init__(self, cid, msg):
         self.message = msg
-        self.c_id = cid
+        self.c_id= cid
