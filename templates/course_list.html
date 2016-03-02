@@ -87,12 +87,12 @@ var SearchExample = React.createClass({
 
         if ( searchString.length ) {
             libraries = libraries.filter(function( lib ) {
-                return lib.name.toLowerCase().match( searchString );
+                return lib.course_name.toLowerCase().match( searchString ) || lib.course_id.toString().toLowerCase().match( searchString );
             });
         }
 
         var librariesList = libraries.map(function( lib ) {
-            return <li>{lib.name} <a href={lib.url} title={lib.name}>{lib.url}</a></li>;
+            return <li>{lib.course_id}. {lib.course_name}</li>;
         });
 
         return (
@@ -110,48 +110,33 @@ var SearchExample = React.createClass({
 
     }
 });
-// $("#status").html('waiting...');
-// $(document).onload(function(){
-// function myfunc(json) {
-//   alert(json);
-// }
+
 var libraries = [];
 $.ajax({
     url: 'http://127.0.0.1:5000/allcourses',
     contentType:'application/json',
     type: 'GET',
     success: function(response) {
-        console.log(response);
-        for(var i = 0; i<response.length;i++)
+        // console.log(response);
+        for(var i = 0; i<response['json_data'].length;i++)
         {
-          libraries.push({course_id: response[i]['course_id'], course_name: response[i]['course_name']});
+          libraries.push({course_id: response['json_data'][i]['course_id'], course_name: response['json_data'][i]['course_name']});
+
         }
+		console.log("haha");
+		console.log(libraries)
+		React.renderComponent(
+		    <SearchExample items={libraries} />,
+		    document.body
+		);
     },
     error: function(error) {
         console.log(error);
     },
 });
+// var abc = libraries;
+console.log("yo");
+console.log(libraries);
 
-var libraries = [
-    { name: 'Backbone.js', url: 'http://documentcloud.github.io/backbone/'},
-    { name: 'AngularJS', url: 'https://angularjs.org/'},
-    { name: 'jQuery', url: 'http://jquery.com/'},
-    { name: 'Prototype', url: 'http://www.prototypejs.org/'},
-    { name: 'React', url: 'http://facebook.github.io/react/'},
-    { name: 'Ember', url: 'http://emberjs.com/'},
-    { name: 'Knockout.js', url: 'http://knockoutjs.com/'},
-    { name: 'Dojo', url: 'http://dojotoolkit.org/'},
-    { name: 'Mootools', url: 'http://mootools.net/'},
-    { name: 'Underscore', url: 'http://documentcloud.github.io/underscore/'},
-    { name: 'Lodash', url: 'http://lodash.com/'},
-    { name: 'Moment', url: 'http://momentjs.com/'},
-    { name: 'Express', url: 'http://expressjs.com/'},
-    { name: 'Koa', url: 'http://koajs.com/'},
-];
-
-React.renderComponent(
-    <SearchExample items={libraries} />,
-    document.body
-);
 </script>
 </html>

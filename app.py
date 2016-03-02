@@ -327,7 +327,7 @@ def getAllCourses():
     j = Course.query.all()
     d = jsonify(json_data = [i.serialize for i in j])
     # d = "abc"
-    return "myfunc(" + d + ")"
+    return d
 
 
 # API to get list of all courses of a faculty
@@ -364,32 +364,9 @@ def getStudentNotices():
 
 
 # API for listing
-@app.route('/listcourses', methods = ['GET','POST'])
+@app.route('/listcourses', methods = ['GET'])
 def list_course():
     return render_template('course_list.html')
-    # if request.method == 'POST':
-    #     j = Course.query.all()
-    #     d = jsonify(json_data = [i.serialize for i in j])
-    #     return d
-    # #     json_data = request.get_json(force=True)
-    # #     if not json_data:
-    # #         print("error")
-    # #         return redirect(url_for('search_course'))
-    # #     cid = json_data['course_id']
-    # #
-    # #     course = Course.query.filter_by(course_id = cid).first()
-    # #
-    # #     if course:
-    # #         session['course_id'] = cid
-    # #         return redirect(url_for('course_home'))
-    # #     else:
-    # #         return redirect(url_for('search_course'))
-    # #         # session['email'] = email
-    #
-    # if request.method == 'GET':
-    #
-    #     # d = "abc"
-
 
 
 if __name__ == "__main__":
