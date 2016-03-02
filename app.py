@@ -325,7 +325,9 @@ def approve():
 @app.route('/allcourses')
 def getAllCourses():
     j = Course.query.all()
-    return jsonify(json_data = [i.serialize for i in j])
+    d = jsonify(json_data = [i.serialize for i in j])
+    # d = "abc"
+    return "myfunc(" + d + ")"
 
 
 # API to get list of all courses of a faculty
@@ -356,30 +358,38 @@ def getStudentNotices():
         p = c.course_id
         enrolled_courses.append(p)
 
-    return jsonify(json_data = [i.serialize for i in Notice.query.all() if i.c_id in enrolled_courses])
+    d = jsonify(json_data = [i.serialize for i in Notice.query.all() if i.c_id in enrolled_courses])
+    # d = "a"
+    return d
 
 
 # API for listing
 @app.route('/listcourses', methods = ['GET','POST'])
 def list_course():
+    return render_template('course_list.html')
     # if request.method == 'POST':
-    #     json_data = request.get_json(force=True)
-    #     if not json_data:
-    #         print("error")
-    #         return redirect(url_for('search_course'))
-    #     cid = json_data['course_id']
+    #     j = Course.query.all()
+    #     d = jsonify(json_data = [i.serialize for i in j])
+    #     return d
+    # #     json_data = request.get_json(force=True)
+    # #     if not json_data:
+    # #         print("error")
+    # #         return redirect(url_for('search_course'))
+    # #     cid = json_data['course_id']
+    # #
+    # #     course = Course.query.filter_by(course_id = cid).first()
+    # #
+    # #     if course:
+    # #         session['course_id'] = cid
+    # #         return redirect(url_for('course_home'))
+    # #     else:
+    # #         return redirect(url_for('search_course'))
+    # #         # session['email'] = email
     #
-    #     course = Course.query.filter_by(course_id = cid).first()
+    # if request.method == 'GET':
     #
-    #     if course:
-    #         session['course_id'] = cid
-    #         return redirect(url_for('course_home'))
-    #     else:
-    #         return redirect(url_for('search_course'))
-    #         # session['email'] = email
+    #     # d = "abc"
 
-    if request.method == 'GET':
-        return render_template('course_list.html')
 
 
 if __name__ == "__main__":
