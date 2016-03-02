@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <!-- Custom styles for this template -->
     <link href="../static/css/base.css" rel="stylesheet">
-    <link href="../static/css/signup.css" rel="stylesheet">
+    <link href="../static/css/course_list.css" rel="stylesheet">
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -25,31 +25,25 @@
 
 </head>
 <body>
-    <div class="main">
+<script src="http://fb.me/react-0.10.0.min.js"></script>
 
-        <form>
-            <div class="lable-2">
-				<input type="text" class="text" id="inputName" value="Your Name" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Your Name ';}">
-                <input type="text" class="text" id="inputEmail" value="your@email.com " onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'your@email.com ';}">
-				<input type="date" class="text" id="inputDOB" value="1900-01-01" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '1900-01-01';}">
-                <input type="password" class="text" id="inputPassword" value="Password " onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password ';}">
-				<input type="radio" class="text" name="inputUserType" id="inputUserType" value="student" checked> Student
-				<input type="radio" class="text" name="inputUserType" id="inputUserType" value="faculty"> Faculty
+<!-- <script>
+  (function() {
+  var tag = document.querySelector(
+    'script[type="application/javascript;version=1.7"]'
+  );
+  if (!tag || tag.textContent.indexOf('window.onload=function(){') !== -1) {
+    alert('Bad JSFiddle configuration, please fork the original React JSFiddle');
+  }
+  tag.setAttribute('type', 'text/babel');
+  tag.textContent = tag.textContent.replace(/^\/\/<!\[CDATA\[/, '');
+  })();
+</script> -->
 
-            </div>
-			<br>
-            <h3 style="margin-top:20px"> By creating an account, you agree to our <span class="term"><a href="#">Terms & Conditions</a></span></h3>
-            <div class="submit">
-                <input type="submit" id="btnSignUp" value="Create account" >
-            </div>
-            <div class="clear"> </div>
-        </form>
-        <!-----//end-main---->
-    </div>
-
+<div id="container">
+    <!-- This element's contents will be replaced with your component. -->
+</div>
 </body>
-
-<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -59,6 +53,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="../static/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
-<script src="../static/js/signup.js"></script>
-</body>
+<script type="text/jsx" src="../static/js/course_list.js"></script>
+
 </html>

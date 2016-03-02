@@ -325,8 +325,6 @@ def approve():
 @app.route('/allcourses')
 def getAllCourses():
     j = Course.query.all()
-    for notice in j.notices :
-        print notice 
     return jsonify(json_data = [i.serialize for i in j])
 
 
@@ -360,6 +358,28 @@ def getStudentNotices():
 
     return jsonify(json_data = [i.serialize for i in Notice.query.all() if i.c_id in enrolled_courses])
 
+
+# API for listing
+@app.route('/listcourses', methods = ['GET','POST'])
+def list_course():
+    # if request.method == 'POST':
+    #     json_data = request.get_json(force=True)
+    #     if not json_data:
+    #         print("error")
+    #         return redirect(url_for('search_course'))
+    #     cid = json_data['course_id']
+    #
+    #     course = Course.query.filter_by(course_id = cid).first()
+    #
+    #     if course:
+    #         session['course_id'] = cid
+    #         return redirect(url_for('course_home'))
+    #     else:
+    #         return redirect(url_for('search_course'))
+    #         # session['email'] = email
+
+    if request.method == 'GET':
+        return render_template('course_list.html')
 
 
 if __name__ == "__main__":
