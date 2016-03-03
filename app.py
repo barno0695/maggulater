@@ -64,47 +64,6 @@ def template_or_json(template=None):
         return decorated_fn
     return decorated
 
-def render_html(template, **defaults):
-    def wrapped(result):
-        variables = defaults.copy()
-        variables.update(result)
-        return render_template(template, **variables)
-    return wrapped
-
-def view(self, url, renderer=None, *args, **kwargs):
-    super_route = self.route
-
-    defaults = kwargs.pop('defaults', {})
-    route_id = object()
-    defaults['_route_id'] = route_id
-
-    def deco(f):
-        @super_route(url, defaults=defaults, *args, **kwargs)
-        @wraps(f)
-        def decorated_function(*args, **kwargs):
-            this_route = kwargs.get('_route_id')
-            if not getattr(f, 'is_route', False):
-                del kwargs['_route_id']
-
-            result = f(*args, **kwargs)
-
-            if this_route is not route_id:
-                return result
-
-            # catch redirects.
-            if isinstance(result, (app.response_class,
-                                   BaseResponse)):
-                return result
-
-            if renderer is None:
-                return result
-            return renderer(result)
-
-        decorated_function.is_route = True
-        return decorated_function
-
-    return deco
-
 
 # Home API
 @app.route("/" , methods = ['GET', 'POST'])
@@ -137,10 +96,14 @@ def login():
         email_ = json_data['email']
         pwd = json_data['password']
 
+        print email_, pwd
+
         if g.user is not None and g.user.is_authenticated:
+            print "shouldnt hppen"
             return redirect(url_for('profile'))
 
         user = User.query.filter_by(email = email_).first()
+        print "IN LOGIN"
 
         if user and user.check_password(pwd):
             # session['email'] = email_
@@ -153,6 +116,7 @@ def login():
             return redirect(url_for('login'))
 
     if request.method == 'GET':
+        print "get h"
         return render_template('login.html')
 
 
@@ -184,15 +148,15 @@ def add_user():
 
         user = User.query.filter_by(email = (session['email'])).first()
         if flag == 2:
-            newfac = Faculty(user.id)
+            newfac = Faculty(user.user_id)
             db.session.add(newfac)
             db.session.commit()
         elif flag == 0:
-            newadm = Admin(user.id)
+            newadm = Admin(user.user_id)
             db.session.add(newadm)
             db.session.commit()
         elif flag == 1:
-            newst = Student(user.id)
+            newst = Student(user.user_id)
             db.session.add(newst)
             db.session.commit()
 
@@ -240,16 +204,14 @@ def forgotPassword():
             }
             return context
 
-# @view(app, '/profile', render_html('profile.html'))
-# @view(app, '/profile', render_json)
-@app.route('/profile', methods=['GET'])
+
+@app.route('/profile', methods=['GET', 'POST'])
 @template_or_json('profile.html')
 def profile():
-
     if g is None:
         return redirect(url_for('signup'))
     else:
-        return jsonify({'redirect': 'True', 'link' : '/profile'})
+        return ({'redirect': 'True', 'link' : '/profile'})
 
 @app.route('/logout')
 def logout():
