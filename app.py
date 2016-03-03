@@ -82,7 +82,8 @@ def home():
     #             return render_template('faculty.html')
     # else:
 
-    return redirect(url_for('login'), code=302)
+    # return redirect(url_for('login'), code=302)
+    return render_template('index.html')
 
 
 # API for login
