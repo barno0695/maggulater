@@ -358,6 +358,37 @@ def list_course():
     return render_template('course_list.html')
 
 
+# API for adding a lecture
+@app.route('/addLecture', methods = ['GET' , 'POST'])
+def addLecture():
+    if request.method == 'POST' :
+        json_data = result.get_json(force = True)
+        # course_id = json_data['Course_Id']
+        course_id = session['course_id']
+        notes = json_data['Notes']
+        Date_Time = json_data['Date_Time']
+        Topic = json_data['Topic']
+        Link = json_data['Link']
+        # course_id = 1
+        # notes = "abc"
+        # Date_Time = "2012-12-12"
+        # Topic = "topic"
+        # link = "link"
+        NewLec = Lecture(course_id, Date_Time, Topic)
+        NewLec.setNotes(notes)
+        NewLec.setLink(Link)
+        db.session.add(NewLec)
+        Lecture_Id= NewLec.Lecture_Id
+        Questions = json_data['Questions']
+        Answers = json_data['Answers']
+        # Questions = "q"
+        # Answers = "a"
+        NewTest = Test(Lecture_Id, Questions, Answers)
+        db.session.add(NewTest)
+        db.session.commit()
+        return redirect(url_for('course_home'))
+
+
 if __name__ == "__main__":
     app.secret_key = "shubham12345"
     app.run(host="0.0.0.0", port = 5000, debug=True, threaded=True)
