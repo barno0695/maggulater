@@ -1,10 +1,14 @@
 function timeout(ms, promise) {
     return new Promise(function(resolve, reject) {
         setTimeout(function() {
-            reject(new Error("timeout"))
-        }, ms)
-        promise.then(resolve, reject)
-    })
+            console.log("successfully resolving");
+            resolve();
+        }, ms);
+        setTimeout(function() {
+            console.log("rejecting the promise");
+            reject();
+        }, 2*ms);
+    });
 }
 
 

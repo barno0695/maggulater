@@ -26,12 +26,10 @@
 //
 // console.log(result);
 
-var result = fetch('http://127.0.0.1:5000/allcourses').then(function(response) {
-  console.log(response.headers.get('Content-Type'))
-  console.log(response.headers.get('Date'))
-  console.log(response.status)
-  console.log(response.statusText)
-})
-
-
-console.log(result);
+fetch('http://127.0.0.1:5000/allcourses').then(function(response) {
+    return response.json()
+  }).then(function(json) {
+    console.log('parsed json', json)
+  }).catch(function(ex) {
+    console.log('parsing failed', ex)
+  })
