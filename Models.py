@@ -81,60 +81,6 @@ class User(db.Model):
         return [ item.serialize for item in self.many2many]
 
 
-# Lecture Model
-class Lecture(db.Model):
-    __tablename__ = 'db_Lecture'
-    Lecture_Id = db.Column(db.Integer, primary_key = True)
-    Notes = db.Column(db.Text)
-    Date_Time = db.Column(db.DateTime)
-    Topic = db.Column(db.Text)
-    Test = db.relationship('Test', backref = 'Lecture' , lazy = 'dynamic')
-
-    # Initialization func
-    def __init__ (self, lec_id, notes , timestamp , topic):
-        self.Lecture_Id = lec_id
-        self.Notes = notes
-        self.Date_Time = timestamp
-        self.Topic = topic
-
-    @property
-    def serialize(self):
-        return {
-            'Lecture_Id' : self.Lecture_Id,
-            'Notes' : self.Notes ,
-            'Date_Time' : self.Date_Time,
-            'Topic' : self.Topic,
-        }
-
-    @property
-    def serialize_many2many(self):
-        return [item.serialize for item in self.many2many]
-
-
-
-# Test Model
-class Test(db.Model):
-    __tablename__ = 'db_Test'
-    Test_Id = db.Column(db.Integer, primary_key = True)
-    Lecture_Id = db.Column(db.Integer, db.ForeignKey(Lecture.Lecture_Id))
-    Question_Paper = db.relationship('Question', backref = 'Test' , lazy = 'dynamic')
-
-    def __init__ (self, test_id , lec_id ):
-        self.Test_Id = test_id
-        self.Lecture_Id = lec_id
-
-    @property
-    def serialize(self):
-        return {
-            'Test_Id' : self.Test_Id,
-            'Lecture_Id' : self.Lecture_Id
-        }
-
-    @property
-    def serialize_many2many(self):
-        return [item.serialize for item in self.many2many]
-
-
 
 # Student Model
 class Student(db.Model):
@@ -219,70 +165,6 @@ class Admin(db.Model):
 
 
 
-# Question Model
-class Question(db.Model):
-    __tablename__ = 'db_Questions'
-    Question_Id = db.Column(db.Integer, db.ForeignKey(Test.Lecture_Id))
-    text = db.Column(db.String(200) , primary_key = True)
-    answ = db.Column(db.String(200))
-
-    def __init__ (self , qtext ,qansw):
-        self.text = qtext
-        self.answ = qansw
-
-    @property
-    def serialize(self):
-        """Return object data in easily serializeable format"""
-        return {
-            'Question_Id' : self.Question_Id,
-            'text' : self.text,
-            'answ' : self.answ
-            # This is an example how to deal with Many2Many relations
-            #    'many2many'  : self.serialize_many2many
-        }
-    @property
-    def serialize_many2many(self):
-        """
-        Return object's relations in easily serializeable format.
-        NB! Calls many2many's serialize property.
-        """
-        return [ item.serialize for item in self.many2many]
-
-
-
-#Performance Model
-class Performance_Sheet(db.Model):
-    __tablename__ = 'db_Performance_Sheet'
-    Student_Id = db.Column(db.Integer , db.ForeignKey(Student.Student_Id) , primary_key = True)
-    Test_Id = db.Column(db.Integer , db.ForeignKey(Test.Test_Id), primary_key = True)
-    Marks_Obtained = db.Column(db.Float)
-    Marks_Total = db.Column(db.Float)
-
-    def __init__(self, sid, tid, mark_obt, mark_tot):
-        self.Student_Id = sid
-        self.Test_Id = tid
-        self.Marks_Obtained = mark_obt
-        self.Marks_Total = mark_tot
-
-    @property
-    def serialize(self):
-       """Return object data in easily serializeable format"""
-       return {
-           'Student_Id' : self.Student_Id,
-           'Test_Id' : self.Test_Id,
-           'Marks_Obtained' : self.Marks_Obtained,
-           'Marks_Total' : self.Marks_Total
-           # This is an example how to deal with Many2Many relations
-        #    'many2many'  : self.serialize_many2many
-       }
-    @property
-    def serialize_many2many(self):
-       """
-       Return object's relations in easily serializeable format.
-       NB! Calls many2many's serialize property.
-       """
-       return [ item.serialize for item in self.many2many]
-
 
 # Course Table
 class Course(db.Model):
@@ -328,6 +210,131 @@ class Course(db.Model):
        NB! Calls many2many's serialize property.
        """
        return [ item.serialize for item in self.many2many]
+
+
+
+
+
+# Lecture Model
+class Lecture(db.Model):
+    __tablename__ = 'db_Lecture'
+    Lecture_Id = db.Column(db.Integer, primary_key = True)
+    Course_Id = db.Column(db.Integer, db.ForeignKey(Course.course_id))
+    Notes = db.Column(db.Text)
+    Date_Time = db.Column(db.DateTime)
+    Topic = db.Column(db.Text)
+    Test = db.relationship('Test', backref = 'Lecture' , lazy = 'dynamic')
+
+    # Initialization func
+    def __init__ (self, course_id, notes , timestamp , topic):
+        self.Course_Id = course_id
+        self.Notes = notes
+        self.Date_Time = timestamp
+        self.Topic = topic
+
+    @property
+    def serialize(self):
+        return {
+            'Lecture_Id' : self.Lecture_Id,
+            'Notes' : self.Notes ,
+            'Date_Time' : self.Date_Time,
+            'Topic' : self.Topic,
+        }
+
+    @property
+    def serialize_many2many(self):
+        return [item.serialize for item in self.many2many]
+
+# Test Model
+class Test(db.Model):
+    __tablename__ = 'db_Test'
+    Test_Id = db.Column(db.Integer, primary_key = True)
+    Lecture_Id = db.Column(db.Integer, db.ForeignKey(Lecture.Lecture_Id))
+    Question_Paper = db.relationship('Question', backref = 'Test' , lazy = 'dynamic')
+
+    def __init__ (self, test_id , lec_id ):
+        self.Test_Id = test_id
+        self.Lecture_Id = lec_id
+
+    @property
+    def serialize(self):
+        return {
+            'Test_Id' : self.Test_Id,
+            'Lecture_Id' : self.Lecture_Id
+        }
+
+    @property
+    def serialize_many2many(self):
+        return [item.serialize for item in self.many2many]
+
+
+# Question Model
+class Question(db.Model):
+    __tablename__ = 'db_Questions'
+    Question_Id = db.Column(db.Integer, db.ForeignKey(Test.Lecture_Id))
+    text = db.Column(db.String(200) , primary_key = True)
+    answ = db.Column(db.String(200))
+
+    def __init__ (self , qtext ,qansw):
+        self.text = qtext
+        self.answ = qansw
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'Question_Id' : self.Question_Id,
+            'text' : self.text,
+            'answ' : self.answ
+            # This is an example how to deal with Many2Many relations
+            #    'many2many'  : self.serialize_many2many
+        }
+    @property
+    def serialize_many2many(self):
+        """
+        Return object's relations in easily serializeable format.
+        NB! Calls many2many's serialize property.
+        """
+        return [ item.serialize for item in self.many2many]
+
+
+
+
+
+
+#Performance Model
+class Performance_Sheet(db.Model):
+    __tablename__ = 'db_Performance_Sheet'
+    Student_Id = db.Column(db.Integer , db.ForeignKey(Student.Student_Id) , primary_key = True)
+    Test_Id = db.Column(db.Integer , db.ForeignKey(Test.Test_Id), primary_key = True)
+    Marks_Obtained = db.Column(db.Float)
+    Marks_Total = db.Column(db.Float)
+
+    def __init__(self, sid, tid, mark_obt, mark_tot):
+        self.Student_Id = sid
+        self.Test_Id = tid
+        self.Marks_Obtained = mark_obt
+        self.Marks_Total = mark_tot
+
+    @property
+    def serialize(self):
+       """Return object data in easily serializeable format"""
+       return {
+           'Student_Id' : self.Student_Id,
+           'Test_Id' : self.Test_Id,
+           'Marks_Obtained' : self.Marks_Obtained,
+           'Marks_Total' : self.Marks_Total
+           # This is an example how to deal with Many2Many relations
+        #    'many2many'  : self.serialize_many2many
+       }
+    @property
+    def serialize_many2many(self):
+       """
+       Return object's relations in easily serializeable format.
+       NB! Calls many2many's serialize property.
+       """
+       return [ item.serialize for item in self.many2many]
+
 
 
 # Enrolls relationship
