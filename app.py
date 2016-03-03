@@ -33,6 +33,7 @@ with app.app_context():
     db.create_all()
 
 
+
 @app.before_request
 def before_request():
     g.user = current_user
@@ -68,22 +69,7 @@ def template_or_json(template=None):
 # Home API
 @app.route("/" , methods = ['GET', 'POST'])
 def home():
-    # if session:
-    #     # user = User.query.filter_by(email = (session['email'])).first()
-    #     if user:
-    #         if user.type_flag == 0:
-    #             print "Zero"
-    #             return render_template('admin.html')
-    #         elif user.type_flag == 1:
-    #             print "One"
-    #             return render_template('student.html')
-    #         elif user.type_flag == 2:
-    #             print "two"
-    #             return render_template('faculty.html')
-    # else:
-
-    # return redirect(url_for('login'), code=302)
-    return render_template('index.html')
+    return render_template('login.html')
 
 
 # API for login
@@ -108,9 +94,10 @@ def login():
 
         if user and user.check_password(pwd):
             # session['email'] = email_
-            # session['user_id'] = user.user_id
+            session['user_id'] = user.user_id
+            USERID = user.user_id
+            session.modified = True
             print "In profile redirect"
-            login_user(user)
             return redirect(url_for('profile'))
         else:
             print "IN login wala !! "
