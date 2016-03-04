@@ -75,7 +75,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
-# AUTH_USER_MODEL = 'maggulater.User'
 
 
 # Database

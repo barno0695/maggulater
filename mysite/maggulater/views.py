@@ -3,11 +3,13 @@ from django.http import HttpResponse
 import json
 from django.core.context_processors import csrf
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.contrib.auth.models import User
 from models import *
 # Create your views here.
 
 
 def home(request):
+
 	print "Here in chota wala home "
 	return render(request, "maggulater/login.html")
 
@@ -26,8 +28,10 @@ def login(request):
 			print "hehehehe"
 			print("error")
 			return redirect('/login/')
+
 		json_data = json.loads(json_data)
 		print json_data
+
 		email_ = json_data['email']
 		pwd = json_data['password']
 		print email_, pwd
@@ -56,14 +60,27 @@ def login(request):
 
 
 def signUp(request):
-	return HttpResponse("In the sigup wala")
-	# if request.method == "POST" :
-	# 	json_data = request.get_json(force = True)
 
-	# args = {}
-	# args.update(csrf(request))
-	# args['form'] = UserCreationForm()
-	# return render_to_response('login_register/register.html', args	)
+	if request.method == 'POST':
+		json_data = request.body
+		json_data = json.loads(json_data)
+		name = json_data['name']
+		email = json_data['email']
+		# link_to_dp = json_data['link_to_dp']
+		link_to_dp = "link"
+		type_flag = json_data['flag']
+		dob = json_data['dob']
+		password = json_data['password']
+		user = MyUser(name = name, email = email, link_to_dp = link_to_dp , type_flag = type_flag , dob = dob)
+		hashed_pass = user.make_password(password)
+		user.set_password(password)
+		user.save()
+		duser = User.objects.create_user(name,email,password)
+		print "Created Users succesfully"
+		return redirect('/login/')
+
+	if request.method == 'GET':
+		return render(request, 'maggulater/signup.html')
 
 def profile(request):
 	# print "Here in chota wala home "

@@ -13,7 +13,6 @@ class MyUser(models.Model):
 	type_flag = models.IntegerField(default = 1)
 	dob = models.CharField(max_length = 100)
 	password = models.CharField(max_length = 100)
-
 	def make_password(self ,password):
 		assert password
 		hashedpassword = hashlib.md5(password).hexdigest()
