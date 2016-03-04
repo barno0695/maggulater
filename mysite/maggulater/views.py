@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse , HttpResponseRedirect
 import json
 from django.core.context_processors import csrf
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.models import User
 from models import *
+from django.core.urlresolvers import reverse 
+
 # Create your views here.
 
 
@@ -49,22 +51,22 @@ def login(request):
 
 def signUp(request):
 	if request.method == 'POST':
-		json_data = request.body
-		json_data = json.loads(json_data)
-		name = json_data['name']
-		email = json_data['email']
-		# link_to_dp = json_data['link_to_dp']
-		link_to_dp = "link"
-		type_flag = json_data['flag']
-		dob = json_data['dob']
-		password = json_data['password']
-		user = MyUser(name = name, email = email, link_to_dp = link_to_dp , type_flag = type_flag , dob = dob)
-		hashed_pass = user.make_password(password)
-		user.set_password(password)
-		user.save()
-		duser = User.objects.create_user(name,email,password)
-		print "Created Users succesfully"
-		return redirect('/login/')
+		# json_data = request.body
+		# json_data = json.loads(json_data)
+		# name = json_data['name']
+		# email = json_data['email']
+		# # link_to_dp = json_data['link_to_dp']
+		# link_to_dp = "link"
+		# type_flag = json_data['flag']
+		# dob = json_data['dob']
+		# password = json_data['password']
+		# user = MyUser(name = name, email = email, link_to_dp = link_to_dp , type_flag = type_flag , dob = dob)
+		# hashed_pass = user.make_password(password)
+		# user.set_password(password)
+		# user.save()
+		# duser = User.objects.create_user(name,email,password)
+		# print "Created Users succesfully"
+		return HttpResponseRedirect('/login/')
 	
 	if request.method == 'GET':
 		return render(request, 'maggulater/signup.html')
