@@ -5,7 +5,7 @@ from django.db import models
 
 # Create your models here.
 
-class User(models.Model):
+class MyUser(models.Model):
 	user_id = models.AutoField(primary_key = True)
 	name = models.CharField(max_length = 100)
 	email = models.EmailField(unique = True)
@@ -13,7 +13,6 @@ class User(models.Model):
 	type_flag = models.IntegerField(default = 1)
 	dob = models.CharField(max_length = 100)
 	password = models.CharField(max_length = 100)
-
 	def make_password(self ,password):
 		assert password
 		hashedpassword = hashlib.md5(password).hexdigest()
@@ -23,3 +22,4 @@ class User(models.Model):
 		return self.password == hashed
 	def set_password(self, password):
 		self.password = password
+
