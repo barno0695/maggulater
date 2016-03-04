@@ -1,27 +1,30 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-import json 
+import json
+from django.core.context_processors import csrf
+from django.views.decorators.csrf import ensure_csrf_cookie
 # Create your views here.
 
 
 def home(request):
 	print "Here in chota wala home "
-	return render(request, "maggulater/index.html")
+	return render(request, "maggulater/login.html")
 
 def Home(request):
 	print "Here in home"
 	return HttpResponse("Home sweet Home !!")
 
-
+@ensure_csrf_cookie
 def login(request):
 	print "Here in Login!!!"
 	if request.method == 'POST':
 		print "yaha aaya !! "
-		json_data = request.get_json(force=True)
+		json_data = request.POST
+		print request.POST
 		if not json_data:
 			print("error")
-			return redirect(url_for('login'))
-		email_ = json_data['email']
+			return redirect('/login/')
+		email_ = json_data['email]
 		pwd = json_data['password']
 		print email_, pwd
 		# user = User.objects.all().filter(email = email_)
@@ -38,7 +41,7 @@ def login(request):
 
 	if request.method == 'GET':
 		print "get h"
-		return render(request,'maggulater/index.html')
+		return render(request,'maggulater/login.html')
 
 
 def signUp(request):
