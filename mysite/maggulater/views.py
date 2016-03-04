@@ -1,10 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import json 
+from django.views.decorators.csrf import csrf_protect
+from django.core.context_processors import csrf
+
 # Create your views here.
 
 
 def home(request):
+
 	print "Here in chota wala home "
 	return render(request, "maggulater/index.html")
 
@@ -12,7 +16,7 @@ def Home(request):
 	print "Here in home"
 	return HttpResponse("Home sweet Home !!")
 
-
+# @csrf_protect
 def login(request):
 	print "Here in Login!!!"
 	if request.method == 'POST':
@@ -38,7 +42,9 @@ def login(request):
 
 	if request.method == 'GET':
 		print "get h"
-		return render(request,'maggulater/index.html')
+		c = {}
+		c.update(csrf(request))
+		return render(request,'maggulater/index.html', c)
 
 
 def signUp(request):

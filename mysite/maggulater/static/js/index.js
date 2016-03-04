@@ -1,4 +1,5 @@
 var working = false;
+// var csrftoken = Cookies.get('csrftoken');
 $('.login').on('submit', function(e) {
     e.preventDefault();
     if (working) return;
@@ -14,6 +15,17 @@ $('.login').on('submit', function(e) {
     }
 
     console.log(user);
+    // function csrfSafeMethod(method) {
+    // // these HTTP methods do not require CSRF protection
+    // return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    // }
+    // $.ajaxSetup({
+    //     beforeSend: function(xhr, settings) {
+    //         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+    //             xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    //         }
+    //     }
+    // });
 
     fetch('http://127.0.0.1:8000/login/', {
         method: 'post',

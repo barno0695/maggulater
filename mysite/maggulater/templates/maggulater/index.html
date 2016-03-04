@@ -20,7 +20,7 @@
 <body>
 
     <div class="wrapper">
-        <form class="login">
+        <form class="login">{% csrf_token %}
             <p class="title">Log in</p>
             <input type="email" id = "inputEmail" placeholder="Email" autofocus/>
             <i class="fa fa-user"></i>
