@@ -1,13 +1,6 @@
-var working = false;
-$('.login').on('submit', function(e) {
-    e.preventDefault();
-    if (working) return;
-    working = true;
-    var $this = $(this),
-    $state = $this.find('button > .state');
-    $this.addClass('loading');
-    $state.html('Authenticating');
 
+$('#btnLogin').click(function(e) {
+    e.preventDefault();
     user = {
         'email' : $("#inputEmail").val(),
         'password' : $("#inputPassword").val(),
@@ -15,7 +8,7 @@ $('.login').on('submit', function(e) {
 
     console.log(user);
 
-    fetch('http://127.0.0.1:5000/login', {
+    fetch('http://127.0.0.1:8000/login', {
         method: 'post',
         headers: {
             'Accept': 'application/json',
@@ -28,13 +21,6 @@ $('.login').on('submit', function(e) {
         console.log(response.status)
         console.log(response.statusText)
         console.log(response)
-        $this.addClass('ok');
-        $state.html('Welcome back!');
         window.location = response.url
     })
-    setTimeout(function() {
-        // $this.addClass('ok');
-        // $state.html('Welcome back!');
-        console.log("error");
-    }, 10000);
 });
