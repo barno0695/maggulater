@@ -42,7 +42,7 @@ $('.login').on('submit', function(e) {
         type: 'POST',
         data: JSON.stringify(user),
         success: function(response) {
-            console.log("user added");
+            console.log("logged in");
         },
         error: function(error) {
             console.log(error);
