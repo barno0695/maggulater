@@ -94,9 +94,14 @@ def login():
 
         if user and user.check_password(pwd):
             # session['email'] = email_
+            currSession.query.delete()
             session['user_id'] = user.user_id
+            newsession = currSession(user.user_id,-1)
+            db.session.add(newsession)
+            db.session.commit()
             USERID = user.user_id
             session.modified = True
+            # session.save()
             print "In profile redirect"
             return redirect(url_for('profile'))
         else:
@@ -135,6 +140,9 @@ def add_user():
         db.session.commit()
 
         user = User.query.filter_by(email = (session['email'])).first()
+        newsession = currSession(user.user_id,-1)
+        db.session.add(newsession)
+        db.session.commit()
         if flag == 2:
             newfac = Faculty(user.user_id)
             db.session.add(newfac)
@@ -196,6 +204,9 @@ def forgotPassword():
 @app.route('/profile', methods=['GET', 'POST'])
 @template_or_json('profile.html')
 def profile():
+    print session
+    sess = currSession.query.first()
+    print sess.user_id
     if g is None:
         return redirect(url_for('signup'))
     else:
@@ -351,17 +362,11 @@ def list_course():
 def addLecture():
     if request.method == 'POST' :
         json_data = result.get_json(force = True)
-        # course_id = json_data['Course_Id']
         course_id = session['course_id']
         notes = json_data['Notes']
         Date_Time = json_data['Date_Time']
         Topic = json_data['Topic']
         Link = json_data['Link']
-        # course_id = 1
-        # notes = "abc"
-        # Date_Time = "2012-12-12"
-        # Topic = "topic"
-        # link = "link"
         NewLec = Lecture(course_id, Date_Time, Topic)
         NewLec.setNotes(notes)
         NewLec.setLink(Link)
@@ -369,12 +374,23 @@ def addLecture():
         Lecture_Id= NewLec.Lecture_Id
         Questions = json_data['Questions']
         Answers = json_data['Answers']
-        # Questions = "q"
-        # Answers = "a"
         NewTest = Test(Lecture_Id, Questions, Answers)
         db.session.add(NewTest)
         db.session.commit()
         return redirect(url_for('course_home'))
+
+@app.route('/getuser', methods = ['GET'])
+def getuser():
+    sess = currSession.query.first()
+    user = User.query.filter_by(user_id = sess.user_id).first()
+    return jsonify(json_data = user.serialize)
+
+
+@app.route('/getcourse', methods = ['GET'])
+def getcourse():
+    sess = currSession.query.first()
+    user = Course.query.filter_by(course_id = sess.course_id).first()
+    return jsonify(json_data = user.serialize)
 
 
 if __name__ == "__main__":

@@ -398,3 +398,31 @@ class Notice(db.Model):
        NB! Calls many2many's serialize property.
        """
        return [ item.serialize for item in self.many2many]
+
+class currSession(db.Model):
+    __tablename__ = 'db_session'
+    session_id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.user_id))
+    course_id = db.Column(db.Integer)
+
+    def __init__(self, uid, cid):
+        self.user_id = uid
+        self.course_id = cid
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'session_id' : self.session_id,
+            'user_id' : self.user_id,
+            'course_id' : self.course_id
+            # This is an example how to deal with Many2Many relations
+            #    'many2many'  : self.serialize_many2many
+        }
+    @property
+    def serialize_many2many(self):
+        """
+        Return object's relations in easily serializeable format.
+        NB! Calls many2many's serialize property.
+        """
+        return [ item.serialize for item in self.many2many]
