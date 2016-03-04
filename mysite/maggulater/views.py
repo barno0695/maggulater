@@ -24,7 +24,7 @@ def login(request):
 		if not json_data:
 			print("error")
 			return redirect('/login/')
-		email_ = json_data['email]
+		email_ = json_data['email']
 		pwd = json_data['password']
 		print email_, pwd
 		# user = User.objects.all().filter(email = email_)
@@ -44,6 +44,10 @@ def login(request):
 		return render(request,'maggulater/login.html')
 
 
+
+def faculty(request):
+	if request.method == 'GET':
+		return render(request, 'maggulater/faculty.html')
 def signUp(request):
 	return HttpResponse("In the sigup wala")
 	# if request.method == "POST" :
