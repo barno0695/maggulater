@@ -44,8 +44,9 @@ $('#btnSignUp').click(function(e) {
         data: JSON.stringify(user),
         success: function(response) {
             console.log("user added");
-            console.log(response);
-            window.open = response.link ;
+            console.log(response.url);
+            // data = JSON.parse(response) ;
+            window.location = response.url ;
         },
         error: function(error) {
             console.log(error);
