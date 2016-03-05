@@ -24,7 +24,7 @@ def login(request):
 	if request.method == 'POST':
 		print "yaha aaya !! "
 		json_data = request.body
-		print request.body
+		# print request.body
 		if not json_data:
 			response = {'status': 1, 'message': "Confirmed!!", 'url':'/login/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
@@ -32,14 +32,14 @@ def login(request):
 		print json_data
 		email_ = json_data['email']
 		pwd = json_data['password']
-		print email_, pwd
+		# print email_, pwd
 		user = MyUser.objects.get(email = email_)
 		print "IN LOGIN"
 		print user and user.check_password(pwd)
 		# print make_password(pwd)
 		if user and user.check_password(pwd):
 			request.session['id'] = user.user_id
-			print request.session
+			# print request.session
 			print "In profile redirect"
 			response = {'status': 1, 'message': "Confirmed!!", 'url':'/profile/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
@@ -79,15 +79,15 @@ def signUp(request):
 		user = MyUser.objects.get(email = email)
 		# duser = User.objects.create_user(name,email,password)
 		if type_flag == FACULTY:
-			newfac = Faculty(Faculty_Id = user.user_id)
+			newfac = Faculty(Faculty_Id = user)
 			newfac.save()
 		elif type_flag == ADMIN:
-			newadm = Admin(Admin_Id = user.user_id)
+			newadm = Admin(Admin_Id = user)
 			newadm.save()
 		elif type_flag == STUDENT:
 			print "student"
 			print user.user_id
-			newst = Student(Student_Id = user.user_id)
+			newst = Student(Student_Id = user)
 			newst.save()
 		print "Created Users succesfully"
 		response = {'status': 1, 'message': "Confirmed!!", 'url':'/login/'}
@@ -271,9 +271,12 @@ def approve(request):
 
 
 # API to get list of all courses
-def allstudentnoticesourses(request):
+def allcourses(request):
 	j = Course.objects.all()
-	d = jsonify(json_data = [i.serialize for i in j])
+	print j[0].serialize()
+	return json.dumps(j[0].serialize())
+	d = json.dumps(json_data = [i.serialize() for i in j])
+	print d
 	return d
 
 
