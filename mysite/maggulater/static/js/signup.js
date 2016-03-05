@@ -18,8 +18,8 @@
 
 
 
-$('#btnSignUp').click(function() {
-
+$('#btnSignUp').click(function(e) {
+    e.preventDefault() ;
 	// console.log($("input[name=inputUserType]:checked").val());
 	var flag = 0;
 	if($("input[name=inputUserType]:checked").val() === "student") flag = 1;
@@ -76,4 +76,5 @@ $('#btnSignUp').click(function() {
 		// $state.html('Welcome back!');
 		console.log("error");
 	}, 10000);
+
 });

@@ -75,7 +75,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
-# AUTH_USER_MODEL = 'maggulater.User'
 
 
 # Database
@@ -84,8 +83,8 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':'13CS30037',
-        'USER' : '13CS30037',
+        'NAME':'13CS30009',
+        'USER' : '13CS30009',
         'PASSWORD' : 'cse12',
         'HOST' : '10.5.18.68',
 
