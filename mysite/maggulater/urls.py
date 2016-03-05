@@ -16,6 +16,7 @@ urlpatterns = [
 	url(r'^allstudentcourses/$', views.allstudentcourses , name = 'allstudentcourses'),
 	url(r'^listfacultycourses/$', views.listfacultycourses , name = 'listfacultycourses'),
 	url(r'^liststudentcourses/$', views.liststudentcourses , name = 'liststudentcourses'),
+	url(r'^logout/$', views.logout , name = 'logout'),
 	# url(r'^index/$' , views.home, name = 'Index'),
 
 ]

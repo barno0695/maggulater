@@ -174,8 +174,8 @@ def logout(request):
 		del request.session['id']
 	except KeyError:
 		pass
-	response = {'status': 1, 'message': "Confirmed!!", 'url':'/home/'}
-	return HttpResponse(json.dumps(response), content_type='application/json')
+	print request.session
+	return render(request,'maggulater/login.html')
 
 
 def searchcourse(request):
