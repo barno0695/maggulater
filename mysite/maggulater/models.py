@@ -17,7 +17,7 @@ class MyUser(models.Model):
 		hashedpassword = hashlib.md5(password).hexdigest()
 		return hashedpassword
 	def check_password(self, password):
-		hashed = make_password(password)
+		hashed = hashlib.md5(password).hexdigest()
 		return self.password == hashed
 	def set_password(self, password):
 		self.password = password
@@ -81,10 +81,10 @@ class Lecture(models.Model):
 	Link = models.CharField(max_length = 100)
 
 	def setNotes(self , notes):
-		self.Notes = notes 
+		self.Notes = notes
 
 	def setLink(self, link):
-		self.Link = link 
+		self.Link = link
 	def serialize(self):
 		return {
 			'Lecture_Id' : self.Lecture_Id,
@@ -107,7 +107,7 @@ class Test(models.Model):
 			'Questions' : self.Questions,
 			'Answer_Sheet' : self.Answer_Sheet
 		}
-#Performance 
+#Performance
 class Performance_Sheet(models.Model):
 	Student_Id = models.ForeignKey(Student, unique = True , on_delete = models.CASCADE)
 	Test_Id = models.ForeignKey(Test ,  unique = True, on_delete = models.CASCADE)

@@ -16,32 +16,15 @@ $('.login').on('submit', function(e) {
     }
 
     console.log(user);
-    // var csrftoken = getCookie('csrftoken');
 
-    // fetch('/login/', {
-    //     method: 'post',
-    //     headers: {
-    //         'Accept': 'application/json',
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(user)
-    // }).then(function(response){
-    //     console.log(response.headers.get('Content-Type'))
-    //     console.log(response.headers.get('Date'))
-    //     console.log(response.status)
-    //     console.log(response.statusText)
-    //     console.log(response)
-    //     $this.addClass('ok');
-    //     $state.html('Welcome back!');
-    //     window.location = response.url
-    // })
     $.ajax({
         url: '/login/',
-        // dataType: 'application/json',
-        // contentType:'application/json',
+        dataType: 'json',
+        contentType:'application/json',
         type: 'POST',
         data: JSON.stringify(user),
         success: function(response) {
+            console.log(response);
             window.location = response.url;
             console.log("logged in");
         },

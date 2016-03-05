@@ -21,11 +21,6 @@ def login(request):
 		json_data = request.body
 		print request.body
 		if not json_data:
-			print "hehehehe"
-			print("error")
-			return redirect('/login/')
-
-
 			response = {'status': 1, 'message': "Confirmed!!", 'url':'/login/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
 		json_data = json.loads(json_data)
@@ -35,6 +30,8 @@ def login(request):
 		print email_, pwd
 		user = MyUser.objects.get(email = email_)
 		print "IN LOGIN"
+		print user and user.check_password(pwd)
+		# print make_password(pwd)
 		if user and user.check_password(pwd):
 			request.session['id'] = user.user_id
 			print request.session
@@ -67,7 +64,8 @@ def signUp(request):
 		password = json_data['password']
 		user = MyUser(name = name, email = email, link_to_dp = link_to_dp , type_flag = type_flag , dob = dob)
 		hashed_pass = user.make_password(password)
-		user.set_password(password)
+		print hashed_pass
+		user.set_password(hashed_pass)
 		user.save()
 		duser = User.objects.create_user(name,email,password)
 		print "Created Users succesfully"
@@ -174,7 +172,7 @@ def searchcourse(request):
 
 # API for enrolling a student in a course
 def enroll(request):
-	newenroll = Enrolls(student_id = request.session['id'],student_id = request.session['course_id'])
+	newenroll = Enrolls(student_id = request.session['id'],course_id = request.session['course_id'])
 	newenroll.save()
 	response = {'status': 1, 'message': "Confirmed!!", 'url':'/coursehome/'}
 	return HttpResponse(json.dumps(response), content_type='application/json')
@@ -304,7 +302,7 @@ def addlecture(request):
 		Lecture_Id= NewLec.Lecture_Id
 		Questions = json_data['Questions']
 		Answers = json_data['Answers']
-		NewTest = Test(Lecture_Id = ,Questions = Questions,Answers = Answers)
+		NewTest = Test(Lecture_Id = Lecture_Id,Questions = Questions,Answers = Answers)
 		NewTest.save()
 		response = {'status': 1, 'message': "Confirmed!!", 'url':'coursehome'}
 		return HttpResponse(json.dumps(response), content_type='application/json')
