@@ -240,7 +240,7 @@ def addcourse(request):
 		cid = json_data['c_id']
 		cname = json_data['course_name']
 		pre = json_data['prereq']
-		fac_id = json_data['faculty_id']
+		fac_id = request.session['id']
 		course = Course.objects.get(course_id = cid)
 
 		if course:
@@ -278,30 +278,30 @@ def approve(request):
 
 
 # API to get list of all courses
-# @ajax_request
 def allcourses(request):
 	j = Course.objects.all()
-	print j[0].serialize()
-	# print type(j[0].serialize())
-	# data = json.loads(j)
-	# print data
-	# d = json.dumps(json_data = [i.serialize() for i in j])
-	print "jhvbjfsb"
 	return HttpResponse([i.serialize() for i in j])
-	# return d
 
 
 # API to get list of all courses of a faculty
 def allfacultycourses(request):
-	request.session['id'] = 18
-	d = [i.serialize for i in Course.objects.get(faculty_id = request.session['id']).all()]
-	print d
+	j = Course.objects.all()
+	d = [i.serialize() for i in j if i.faculty_id == request.session['id']]
 	return HttpResponse(d)
 
 # API to get list of all courses of a faculty
 def allstudentcourses(request):
-	request.session['id'] = 18
-	return HttpResponse([i.serialize for i in Course.objects.get(faculty_id = request.session['id']).all()])
+	enrolled_courses = []
+	print request.session['id']
+	for c in Enrolls.objects.all():
+		print c.student_id.Student_Id.user_id
+		if c.student_id.Student_Id.user_id == request.session['id']:
+			p = c.course_id.course_id
+			enrolled_courses.append(p)
+	print enrolled_courses
+	d = [i.serialize() for i in Course.objects.all() if i.course_id in enrolled_courses]
+	print d
+	return HttpResponse(d)
 
 # API to get all notices
 def allnotices(request):
