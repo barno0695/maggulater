@@ -7,6 +7,11 @@ from django.contrib.auth.models import User
 from models import *
 from django.core.urlresolvers import reverse
 
+
+ADMIN = 0
+STUDENT = 1
+FACULTY = 2
+
 # Create your views here.
 
 def home(request):
@@ -50,8 +55,11 @@ def login(request):
 
 
 def faculty(request):
+	if 'id' in request.session.keys():
+		print "faculty_id" , request.session['id']
 	if request.method == 'GET':
 		return render(request, 'maggulater/faculty.html')
+
 def signUp(request):
 	if request.method == 'POST':
 		json_data = request.body
@@ -65,9 +73,22 @@ def signUp(request):
 		user = MyUser(name = name, email = email, link_to_dp = link_to_dp , type_flag = type_flag , dob = dob)
 		hashed_pass = user.make_password(password)
 		print hashed_pass
+		print type_flag
 		user.set_password(hashed_pass)
 		user.save()
-		duser = User.objects.create_user(name,email,password)
+		user = MyUser.objects.get(email = email)
+		# duser = User.objects.create_user(name,email,password)
+		if type_flag == FACULTY:
+			newfac = Faculty(Faculty_Id = user.user_id)
+			newfac.save()
+		elif type_flag == ADMIN:
+			newadm = Admin(Admin_Id = user.user_id)
+			newadm.save()
+		elif type_flag == STUDENT:
+			print "student"
+			print user.user_id
+			newst = Student(Student_Id = user.user_id)
+			newst.save()
 		print "Created Users succesfully"
 		response = {'status': 1, 'message': "Confirmed!!", 'url':'/login/'}
 		return HttpResponse(json.dumps(response), content_type='application/json')
@@ -78,17 +99,21 @@ def signUp(request):
 
 def profile(request):
 	print "user_id" , request.session['id']
-	return render(request, "maggulater/profile.html")
+	user = MyUser.objects.get(user_id = request.session['id'])
+	if user.type_flag == ADMIN:
+		print "ADMIN"
+		return render(request, "maggulater/admin.html")
+	if user.type_flag == STUDENT:
+		print "STUDENT"
+		return render(request, "maggulater/student.html")
+	if user.type_flag == FACULTY:
+		print "FACULTY"
+		return render(request, "maggulater/faculty.html")
 
 
 def studenthome(request):
 	print "student_id" , request.session['id']
 	return render(request , 'maggulater/student.html')
-
-
-def facultyhome(request):
-	print "faculty_id" , request.session['id']
-	return render(request , 'maggulater/faculty.html')
 
 
 def adminhome(request):
