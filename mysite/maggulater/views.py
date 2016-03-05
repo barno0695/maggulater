@@ -1,12 +1,19 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse , HttpResponseRedirect
 import json
+# import simplejson
 from django.core.context_processors import csrf
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.models import User
 from models import *
 from django.core.urlresolvers import reverse
-
+from django.core import serializers
+from django.http import JsonResponse
+# from jsonify.decorators import ajax_request
+# try:
+# from django.utils import simplejson
+# except:
+#     import simplejson as json
 
 ADMIN = 0
 STUDENT = 1
@@ -271,19 +278,30 @@ def approve(request):
 
 
 # API to get list of all courses
+# @ajax_request
 def allcourses(request):
 	j = Course.objects.all()
 	print j[0].serialize()
-	return json.dumps(j[0].serialize())
-	d = json.dumps(json_data = [i.serialize() for i in j])
-	print d
-	return d
+	# print type(j[0].serialize())
+	# data = json.loads(j)
+	# print data
+	# d = json.dumps(json_data = [i.serialize() for i in j])
+	print "jhvbjfsb"
+	return HttpResponse([i.serialize() for i in j])
+	# return d
 
 
 # API to get list of all courses of a faculty
-def facultycourses(request):
-	return jsonify(json_data = [i.serialize for i in Course.objects.get(faculty = request.session['id']).all()])
+def allfacultycourses(request):
+	request.session['id'] = 18
+	d = [i.serialize for i in Course.objects.get(faculty_id = request.session['id']).all()]
+	print d
+	return HttpResponse(d)
 
+# API to get list of all courses of a faculty
+def allstudentcourses(request):
+	request.session['id'] = 18
+	return HttpResponse([i.serialize for i in Course.objects.get(faculty_id = request.session['id']).all()])
 
 # API to get all notices
 def allnotices(request):
@@ -312,6 +330,13 @@ def allstudentnotices(request):
 def listcourses(request):
 	return render(request, 'maggulater/course_list.html')
 
+# API for listing
+def listfacultycourses(request):
+	return render(request, 'maggulater/faculty_course_list.html')
+
+# API for listing
+def liststudentcourses(request):
+	return render(request, 'maggulater/student_course_list.html')
 
 # API for adding a lecture
 def addlecture(request):
