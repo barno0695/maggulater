@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+# 'jsonify',
     'maggulater.apps.MaggulaterConfig',
     'django.contrib.admin',
     'django.contrib.auth',

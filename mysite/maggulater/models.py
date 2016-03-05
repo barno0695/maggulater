@@ -17,7 +17,9 @@ class MyUser(models.Model):
 		hashedpassword = hashlib.md5(password).hexdigest()
 		return hashedpassword
 	def check_password(self, password):
+		assert password
 		hashed = hashlib.md5(password).hexdigest()
+		print self.password, hashed
 		return self.password == hashed
 	def set_password(self, password):
 		self.password = password
