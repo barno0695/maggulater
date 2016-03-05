@@ -24,7 +24,7 @@ FACULTY = 2
 
 def home(request):
 	print "Here in home "
-	return render(request, "maggulater/login.html")
+	return render(request, "gentelella/index.html")
 
 @ensure_csrf_cookie
 def login(request):
@@ -130,6 +130,9 @@ def adminhome(request):
 	print "admin_id" , request.session['id']
 	return render(request , 'maggulater/admin.html')
 
+def index2(request):
+	# print "admin_id" , request.session['id']
+	return render(request , 'gentelella/index2.html')
 
 def parentPortal(request):
 	if request.method == 'POST' :
@@ -174,7 +177,7 @@ def forgotPassword(request):
 			# return HttpResponseRedirect(("/login/"))
 			return HttpResponse(json.dumps(response), content_type ='application/json')
 	if request.method == 'GET' :
-		return render(request, 'maggulater/forgotPassword.html')						
+		return render(request, 'maggulater/forgotPassword.html')
 
 
 def logout(request):
@@ -372,7 +375,7 @@ def addLecture(request):
 		Answers = json_data['Answers']
 		NewTest = Test(Lecture_Id = NewLec)
 		NewTest.setQuestions(Questions)
-		NewTest.setAnswers(Answers)		
+		NewTest.setAnswers(Answers)
 		NewTest.save()
 		response = {'status': 1, 'message': "Confirmed!!", 'url':'/coursehome/'}
 		return HttpResponse(json.dumps(response), content_type='application/json')
