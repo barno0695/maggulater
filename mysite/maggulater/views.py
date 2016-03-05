@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse , HttpResponseRedirect
 import json
 from django.core.context_processors import csrf
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.models import User
 from models import *
+from django.core.urlresolvers import reverse
 
+# Create your views here.
 
 def home(request):
 	print "Here in home "
