@@ -79,15 +79,15 @@ def signUp(request):
 		user = MyUser.objects.get(email = email)
 		# duser = User.objects.create_user(name,email,password)
 		if type_flag == FACULTY:
-			newfac = Faculty(Faculty_Id = user.user_id)
+			newfac = Faculty(Faculty_Id = user)
 			newfac.save()
 		elif type_flag == ADMIN:
-			newadm = Admin(Admin_Id = user.user_id)
+			newadm = Admin(Admin_Id = user)
 			newadm.save()
 		elif type_flag == STUDENT:
 			print "student"
 			print user.user_id
-			newst = Student(Student_Id = user.user_id)
+			newst = Student(Student_Id = user)
 			newst.save()
 		print "Created Users succesfully"
 		response = {'status': 1, 'message': "Confirmed!!", 'url':'/login/'}
