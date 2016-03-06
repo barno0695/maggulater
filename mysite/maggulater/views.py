@@ -1,3 +1,4 @@
+import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpResponse , HttpResponseRedirect
 import json
@@ -208,7 +209,6 @@ def searchcourse(request):
 	if request.method == 'GET':
 		return render(request , 'maggulater/student_home.html')
 
-
 # API for enrolling a student in a course
 def enroll(request):
 	newenroll = Enrolls(student_id = request.session['id'],course_id = request.session['course_id'])
@@ -346,23 +346,35 @@ def liststudentcourses(request):
 	return render(request, 'maggulater/student_course_list.html')
 
 # API for adding a lecture
-def addlecture(request):
+def addLecture(request):
 	if request.method == 'POST' :
-		json_data = result.body
+		json_data = request.body
+		print json_data
 		json_data = json.loads(json_data)
-		course_id = request.session['course_id']
+		# course_id = request.session['course_id']
+		course_id = 1
+		print json_data
 		notes = json_data['Notes']
 		Date_Time = json_data['Date_Time']
+		date = datetime.datetime.strptime(Date_Time, '%Y-%m-%d').date()
 		Topic = json_data['Topic']
 		Link = json_data['Link']
-		NewLec = Lecture(Course_Id = course_id,Date_Time = Date_Time,Topic =  Topic)
+		print "Here!!"
+		course = Course.objects.get(course_id = course_id)
+		NewLec = Lecture(Course_Id = course,Topic =  Topic)
+		print "here"
+		NewLec.setDate(date)
 		NewLec.setNotes(notes)
 		NewLec.setLink(Link)
 		NewLec.save()
 		Lecture_Id= NewLec.Lecture_Id
 		Questions = json_data['Questions']
 		Answers = json_data['Answers']
-		NewTest = Test(Lecture_Id = Lecture_Id,Questions = Questions,Answers = Answers)
+		NewTest = Test(Lecture_Id = NewLec)
+		NewTest.setQuestions(Questions)
+		NewTest.setAnswers(Answers)		
 		NewTest.save()
-		response = {'status': 1, 'message': "Confirmed!!", 'url':'coursehome'}
+		response = {'status': 1, 'message': "Confirmed!!", 'url':'/coursehome/'}
 		return HttpResponse(json.dumps(response), content_type='application/json')
+	if request.method == 'GET' :
+		return render(request, 'maggulater/addLecture.html')

@@ -79,9 +79,11 @@ class Lecture(models.Model):
 	Course_Id = models.ForeignKey(Course, on_delete =models.CASCADE)
 	Notes = models.TextField
 	Date_Time = models.DateTimeField
-	Topic = models.TextField
+	Topic = models.CharField(max_length = 100, default = "Topic Not Mentioned")
 	Link = models.CharField(max_length = 100)
 
+	def setDate(self, date):
+		self.Date_Time = date 
 	def setNotes(self , notes):
 		self.Notes = notes
 
@@ -102,6 +104,12 @@ class Test(models.Model):
 	Lecture_Id = models.ForeignKey(Lecture, on_delete = models.CASCADE)
 	Questions = models.TextField
 	Answer_Sheet = models.TextField
+
+	def setQuestions(self, Questions):
+		self.Questions = Questions
+
+	def setAnswers(self, Answers):
+		self.Answer_Sheet = Answers
 	def serialize(self):
 		return {
 			'Test_Id' : self.Test_Id,
