@@ -114,17 +114,15 @@ var SearchExample = React.createClass({
 var libraries = [];
 $.ajax({
     url: '/allstudentcourses/',
-    // dataType: 'json',
-    // contentType:'application/json',
     type: 'GET',
-    // data: JSON.stringify("yo"),
     success: function(response) {
       console.log("hahaha")
       var names = response.split("{u\'course_name\': u\'")
-
       var ids = response.split("u\'course_id\': ")
-      console.log(ids[1].split("L"));
-        // console.log(json.loads(response)['length']);
+      if(names.length <= 1)
+      {
+        libraries.push({course_id: "0", course_name: "No Courses"});
+      }
         for(var i = 1; i<names.length;i++)
         {
           cname = names[i].split("\', u\'prereq")[0]
@@ -133,7 +131,6 @@ $.ajax({
 
         }
         console.log(libraries)
-        // window.location = response.url;
         console.log("logged in");
         React.renderComponent(
     		    <SearchExample items={libraries} />,
@@ -143,50 +140,8 @@ $.ajax({
     error: function(error) {
         console.log(error);
     },
-    // beforeSend: function(xhr, settings) {
-    //     function getCookie(name) {
-    //         var cookieValue = null;
-    //         if (document.cookie && document.cookie != '') {
-    //             var cookies = document.cookie.split(';');
-    //             for (var i = 0; i < cookies.length; i++) {
-    //                 var cookie = jQuery.trim(cookies[i]);
-    //                 // Does this cookie string begin with the name we want?
-    //                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
-    //                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //         return cookieValue;
-    //     }
-    //     if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-    //         // Only send the token to relative URLs i.e. locally.
-    //         xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-    //     }
-    // }
 
 });
-// $.ajax({
-//     url: 'http://127.0.0.1:5000/allcourses',
-//     contentType:'application/json',
-//     type: 'GET',
-//     success: function(response) {
-//         for(var i = 0; i<response['json_data'].length;i++)
-//         {
-//           libraries.push({course_id: response['json_data'][i]['course_id'], course_name: response['json_data'][i]['course_name']});
-//
-//         }
-// 		console.log("haha");
-// 		console.log(libraries)
-// 		React.renderComponent(
-// 		    <SearchExample items={libraries} />,
-// 		    document.body
-// 		);
-//     },
-//     error: function(error) {
-//         console.log(error);
-//     },
-// });
 
 console.log("yo");
 console.log(libraries);

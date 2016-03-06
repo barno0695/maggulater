@@ -60,7 +60,6 @@ def login(request):
 		return render(request,'maggulater/login.html')
 
 
-
 def faculty(request):
 	if 'id' in request.session.keys():
 		print "faculty_id" , request.session['id']
@@ -105,17 +104,20 @@ def signUp(request):
 
 
 def profile(request):
-	print "user_id" , request.session['id']
-	user = MyUser.objects.get(user_id = request.session['id'])
-	if user.type_flag == ADMIN:
-		print "ADMIN"
-		return render(request, "maggulater/admin.html")
-	if user.type_flag == STUDENT:
-		print "STUDENT"
-		return render(request, "maggulater/student.html")
-	if user.type_flag == FACULTY:
-		print "FACULTY"
-		return render(request, "maggulater/faculty.html")
+	if 'id' in request.session.keys():
+		print "user_id" , request.session['id']
+		user = MyUser.objects.get(user_id = request.session['id'])
+		if user.type_flag == ADMIN:
+			print "ADMIN"
+			return render(request, "maggulater/admin.html")
+		if user.type_flag == STUDENT:
+			print "STUDENT"
+			return render(request, "maggulater/student.html")
+		if user.type_flag == FACULTY:
+			print "FACULTY"
+			return render(request, "maggulater/faculty.html")
+	else :
+		return redirect('/login/')
 
 
 def studenthome(request):
@@ -143,7 +145,7 @@ def parentPortal(request):
 			response = {'status': 1, 'message': "Confirmed!!", 'url':'/parentPortal/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
 		else:
-			Performance = Performance_Sheet.objects.get(Student_Id = user.user_id)
+			Performance = Performance_Sheet.objects.get(Student_Id = user)
 			return render(request , 'maggulater/Parent_Portal.html')
 
 
@@ -155,18 +157,23 @@ def forgotPassword(request):
 			response = {'status': 1, 'message': "Confirmed!!", 'url':'/forgotPassword/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
 		json_data = json.loads(json_data)
-		_email = json_data['Email']
-		user = User.objects.get(email = _email)
-		if user is None or user.email != _email :
+		_email = json_data['email']
+		name = json_data['name']
+		user = MyUser.objects.get(email = _email)
+		if user is None or user.name != name :
 			print("Sorry Wrong Credentials !! ")
 			response = {'status': 1, 'message': "Confirmed!!", 'url':'/forgotPassword/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
 		else:
-			password = user.password
-			context = {
-			'Password' : password
-			}
-			return context
+			newpassword = json_data['password']
+			hashed_pass = user.make_password(newpassword)
+			user.set_password(hashed_pass)
+			response = {'status': 1, 'message': "Confirmed!!", 'url':'/login/'}
+			print response
+			# return HttpResponseRedirect(("/login/"))
+			return HttpResponse(json.dumps(response), content_type ='application/json')
+	if request.method == 'GET' :
+		return render(request, 'maggulater/forgotPassword.html')						
 
 
 def logout(request):
@@ -174,8 +181,8 @@ def logout(request):
 		del request.session['id']
 	except KeyError:
 		pass
-	response = {'status': 1, 'message': "Confirmed!!", 'url':'/home/'}
-	return HttpResponse(json.dumps(response), content_type='application/json')
+	print request.session
+	return render(request,'maggulater/login.html')
 
 
 def searchcourse(request):
