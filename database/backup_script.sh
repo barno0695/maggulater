@@ -1,0 +1,10 @@
+mysqldump -h 10.5.18.68 -u 13CS30009 -p 13CS30009 maggulater_myuser > maggulater_myuser.sql
+mysqldump -h 10.5.18.68 -u 13CS30009 -p 13CS30009 maggulater_admin > maggulater_admin.sql
+mysqldump -h 10.5.18.68 -u 13CS30009 -p 13CS30009 maggulater_student > maggulater_student.sql
+mysqldump -h 10.5.18.68 -u 13CS30009 -p 13CS30009 maggulater_faculty > maggulater_faculty.sql
+mysqldump -h 10.5.18.68 -u 13CS30009 -p 13CS30009 maggulater_course > maggulater_course.sql
+mysqldump -h 10.5.18.68 -u 13CS30009 -p 13CS30009 maggulater_enrolls > maggulater_enrolls.sql
+mysqldump -h 10.5.18.68 -u 13CS30009 -p 13CS30009 maggulater_lecture > maggulater_lecture.sql
+mysqldump -h 10.5.18.68 -u 13CS30009 -p 13CS30009 maggulater_notice > maggulater_notice.sql
+mysqldump -h 10.5.18.68 -u 13CS30009 -p 13CS30009 maggulater_test > maggulater_test.sql
+mysqldump -h 10.5.18.68 -u 13CS30009 -p 13CS30009 maggulater_performance_sheet > maggulater_performance_sheet.sql
