@@ -65,7 +65,9 @@ class Course(models.Model):
 		"""Return object data in easily serializeable format"""
 		return {
 			'course_id' : self.course_id,
-			'faculty' : self.faculty,
+			'faculty_name' : self.faculty.Faculty_Id.name,
+			'faculty_email' : self.faculty.Faculty_Id.email,
+			'faculty_dp' : self.faculty.Faculty_Id.link_to_dp,
 			'course_name' : self.course_name,
 			'prereq' : self.prereq,
 			'syllabus' : self.syllabus,
@@ -83,7 +85,7 @@ class Lecture(models.Model):
 	Link = models.CharField(max_length = 100)
 
 	def setDate(self, date):
-		self.Date_Time = date 
+		self.Date_Time = date
 	def setNotes(self , notes):
 		self.Notes = notes
 

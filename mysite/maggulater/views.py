@@ -26,6 +26,10 @@ def home(request):
 	print "Here in home "
 	return render(request, "gentelella/index.html")
 
+def coursehome(request):
+
+	return render(request, "gentelella/courseHome.html")
+
 @ensure_csrf_cookie
 def login(request):
 	print "Here in Login!!!"
@@ -287,6 +291,13 @@ def approve(request):
 			return HttpResponse(json.dumps(response), content_type='application/json')
 
 
+# API to get details of current course
+def coursedetails(request):
+	j = Course.objects.all()
+	for i in j:
+		if i.course_id == 1:
+			return JsonResponse(i.serialize(), safe = False)
+
 # API to get list of all courses
 def allcourses(request):
 	j = Course.objects.all()
@@ -316,7 +327,7 @@ def allstudentcourses(request):
 # API to get all notices
 def allnotices(request):
 	for i in Notice.objects.all():
-		print i.serialize
+		print i.serialize()
 	return jsonify(json_data = [i.serialize for i in Notice.objects.all()])
 
 
