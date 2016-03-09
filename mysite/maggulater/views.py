@@ -54,6 +54,10 @@ def userdetails(request):
 	user = MyUser.objects.get(user_id = request.session['id'])
 	return JsonResponse(user.serialize(),safe = False)
 
+def coursehome(request):
+
+	return render(request, "gentelella/courseHome.html")
+
 @ensure_csrf_cookie
 def login(request):
 	print "Here in Login!!!"
@@ -301,6 +305,13 @@ def approve(request):
 			response = {'status': 1, 'message': "Confirmed!!", 'url':'error'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
 
+
+# API to get details of current course
+def coursedetails(request):
+	j = Course.objects.all()
+	for i in j:
+		if i.course_id == 1:
+			return JsonResponse(i.serialize(), safe = False)
 
 # API to get list of all courses
 def allcourses(request):

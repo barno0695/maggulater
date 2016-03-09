@@ -141,7 +141,8 @@
 									}
 
 									var librariesList = libraries.map(function( lib ) {
-										return <li>{lib.course_id}. {lib.course_name}</li>;
+										var link = "/coursehome?id=" + lib.course_id.toString();
+										return <li><a href={link}> {lib.course_id}. {lib.course_name} </a></li>;
 									});
 
 									return (

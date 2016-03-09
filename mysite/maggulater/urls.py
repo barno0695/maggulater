@@ -19,6 +19,9 @@ urlpatterns = [
 	url(r'^listfacultycourses/$', views.listfacultycourses , name = 'listfacultycourses'),
 	url(r'^liststudentcourses/$', views.liststudentcourses , name = 'liststudentcourses'),
 	url(r'^logout/$', views.logout , name = 'logout'),
+	url(r'^coursehome/$', views.coursehome , name = 'coursehome'),
+	url(r'^coursedetails/$', views.coursedetails , name = 'coursedetails'),
+
 	# url(r'^index/$' , views.home, name = 'Index'),
 	url(r'^allnotices/$', views.allnotices , name = 'allnotices'),
 	url(r'^allcoursenotices/$', views.allcoursenotices , name = 'allcoursenotices'),
