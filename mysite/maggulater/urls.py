@@ -11,6 +11,7 @@ urlpatterns = [
 	url(r'^[a-z/]*home/$', views.home , name = 'home'),
 	url(r'^profile/$', views.profile , name = 'profile'),
 	url(r'^addLecture/$', views.addLecture, name = 'addLecture'),
+	url(r'^addCourse/$',views.addcourse, name = 'addCourse'),
 	url(r'^[a-z]*/listcourses/$', views.listcourses , name = 'listcourses'),
 	url(r'^index2/$', views.index2 , name = 'index2'),
 	url(r'^allcourses/$', views.allcourses , name = 'allcourses'),

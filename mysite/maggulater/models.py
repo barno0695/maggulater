@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 import hashlib
 from django.db import models
+from datetime import datetime
 
 # Create your models here.
 #User
@@ -78,7 +79,7 @@ class Lecture(models.Model):
 	Lecture_Id = models.AutoField(primary_key = True)
 	Course_Id = models.ForeignKey(Course, on_delete =models.CASCADE)
 	Notes = models.TextField
-	Date_Time = models.DateTimeField
+	Date_Time = models.DateTimeField(default =datetime.now())
 	Topic = models.CharField(max_length = 100, default = "Topic Not Mentioned")
 	Link = models.CharField(max_length = 100)
 
@@ -150,7 +151,7 @@ class Enrolls(models.Model):
 # Notice Table
 class Notice(models.Model):
 	notice_id = models.IntegerField( primary_key = True)
-	timestamp = models.DateTimeField
+	timestamp = models.DateTimeField(default =datetime.now())
 	message = models.CharField(max_length = 500)
 	c_id = models.ForeignKey(Course, on_delete = models.CASCADE)
 	def serialize(self):

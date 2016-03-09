@@ -74,7 +74,8 @@ def signUp(request):
 		name = json_data['name']
 		email = json_data['email']
 		link_to_dp = "link"
-		type_flag = json_data['flag']
+		# type_flag = json_data['flag']
+		type_flag = 0
 		dob = json_data['dob']
 		password = json_data['password']
 		user = MyUser(name = name, email = email, link_to_dp = link_to_dp , type_flag = type_flag , dob = dob)
@@ -245,23 +246,31 @@ def addcourse(request):
 		json_data = json.loads(json_data)
 		if not json_data:
 			print("error")
-			response = {'status': 1, 'message': "Confirmed!!", 'url':'/searchcourse/'}
+			response = {'status': 1, 'message': "Confirmed!!", 'url':'/addcourse/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
-		cid = json_data['c_id']
-		cname = json_data['course_name']
+		cname = json_data['cname']
 		pre = json_data['prereq']
 		fac_id = request.session['id']
-		course = Course.objects.get(course_id = cid)
+		fac_id = Faculty.objects.get(Faculty_Id = fac_id)
+		try:
+			course = Course.objects.get(course_name = cname)
+		except Exception, e:
+			course = None
+		syllabus = json_data['syllabus']
 
 		if course:
 			perror("error")
-			response = {'status': 1, 'message': "Confirmed!!", 'url':'/addcourse/'}
+			response = {'status': 1, 'message': "Confirmed!!", 'url':'/searchcourse/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
 
-		newcourse = Course(course_id = cid,course_name = cname,prereq = pre,faculty = fac_id)
+		newcourse = Course(course_name = cname,prereq = pre,faculty = fac_id)
+		newcourse.setSyllabus(syllabus)
 		newcourse.save()
 		response = {'status': 1, 'message': "Confirmed!!", 'url':'/facultyhome/'}
 		return HttpResponse(json.dumps(response), content_type='application/json')
+
+	if request.method == 'GET':
+		return render(request , 'maggulater/addCourse.html')		
 
 
 # API to approve a course
