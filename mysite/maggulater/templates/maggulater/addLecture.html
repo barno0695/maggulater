@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Add A Lecture</title>
+</head>
+<body>
+	<h1>Lecture Fields</h1>
+	<input type="text" class="text" id="inputTopic" value="Topic Name " onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Topic Name ';}">
+	<input type="date" class="text" id="inputDate_Time" value="1900-01-01" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '1900-01-01';}">
+	<input type="text" class="text" id="inputLink" value="Link to file" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'None';}">
+	<input type="textarea" class="text" id="inputNotes" value="Notes" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'No Notes Yet';}">
+
+	<br>
+	<br>
+	<h1>Test Fields </h1>
+	<input type="textarea" class="text" id = "inputQuestions" value = "Questions"onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'No Questions Yet';}">
+	<input type="textarea" class="textarea" id = "inputSolutions" value = "Solutions"onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'No Solutions';}">
+
+	<div class="submit">
+                <input type="submit" id="btnSubmit" value="Create Lecture" >
+    </div>
+	
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="../static/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
+<script src="../static/js/addLecture.js"></script>
+</html>
