@@ -338,7 +338,7 @@ def allstudentnotices(request):
 
 # API for listing
 def listcourses(request):
-	return render(request, 'maggulater/course_list.html')
+	return render(request, 'gentelella/listcourses.html')
 
 # API for listing
 def listfacultycourses(request):
