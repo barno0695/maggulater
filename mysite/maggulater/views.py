@@ -10,6 +10,7 @@ from models import *
 from django.core.urlresolvers import reverse
 from django.core import serializers
 from django.http import JsonResponse
+from django.contrib.auth import authenticate
 # from jsonify.decorators import ajax_request
 # try:
 # from django.utils import simplejson
@@ -30,7 +31,11 @@ def home(request):
 		user = MyUser.objects.get(user_id = request.session['id'])
 		if user.type_flag == ADMIN:
 			print "ADMIN"
-			return render(request, "gentelella/adminhome.html")
+			adm = authenticate(username=user.name,password = user.password)
+			return redirect('/admin/')
+			# response = {'status': 1, 'message': "Confirmed!!", 'url':'/admin/'}
+			# return HttpResponse(json.dumps(response), content_type='application/json')
+
 		if user.type_flag == STUDENT:
 			print "STUDENT"
 			return render(request, "gentelella/studenthome.html")
@@ -40,6 +45,10 @@ def home(request):
 	else :
 		return redirect('/login/')
 	# return render(request, "gentelella/studenthome.html")
+
+# def adminhome(request):
+# 	response = {'status': 1, 'message': "Confirmed!!", 'url':'/login/'}
+# 	return HttpResponse(json.dumps(response), content_type='application/json')
 
 def userdetails(request):
 	user = MyUser.objects.get(user_id = request.session['id'])
@@ -62,7 +71,7 @@ def login(request):
 		# print email_, pwd
 		user = MyUser.objects.get(email = email_)
 		print "IN LOGIN"
-		print user and user.check_password(pwd)
+		# print user and user.check_password(pwd)
 		# print make_password(pwd)
 		if user and user.check_password(pwd):
 			request.session['id'] = user.user_id
