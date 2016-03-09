@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	{% include "gentelella/includes/header.html" %}
+	<!--[if lt IE 9]>
+	<script src="../assets//static/gentelella/js/ie8-responsive-file-warning.js"></script>
+	<![endif]-->
+
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<meta charset="UTF-8">
+	<title>Courses</title>
+	<style>
+	* {
+		padding: 0;
+		margin: 0;
+	}
+	body {
+		margin: 100px auto;
+		font-family: arial;
+		font-size: 100%;
+		text-align: center;
+	}
+	input[type="text"] {
+		margin: 0 auto;
+		text-align: center;
+		width: 430px;
+		display: block;
+		padding: 20px;
+		font-size: 1.2em;
+		border: solid 2px #333;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+	}
+	ul{
+		list-style: none;
+		display: inline-block;
+		margin-top: 10px;
+		width: 480px;
+		text-align: left;
+	}
+	ul li {
+		display: block;
+		position: relative;
+		margin: 2px auto;
+		padding: 20px;
+		border: solid 2px #fff;
+		background: #f1f1f1;
+		font-size: 0.9em;
+		color: #333;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+		-webkit-transition: 0.3s;
+		-moz-transition: 0.3s;
+		transition: 0.3s;
+	}
+	ul li a {
+		position: absolute;
+		left: 120px;
+		color: #999;
+	}
+
+	ul li:hover, .focused {
+		background: #333;
+		color: #fff;
+
+	}
+
+	</style>
+	<script src="http://fb.me/react-0.10.0.js"></script>
+	<script src="http://fb.me/JSXTransformer-0.10.0.js"></script>
+</head>
+
+
+<body class="nav-md">
+
+	<div class="container body">
+
+
+		<div class="main_container">
+
+			{% include "gentelella/includes/leftandtop.html" %}
+			<!-- page content -->
+			<div class="right_col" role="main">
+
+				<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+				<script type="text/jsx">
+
+				/** @jsx React.DOM */
+				var SearchExample = React.createClass({
+
+					getInitialState: function(){
+						return { searchString: '' };
+					},
+
+					handleChange: function(e) {
+						this.setState( { searchString: e.target.value } );
+					},
+
+					render: function() {
+
+						var libraries = this.props.items;
+						var searchString = this.state.searchString.trim().toLowerCase();
+
+						if ( searchString.length ) {
+							libraries = libraries.filter(function( lib ) {
+								return lib.course_name.toLowerCase().match( searchString ) || lib.course_id.toString().toLowerCase().match( searchString );
+							});
+						}
+
+						var librariesList = libraries.map(function( lib ) {
+							return <li>{lib.course_id}. {lib.course_name}</li>;
+						});
+
+						return (
+							<div>
+							<input type="text"
+							value={this.state.searchString}
+							onChange={this.handleChange}
+							placeholder="Type here" />
+
+							<ul>
+							{librariesList}
+							</ul>
+							</div>
+						);
+
+					}
+				});
+
+				var libraries = [];
+				$.ajax({
+					url: '/allcourses/',
+					type: 'GET',
+					success: function(response) {
+						console.log("hahaha")
+						var names = response.split("{u\'course_name\': u\'")
+						var ids = response.split("u\'course_id\': ")
+						if(names.length <= 1)
+						{
+							libraries.push({course_id: "0", course_name: "No Courses"});
+						}
+						for(var i = 1; i<names.length;i++)
+						{
+							cname = names[i].split("\', u\'prereq")[0]
+							cid = ids[i].split("L")[0]
+							libraries.push({course_id: cid, course_name: cname});
+
+						}
+						console.log(libraries)
+						console.log("logged in");
+						React.renderComponent(
+							<SearchExample items={libraries} />,
+							document.getElementById('right_col')
+						);
+					},
+					error: function(error) {
+						console.log(error);
+					},
+
+				});
+
+				console.log("yo");
+				console.log(libraries);
+
+				</script>
+
+			</body>
+
+			</html>

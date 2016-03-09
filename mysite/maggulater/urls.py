@@ -26,5 +26,7 @@ urlpatterns = [
 	url(r'^alllectures/$', views.alllectures , name = 'alllectures'),
 	url(r'^allcourselectures/$', views.allcourselectures , name = 'allcourselectures'),
 	url(r'^allstudentlectures/$', views.allstudentlectures , name = 'allstudentlectures'),
+	url(r'^userdetails/$', views.userdetails , name = 'userdetails'),
+
 
 ]

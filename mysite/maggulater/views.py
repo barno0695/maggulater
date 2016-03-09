@@ -24,6 +24,7 @@ FACULTY = 2
 
 def home(request):
 	print "Here in home "
+	# request.session['id'] = 19
 	if 'id' in request.session.keys():
 		print "user_id" , request.session['id']
 		user = MyUser.objects.get(user_id = request.session['id'])
@@ -39,6 +40,10 @@ def home(request):
 	else :
 		return redirect('/login/')
 	# return render(request, "gentelella/studenthome.html")
+
+def userdetails(request):
+	user = MyUser.objects.get(user_id = request.session['id'])
+	return JsonResponse(user.serialize(),safe = False)
 
 @ensure_csrf_cookie
 def login(request):
@@ -359,7 +364,7 @@ def allstudentlectures(request):
 
 # API for listing
 def listcourses(request):
-	return render(request, 'maggulater/course_list.html')
+	return render(request, 'gentelella/listcourses.html')
 
 # API for listing
 def listfacultycourses(request):

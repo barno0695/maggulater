@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	{% include "gentelella/includes/header.html" %}
     <meta charset="UTF-8">
     <title>Courses</title>
     <style>
@@ -65,9 +66,16 @@
     <script src="http://fb.me/react-0.10.0.js"></script>
     <script src="http://fb.me/JSXTransformer-0.10.0.js"></script>
 </head>
-<body>
+<body class="nav-md">
+
+	<div class="container body">
+
+
+		<div class="main_container">
+
+			{% include "gentelella/includes/leftandtop.html" %}
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script type="text/jsx">
+	<script type="text/jsx">
 
 /** @jsx React.DOM */
 // var SearchExample = React.createClass({
@@ -147,4 +155,8 @@ console.log("yo");
 console.log(libraries);
 
 </script>
+
+</div>
+</div>
+</body>
 </html>
