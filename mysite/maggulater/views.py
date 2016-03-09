@@ -24,7 +24,21 @@ FACULTY = 2
 
 def home(request):
 	print "Here in home "
-	return render(request, "gentelella/index.html")
+	if 'id' in request.session.keys():
+		print "user_id" , request.session['id']
+		user = MyUser.objects.get(user_id = request.session['id'])
+		if user.type_flag == ADMIN:
+			print "ADMIN"
+			return render(request, "gentelella/adminhome.html")
+		if user.type_flag == STUDENT:
+			print "STUDENT"
+			return render(request, "gentelella/studenthome.html")
+		if user.type_flag == FACULTY:
+			print "FACULTY"
+			return render(request, "gentelella/facultyhome.html")
+	else :
+		return redirect('/login/')
+	# return render(request, "gentelella/studenthome.html")
 
 @ensure_csrf_cookie
 def login(request):
@@ -49,7 +63,7 @@ def login(request):
 			request.session['id'] = user.user_id
 			# print request.session
 			print "In profile redirect"
-			response = {'status': 1, 'message': "Confirmed!!", 'url':'/profile/'}
+			response = {'status': 1, 'message': "Confirmed!!", 'url':'/home/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
 		else:
 			print "IN login wala !! "
@@ -105,20 +119,7 @@ def signUp(request):
 
 
 def profile(request):
-	if 'id' in request.session.keys():
-		print "user_id" , request.session['id']
-		user = MyUser.objects.get(user_id = request.session['id'])
-		if user.type_flag == ADMIN:
-			print "ADMIN"
-			return render(request, "maggulater/admin.html")
-		if user.type_flag == STUDENT:
-			print "STUDENT"
-			return render(request, "maggulater/student.html")
-		if user.type_flag == FACULTY:
-			print "FACULTY"
-			return render(request, "maggulater/faculty.html")
-	else :
-		return redirect('/login/')
+	return render(request , 'gentelella/profile.html')
 
 
 def studenthome(request):
@@ -316,8 +317,8 @@ def allstudentcourses(request):
 # API to get all notices
 def allnotices(request):
 	for i in Notice.objects.all():
-		print i.serialize
-	return jsonify(json_data = [i.serialize for i in Notice.objects.all()])
+		print i.serialize()
+	return JsonResponse([i.serialize() for i in Notice.objects.all()])
 
 
 # API to get all notices of a course
@@ -335,6 +336,26 @@ def allstudentnotices(request):
 	d = jsonify(json_data = [i.serialize for i in Notice.objects.all() if i.c_id in enrolled_courses])
 	return d
 
+# API to get all lectures for all courses
+def alllectures(request):
+	for i in Notice.objects.all():
+		print i.serialize
+	return jsonify(json_data = [i.serialize for i in Lecture.objects.all()])
+
+
+# API to get all lectures of a course
+def allcourselectures(request):
+	return jsonify(json_data = [i.serialize for i in Lecture.objects.get(c_id = request.session['course_id']).all()])
+
+# API to get calendar
+def allstudentlectures(request):
+	enrolled_courses = []
+	for c in Enrolls.objects.get(student_id = request.session['id']).all(request):
+		p = c.course_id
+		enrolled_courses.append(p)
+
+	d = jsonify(json_data = [i.serialize for i in Lecture.objects.all() if i.c_id in enrolled_courses])
+	return d
 
 # API for listing
 def listcourses(request):

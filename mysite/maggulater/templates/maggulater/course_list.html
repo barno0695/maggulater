@@ -70,53 +70,53 @@
 <script type="text/jsx">
 
 /** @jsx React.DOM */
-var SearchExample = React.createClass({
-
-    getInitialState: function(){
-        return { searchString: '' };
-    },
-
-    handleChange: function(e) {
-        this.setState( { searchString: e.target.value } );
-    },
-
-    render: function() {
-
-        var libraries = this.props.items;
-        var searchString = this.state.searchString.trim().toLowerCase();
-
-        if ( searchString.length ) {
-            libraries = libraries.filter(function( lib ) {
-                return lib.course_name.toLowerCase().match( searchString ) || lib.course_id.toString().toLowerCase().match( searchString );
-            });
-        }
-
-        var librariesList = libraries.map(function( lib ) {
-            return <li>{lib.course_id}. {lib.course_name}</li>;
-        });
-
-        return (
-            <div>
-                <input type="text"
-                       value={this.state.searchString}
-                       onChange={this.handleChange}
-                       placeholder="Type here" />
-
-                <ul>
-                    {librariesList}
-                </ul>
-            </div>
-        );
-
-    }
-});
+// var SearchExample = React.createClass({
+//
+//     getInitialState: function(){
+//         return { searchString: '' };
+//     },
+//
+//     handleChange: function(e) {
+//         this.setState( { searchString: e.target.value } );
+//     },
+//
+//     render: function() {
+//
+//         var libraries = this.props.items;
+//         var searchString = this.state.searchString.trim().toLowerCase();
+//
+//         if ( searchString.length ) {
+//             libraries = libraries.filter(function( lib ) {
+//                 return lib.course_name.toLowerCase().match( searchString ) || lib.course_id.toString().toLowerCase().match( searchString );
+//             });
+//         }
+//
+//         var librariesList = libraries.map(function( lib ) {
+//             return <li>{lib.course_id}. {lib.course_name}</li>;
+//         });
+//
+//         return (
+//             <div>
+//                 <input type="text"
+//                        value={this.state.searchString}
+//                        onChange={this.handleChange}
+//                        placeholder="Type here" />
+//
+//                 <ul>
+//                     {librariesList}
+//                 </ul>
+//             </div>
+//         );
+//
+//     }
+// });
 
 var libraries = [];
 $.ajax({
-    url: '/allcourses/',
+    url: '/allnotices/',
     type: 'GET',
     success: function(response) {
-      console.log("hahaha")
+      console.log(response)
       var names = response.split("{u\'course_name\': u\'")
       var ids = response.split("u\'course_id\': ")
       if(names.length <= 1)
@@ -132,10 +132,10 @@ $.ajax({
         }
         console.log(libraries)
         console.log("logged in");
-        React.renderComponent(
-    		    <SearchExample items={libraries} />,
-    		    document.body
-    		);
+        // React.renderComponent(
+    	// 	    <SearchExample items={libraries} />,
+    	// 	    document.body
+    	// 	);
     },
     error: function(error) {
         console.log(error);
