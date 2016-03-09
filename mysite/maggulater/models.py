@@ -94,7 +94,7 @@ class Lecture(models.Model):
 	def serialize(self):
 		return {
 			'Lecture_Id' : self.Lecture_Id,
-			'Course_Id' : self.Course_Id ,
+			'Course_Id' : self.Course_Id.serialize() ,
 			'Notes' : self.Notes ,
 			'Date_Time' : self.Date_Time,
 			'Topic' : self.Topic,
@@ -128,8 +128,8 @@ class Performance_Sheet(models.Model):
 	def serialize(self):
 		"""Return object data in easily serializeable format"""
 		return {
-			'Student_Id' : self.Student_Id,
-			'Test_Id' : self.Test_Id,
+			'Student_Id' : self.Student_Id.serialize(),
+			'Test_Id' : self.Test_Id.serialize(),
 			'Marks_Obtained' : self.Marks_Obtained,
 			'Marks_Total' : self.Marks_Total
 			# This is an example how to deal with Many2Many relations
@@ -161,7 +161,8 @@ class Notice(models.Model):
 			'notice_id' : self.notice_id,
 			'timestamp' : self.timestamp,
 			'message' : self.message,
-			'c_id' : self.c_id
+			'c_id' : self.c_id,
+			'course_name' : self.c_id.course_name
 			# This is an example how to deal with Many2Many relations
 		#	'many2many'  : self.serialize_many2many
 		}
