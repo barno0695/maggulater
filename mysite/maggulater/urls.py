@@ -29,7 +29,7 @@ urlpatterns = [
 	url(r'^lecturecontent/$', views.lecturecontent , name = 'lecturecontent	'),
 
 	url(r'^coursedetails/$', views.coursedetails , name = 'coursedetails'),
-	url(r'^mailall/$', views.mailall , name = 'mailall'),
+	url(r'^mailsend/$', views.mailsend , name = 'mailsend'),
 	url(r'^parentPortal/$', views.parentPortal, name = 'parentPortal'),
 
 	# url(r'^index/$' , views.home, name = 'Index'),
