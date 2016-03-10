@@ -97,7 +97,7 @@ def faculty(request):
 	if 'id' in request.session.keys():
 		print "faculty_id" , request.session['id']
 	if request.method == 'GET':
-		return render(request, 'maggulater/faculty.html')
+		return render(request, 'gentelella/facultyhome.html')
 
 def signUp(request):
 	if request.method == 'POST':
