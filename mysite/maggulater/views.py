@@ -597,3 +597,31 @@ def addLecture(request):
 		return HttpResponse(json.dumps(response), content_type='application/json')
 	if request.method == 'GET' :
 		return render(request, 'maggulater/addLecture.html')
+
+def studentAllTestPerformance(request):
+	sid = request.session['id']
+	user = MyUser.objects.get(user_id = sid)
+	student = Student.objects.get(Student_Id = user)
+	PerformanceSheets = Performance_Sheet.objects.get(Student_Id = student)
+	perf = [P.serialize() for p in PerformanceSheets]
+	return HttpResponse(perf)
+
+def studentCoursePerformance(request):
+	sid = request.session['id']
+	user = MyUser.objects.get(user_id = sid)
+	student = Student.objects.get(Student_Id = user)
+	PerformanceSheets = Performance_Sheet.objects.get(Student_Id = student)
+	course_id = request.session['course_id']
+	perf = []
+	for p in PerformanceSheets :
+		test = Test.objects.get(Test_Id = p.Test_Id)
+		lec = Lecture.objects.get(Lecture_Id = test.Lecture_Id)
+		if lec.Course_Id == course_id :
+			perf.append(p)
+	a = [p.serialize() for p in perf]
+	return HttpResponse(a)
+
+def CourseStudentsPerformance(request):
+	fac_id = request.session['id']
+	user = MyUser.objects.get(user_id = sid)
+	student = Student.objects.get(Student_Id = user)
