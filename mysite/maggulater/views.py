@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from datetime import date
 import calendar
+from .email import sendEmail
 # from jsonify.decorators import ajax_request
 # try:
 # from django.utils import simplejson
@@ -81,6 +82,9 @@ def submitperformance(request):
 
 
 
+def generalmail(request):
+	return render(request, "gentelella/generalmail.html")
+
 @ensure_csrf_cookie
 def login(request):
 	print "Here in Login!!!"
@@ -126,6 +130,23 @@ def faculty(request):
 		print "faculty_id" , request.session['id']
 	if request.method == 'GET':
 		return render(request, 'gentelella/facultyhome.html')
+
+def mailall(request):
+	if request.method == 'POST':
+		json_data = request.body
+		print json_data
+		json_data = json.loads(json_data)
+		recipients = [json_data['recipient']]
+		subject = json_data['subject']
+		body = json_data['body']
+		user = MyUser.objects.get(user_id = request.session['id'])
+		sender = user.email
+		sendEmail(sender, recipients, subject, body)
+		response = {'status': 1, 'message': "Confirmed!!", 'url':'/login/'}
+		return HttpResponse(json.dumps(response), content_type='application/json')
+
+	if request.method == 'GET':
+		return render(request, 'maggulater/signup.html')
 
 def signUp(request):
 	if request.method == 'POST':
@@ -189,16 +210,23 @@ def parentPortal(request):
 			response = {'status': 1, 'message': "Confirmed!!", 'url':'/parentPortal/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
 		json_data = json.loads(json_data)
-		_email = json_data['Email']
-		user = MyUser.objects.get(email = email_)
-		if user is None or user.email != _email :
+		email = json_data['email']
+		name = json_data['name']
+		user = MyUser.objects.get(email = email)
+		if user is None or user.name != name :
 			print("Sorry Wrong Credentials !! ")
 			response = {'status': 1, 'message': "Confirmed!!", 'url':'/parentPortal/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
 		else:
-			Performance = Performance_Sheet.objects.get(Student_Id = user)
-			return render(request , 'maggulater/Parent_Portal.html')
+			# Performance = Performance_Sheet.objects.get(Student_Id = user)
+			response = {'status': 1, 'message': "Confirmed!!", 'url':'/studentallperformance/'}
+			request.session['id'] = user.user_id
+			request.session['parentPortal'] = 1
+			print request.session
 
+			return HttpResponse(json.dumps(response), content_type = 'application/json')
+	if request.method == 'GET' :
+		return render(request, 'maggulater/Parent_Portal.html')
 
 def forgotPassword(request):
 	if request.method == 'POST' :
@@ -280,6 +308,7 @@ def addnotice(request):
 			print("error")
 			response = {'status': 1, 'message': "Confirmed!!", 'url':'/addnotice/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
+
 		cid = json_data['c_id']
 		msg = json_data['message']
 
@@ -589,6 +618,7 @@ def addLecture(request):
 		print json_data
 		json_data = json.loads(json_data)
 		# course_id = request.session['course_id']
+
 		course_id = request.session['course_id']
 		print json_data
 		notes = json_data['Notes']
@@ -617,12 +647,34 @@ def addLecture(request):
 	if request.method == 'GET' :
 		return render(request, 'maggulater/addLecture.html')
 
+def studentallperformance(request):
+	return render(request, 'gentelella/studentallperformance.html')
+
 def studentAllTestPerformance(request):
 	sid = request.session['id']
+	# try :
+	# 	a = request.session['parentPortal']
+	# 	del request.session['id']
+	# except Exception, e:
+	# 	pass
+	print "ayayayaya"
 	user = MyUser.objects.get(user_id = sid)
+	print user
 	student = Student.objects.get(Student_Id = user)
-	PerformanceSheets = Performance_Sheet.objects.get(Student_Id = student)
-	perf = [P.serialize() for p in PerformanceSheets]
+	print student
+	PerformanceSheets = Performance_Sheet.objects.all()
+	print PerformanceSheets[0].serialize()
+	p = []
+	for pr in PerformanceSheets:
+		if pr.Student_Id.Student_Id.user_id == sid:
+			p.append(pr)
+	# print PerformanceSheets[0].Student_Id.Student_Id.name
+	# print PerformanceSheets[0].serialize()
+	print "yahan1"
+	print p
+	print "yaha2"
+	perf = [q.serialize() for q in p]
+	print perf
 	return HttpResponse(perf)
 
 def studentCoursePerformance(request):
@@ -640,6 +692,10 @@ def studentCoursePerformance(request):
 	a = [p.serialize() for p in perf]
 	return HttpResponse(a)
 
+
+
+def mailall(request):
+	return render(request,'maggulater/email.html')
 def CourseStudentsPerformance(request):
 	fac_id = request.session['id']
 	user = MyUser.objects.get(user_id = sid)

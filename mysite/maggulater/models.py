@@ -114,6 +114,8 @@ class Test(models.Model):
 	Lecture_Id = models.ForeignKey(Lecture, on_delete = models.CASCADE)
 	Questions = models.TextField(default="")
 	Answer_Sheet = models.TextField(default="")
+	Questions = models.TextField(default = "")
+	Answer_Sheet = models.TextField(default = "")
 	totalMarks = models.IntegerField(default = 100)
 	def setQuestions(self, Questions):
 		self.Questions = Questions
@@ -130,15 +132,17 @@ class Test(models.Model):
 		}
 #Performance
 class Performance_Sheet(models.Model):
-	Student_Id = models.ForeignKey(Student, unique = True , on_delete = models.CASCADE)
-	Test_Id = models.ForeignKey(Test ,  unique = True, on_delete = models.CASCADE)
-	Marks_Obtained = models.FloatField
-	Marks_Total = models.FloatField
+	Student_Id = models.ForeignKey(Student, on_delete = models.CASCADE)
+	Test_Id = models.ForeignKey(Test , on_delete = models.CASCADE)
+	Marks_Obtained = models.FloatField(default = 0)
+	Marks_Total = models.FloatField(default = 100)
 	def serialize(self):
 		"""Return object data in easily serializeable format"""
 		return {
-			'Student_Id' : self.Student_Id.serialize(),
-			'Test_Id' : self.Test_Id.serialize(),
+			'Student_Id' : self.Student_Id.Student_Id.user_id,
+			'Student_Name' : self.Student_Id.Student_Id.name,
+			'Course Name' : self.Test_Id.Lecture_Id.Course_Id.course_name,
+			'Topic' : self.Test_Id.Lecture_Id.Topic,
 			'Marks_Obtained' : self.Marks_Obtained,
 			'Marks_Total' : self.Marks_Total
 			# This is an example how to deal with Many2Many relations

@@ -4,6 +4,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
+
 	url(r'^login/$', views.login, name = 'login'),
 	url(r'^signUp/$', views.signUp, name = 'signUp'),
 	url(r'^forgotPassword/$' , views.forgotPassword, name = 'forgotPassword'),
@@ -28,6 +29,8 @@ urlpatterns = [
 	url(r'^lecturecontent/$', views.lecturecontent , name = 'lecturecontent	'),
 
 	url(r'^coursedetails/$', views.coursedetails , name = 'coursedetails'),
+	url(r'^mailall/$', views.mailall , name = 'mailall'),
+	url(r'^parentPortal/$', views.parentPortal, name = 'parentPortal'),
 
 	# url(r'^index/$' , views.home, name = 'Index'),
 	url(r'^allnotices/$', views.allnotices , name = 'allnotices'),
@@ -46,7 +49,9 @@ urlpatterns = [
 	url(r'^faccalender/$', views.faccalender , name = 'faccalender'),
 	url(r'^studcalender/$', views.studcalender , name = 'studcalender'),
 	url(r'^submitperformance/$', views.submitperformance , name = 'submitperformance'),
-
-
+	url(r'^generalmail/$', views.generalmail , name = 'generalmail.html'),
+	url(r'^studentAllTestPerformance/$', views.studentAllTestPerformance , name = 'studentAllTestPerformance'),
+	url(r'^studentallperformance/$', views.studentallperformance , name = 'studentallperformance'),
+	url(r'^$', views.login, name = 'login'),
 
 ]
