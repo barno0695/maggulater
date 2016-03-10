@@ -23,12 +23,15 @@ urlpatterns = [
 	url(r'^logout/$', views.logout , name = 'logout'),
 	url(r'^enroll/$', views.enroll , name = 'enroll'),
 	url(r'^coursehome/(?P<course_id>[0-9]+)/$', views.coursehome , name = 'coursehome'),
+	# url(r'^lecture/(?P<lecture_id>[0-9]+)/$', views.lecture , name = 'lecture'),
+	url(r'^lecture/$', views.lecture , name = 'lecture'),
+
 	url(r'^coursedetails/$', views.coursedetails , name = 'coursedetails'),
 
 	# url(r'^index/$' , views.home, name = 'Index'),
 	url(r'^allnotices/$', views.allnotices , name = 'allnotices'),
 	url(r'^allcoursenotices/$', views.allcoursenotices , name = 'allcoursenotices'),
-	# url(r'^allstudentnotices/$', views.allstudentnotices , name = 'allstudentnotices'),
+	url(r'^studenthome/$', views.studenthome , name = 'studenthome'),
 	url(r'^alllectures/$', views.alllectures , name = 'alllectures'),
 	url(r'^allcourselectures/$', views.allcourselectures , name = 'allcourselectures'),
 	# url(r'^allstudentlectures/$', views.allstudentlectures , name = 'allstudentlectures'),

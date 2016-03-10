@@ -100,7 +100,7 @@ class Lecture(models.Model):
 
 		return {
 			'Lecture_Id' : self.Lecture_Id,
-			'Course_Id' : self.Course_Id.serialize() ,
+			'Course_Id' : self.Course_Id.serialize(),
 			'Notes' : self.Notes ,
 			'Day' : self.Date_Time.day,
 			'Month' : self.Date_Time.month,

@@ -60,6 +60,12 @@ def coursehome(request, course_id):
 	request.session['course_id'] = course_id
 	return render(request, "gentelella/courseHome.html")
 
+
+def lecture(request):
+	# request.session['lecture_id'] = lecture_id
+	# lec = Lecture.objects.get(lecture_id = lecture_id)
+	return render(request, "gentelella/lecture.html")
+
 @ensure_csrf_cookie
 def login(request):
 	print "Here in Login!!!"
@@ -76,7 +82,7 @@ def login(request):
 		pwd = json_data['password']
 		# print email_, pwd
 		try:
-			user = MyUser.objects.get(email = email_)	
+			user = MyUser.objects.get(email = email_)
 		except Exception, e:
 			user = None
 		print "IN LOGIN"
@@ -148,7 +154,7 @@ def profile(request):
 
 def studenthome(request):
 	print "student_id" , request.session['id']
-	return render(request , 'maggulater/student.html')
+	return render(request , 'gentelella/studenthome.html')
 
 
 def adminhome(request):
@@ -301,7 +307,7 @@ def addcourse(request):
 		return HttpResponse(json.dumps(response), content_type='application/json')
 
 	if request.method == 'GET':
-		return render(request , 'maggulater/addCourse.html')		
+		return render(request , 'maggulater/addCourse.html')
 
 
 # API to approve a course
