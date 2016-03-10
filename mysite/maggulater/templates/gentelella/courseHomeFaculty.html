@@ -22,7 +22,7 @@
 	<div class="container body">
 		<div class="main_container">
 
-			{% include "gentelella/includes/studentleftandtop.html" %}
+			{% include "gentelella/includes/leftandtop.html" %}
 
 			<script>
 
@@ -77,7 +77,6 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="x_panel">
-
 								<div class="x_title">
 									<h2>Course Details</h2>
 									<ul class="nav navbar-right panel_toolbox">
@@ -165,121 +164,6 @@
 							</div>
 						</div>
 					</div>
-
-					<div class="clearfix"></div>
-		            <div class="row">
-		              <div class="col-md-8 col-sm-8 col-xs-12">
-		                <div class="x_panel">
-		                  <div class="x_title">
-		                    <h2>Send mail Form </h2>
-		                    <ul class="nav navbar-right panel_toolbox">
-		                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-		                      </li>
-		                      <li class="dropdown">
-		                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-		                        <ul class="dropdown-menu" role="menu">
-		                          <li><a href="#">Settings 1</a>
-		                          </li>
-		                          <li><a href="#">Settings 2</a>
-		                          </li>
-		                        </ul>
-		                      </li>
-		                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-		                      </li>
-		                    </ul>
-		                    <div class="clearfix"></div>
-		                  </div>
-		                  <div class="x_content">
-		                    <br />
-		                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
-
-		                      <div class="form-group">
-		                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name" >Recipient<span class="required">*</span>
-		                        </label>
-		                        <div class="col-md-6 col-sm-6 col-xs-12">
-		                          <input type="text" id="inputRecipient" required="required" class="form-control col-md-7 col-xs-12">
-		                        </div>
-		                      </div>
-		                      <div class="form-group">
-		                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Subject<span class="required">*</span>
-		                        </label>
-		                        <div class="col-md-6 col-sm-6 col-xs-12">
-		                          <input type="text" id="inputSubject" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
-		                        </div>
-		                      </div>
-		                      <div class="form-group" >
-		                          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Body<span class="required">*</span>
-		                          </label>
-		                          <div  class="col-md-6 col-sm-6 col-xs-12">
-		                            <textarea id = "inputBody" name="Body"> </textarea>
-		                          </div>
-		                      </div>
-		                    </form>
-		                   <button type="submit" style="text-align:right" class="btn btn-success" id = "btnSubmit">Submit</button>
-						   <script type="text/javascript">
-						      $('#btnSubmit').click(function(e) {
-						       e.preventDefault() ;
-						       data = {
-						             'recipient' : $("#inputRecipient").val(),
-						             'body' : $("#inputBody").val(),
-						             'subject' : $("#inputSubject").val(),
-
-						         }
-
-						         console.log(data);
-						         $.ajax({
-						             url: '/mailall/',
-						             dataType: 'json',
-						             contentType:'application/json',
-						             type: 'POST',
-						             data: JSON.stringify(data),
-						             success: function(response) {
-						                 window.location = (response)
-						                 console.log(response);
-						                 console.log("Password has been Reset");
-						                 console.log(response.url);
-						                 // data = JSON.parse(response) ;
-						                 window.location = response.url ;
-						             },
-						             error: function(error) {
-						                 console.log(error);
-						             },
-						             beforeSend: function(xhr, settings) {
-						                 function getCookie(name) {
-						                     var cookieValue = null;
-						                     if (document.cookie && document.cookie != '') {
-						                         var cookies = document.cookie.split(';');
-						                         for (var i = 0; i < cookies.length; i++) {
-						                             var cookie = jQuery.trim(cookies[i]);
-						                             // Does this cookie string begin with the name we want?
-						                             if (cookie.substring(0, name.length + 1) == (name + '=')) {
-						                                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-						                                 break;
-						                             }
-						                         }
-						                     }
-						                     return cookieValue;
-						                 }
-						                 if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-						                     // Only send the token to relative URLs i.e. locally.
-						                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-						                 }
-						             }
-
-						         });
-						         setTimeout(function() {
-						             // $this.addClass('ok');
-						             // $state.html('Welcome back!');
-						             console.log("error");
-						         }, 10000);
-						     });
-						   </script>
-						  </div>
-		                </div>
-		              </div>
-		            </div>
-
-
 				</div>
 
 				<!-- footer content -->

@@ -4,6 +4,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
+
 	url(r'^login/$', views.login, name = 'login'),
 	url(r'^signUp/$', views.signUp, name = 'signUp'),
 	url(r'^forgotPassword/$' , views.forgotPassword, name = 'forgotPassword'),
@@ -13,21 +14,25 @@ urlpatterns = [
 	url(r'^addLecture/$', views.addLecture, name = 'addLecture'),
 	url(r'^addCourse/$',views.addcourse, name = 'addCourse'),
 	url(r'^addNotice/$',views.addnotice , name = 'addNotice'),
-	url(r'^[a-z]*/listcourses/$', views.listcourses , name = 'listcourses'),
-	url(r'^Performance=/$',views.studentAllTestPerformance, name = 'performance'),
+	# url(r'^[a-z]*/listcourses/$', views.listcourses , name = 'listcourses'),
 	url(r'^index2/$', views.index2 , name = 'index2'),
 	url(r'^allcourses/$', views.allcourses , name = 'allcourses'),
 	url(r'^allfacultycourses/$', views.allfacultycourses , name = 'allfacultycourses'),
 	url(r'^allstudentcourses/$', views.allstudentcourses , name = 'allstudentcourses'),
+	url(r'^studentlistcourses/$', views.studentlistcourses , name = 'studentlistcourses'),
 	url(r'^listfacultycourses/$', views.listfacultycourses , name = 'listfacultycourses'),
 	url(r'^liststudentcourses/$', views.liststudentcourses , name = 'liststudentcourses'),
 	url(r'^logout/$', views.logout , name = 'logout'),
 	url(r'^enroll/$', views.enroll , name = 'enroll'),
 	url(r'^coursehome/(?P<course_id>[0-9]+)/$', views.coursehome , name = 'coursehome'),
 	url(r'^coursedetails/$', views.coursedetails , name = 'coursedetails'),
-	url(r'^mailall/$',views.mailall, name = 'mail all'),
+	url(r'^mailall/$', views.mailall , name = 'mailall'),
+	url(r'^parentPortal/$', views.parentPortal, name = 'parentPortal'),
+
 	# url(r'^index/$' , views.home, name = 'Index'),
 	url(r'^allnotices/$', views.allnotices , name = 'allnotices'),
+	url(r'^studentlistcourses/$', views.studentlistcourses , name = 'studentlistcourses'),
+	url(r'^facultylistcourses/$', views.facultylistcourses , name = 'facultylistcourses'),
 	url(r'^allcoursenotices/$', views.allcoursenotices , name = 'allcoursenotices'),
 	# url(r'^allstudentnotices/$', views.allstudentnotices , name = 'allstudentnotices'),
 	url(r'^alllectures/$', views.alllectures , name = 'alllectures'),
@@ -36,6 +41,13 @@ urlpatterns = [
 	url(r'^userdetails/$', views.userdetails , name = 'userdetails'),
 	url(r'^getStudentLectures/$', views.getStudentLectures , name = 'getStudentLectures'),
 	url(r'^getStudentNotices/$', views.getStudentNotices , name = 'getStudentNotices'),
+	url(r'^getFacultyLectures/$', views.getFacultyLectures , name = 'getFacultyLectures'),
+	url(r'^getFacultyNotices/$', views.getFacultyNotices , name = 'getFacultyNotices'),
+	url(r'^faccalender/$', views.faccalender , name = 'faccalender'),
+	url(r'^studcalender/$', views.studcalender , name = 'studcalender'),
+	url(r'^studentAllTestPerformance/$', views.studentAllTestPerformance , name = 'studentAllTestPerformance'),
+	url(r'^studentallperformance/$', views.studentallperformance , name = 'studentallperformance'),
+	url(r'^$', views.login, name = 'login'),
 
 
 ]

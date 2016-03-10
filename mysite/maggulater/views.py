@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from datetime import date
 import calendar
+from .email import sendEmail
 # from jsonify.decorators import ajax_request
 # try:
 # from django.utils import simplejson
@@ -58,6 +59,7 @@ def userdetails(request):
 
 def coursehome(request, course_id):
 	request.session['course_id'] = course_id
+	print "course_id = " + request.session['course_id']
 	return render(request, "gentelella/courseHome.html")
 
 @ensure_csrf_cookie
@@ -75,10 +77,12 @@ def login(request):
 		email_ = json_data['email']
 		pwd = json_data['password']
 		# print email_, pwd
+
 		try:
-			user = MyUser.objects.get(email = email_)	
+			user = MyUser.objects.get(email = email_)
 		except Exception, e:
 			user = None
+
 		print "IN LOGIN"
 		# print user and user.check_password(pwd)
 		# print make_password(pwd)
@@ -104,6 +108,23 @@ def faculty(request):
 	if request.method == 'GET':
 		return render(request, 'gentelella/facultyhome.html')
 
+def mailall(request):
+	if request.method == 'POST':
+		json_data = request.body
+		print json_data
+		json_data = json.loads(json_data)
+		recipients = [json_data['recipient']]
+		subject = json_data['subject']
+		body = json_data['body']
+		user = MyUser.objects.get(user_id = request.session['id'])
+		sender = user.email
+		sendEmail(sender, recipients, subject, body)
+		response = {'status': 1, 'message': "Confirmed!!", 'url':'/login/'}
+		return HttpResponse(json.dumps(response), content_type='application/json')
+
+	if request.method == 'GET':
+		return render(request, 'maggulater/signup.html')
+
 def signUp(request):
 	if request.method == 'POST':
 		json_data = request.body
@@ -111,8 +132,7 @@ def signUp(request):
 		name = json_data['name']
 		email = json_data['email']
 		link_to_dp = "link"
-		# type_flag = json_data['flag']
-		type_flag = 0
+		type_flag = json_data['flag']
 		dob = json_data['dob']
 		password = json_data['password']
 		user = MyUser(name = name, email = email, link_to_dp = link_to_dp , type_flag = type_flag , dob = dob)
@@ -167,16 +187,23 @@ def parentPortal(request):
 			response = {'status': 1, 'message': "Confirmed!!", 'url':'/parentPortal/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
 		json_data = json.loads(json_data)
-		_email = json_data['Email']
-		user = MyUser.objects.get(email = email_)
-		if user is None or user.email != _email :
+		email = json_data['email']
+		name = json_data['name']
+		user = MyUser.objects.get(email = email)
+		if user is None or user.name != name :
 			print("Sorry Wrong Credentials !! ")
 			response = {'status': 1, 'message': "Confirmed!!", 'url':'/parentPortal/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
 		else:
-			Performance = Performance_Sheet.objects.get(Student_Id = user)
-			return render(request , 'maggulater/Parent_Portal.html')
+			# Performance = Performance_Sheet.objects.get(Student_Id = user)
+			response = {'status': 1, 'message': "Confirmed!!", 'url':'/studentallperformance/'}
+			request.session['id'] = user.user_id
+			request.session['parentPortal'] = 1
+			print request.session
 
+			return HttpResponse(json.dumps(response), content_type = 'application/json')
+	if request.method == 'GET' :
+		return render(request, 'maggulater/Parent_Portal.html')
 
 def forgotPassword(request):
 	if request.method == 'POST' :
@@ -256,18 +283,18 @@ def addnotice(request):
 		json_data = json.loads(json_data)
 		if not json_data:
 			print("error")
-			response = {'status': 1, 'message': "Confirmed!!", 'url':'/addNotice/'}
+			response = {'status': 1, 'message': "Confirmed!!", 'url':'/addnotice/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
-		# cid = request.session['course_id']
-		cid =2
-		print json_data
+
+		cid = json_data['c_id']
 		msg = json_data['message']
-		cid = Course.objects.get(course_id = cid)
-		newnotice = Notice(timestamp = datetime.now(), message = msg, c_id = cid)
+
+		newnotice = Notice(timestamp = now(), message = msg, c_id = cid)
 		newnotice.save()
 		response = {'status': 1, 'message': "Confirmed!!", 'url':'/coursehome/'}
 		return HttpResponse(json.dumps(response), content_type='application/json')
-	if request.method == 'GET' :
+
+	if request.method == "GET":
 		return render(request, 'maggulater/addNotice.html')
 
 # API to add a new course
@@ -277,31 +304,28 @@ def addcourse(request):
 		json_data = json.loads(json_data)
 		if not json_data:
 			print("error")
-			response = {'status': 1, 'message': "Confirmed!!", 'url':'/addcourse/'}
+			response = {'status': 1, 'message': "Confirmed!!", 'url':'/searchcourse/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
-		cname = json_data['cname']
+		cid = json_data['c_id']
+		cname = json_data['course_name']
 		pre = json_data['prereq']
 		fac_id = request.session['id']
-		fac_id = Faculty.objects.get(Faculty_Id = fac_id)
-		try:
-			course = Course.objects.get(course_name = cname)
-		except Exception, e:
-			course = None
-		syllabus = json_data['syllabus']
+		course = Course.objects.get(course_id = cid)
 
 		if course:
 			perror("error")
-			response = {'status': 1, 'message': "Confirmed!!", 'url':'/searchcourse/'}
+			response = {'status': 1, 'message': "Confirmed!!", 'url':'/addcourse/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
 
-		newcourse = Course(course_name = cname,prereq = pre,faculty = fac_id)
-		newcourse.setSyllabus(syllabus)
+		newcourse = Course(course_id = cid,course_name = cname,prereq = pre,faculty = fac_id)
 		newcourse.save()
-		response = {'status': 1, 'message': "Confirmed!!", 'url':'/facultyhome/'}
+		response = {'status': 1, 'message': "Confirmed!!", 'url':'/home/'}
 		return HttpResponse(json.dumps(response), content_type='application/json')
 
+
 	if request.method == 'GET':
-		return render(request , 'maggulater/addCourse.html')		
+		return render(request , 'maggulater/addCourse.html')
+
 
 
 # API to approve a course
@@ -329,22 +353,22 @@ def approve(request):
 
 # API to get details of current course
 def coursedetails(request):
-	j = Course.objects.all()
-	for i in j:
-		if i.course_id == 1:
-			break
-	flag = False
-	for k in j:
-		if i.prereq == k.course_id:
-			flag = True
-			break
+	# print "Course id in detail api call = " + request.session['course_id']
+	course = Course.objects.get(course_id = request.session['course_id'])
+	# print course.serialize()
+	js = course.serialize()
+	try:
+		prereq = Course.objects.get(course_id = course.prereq)
+	except Exception, e:
+		prereq = None
 
-	js = i.serialize()
-	if(flag):
-		js['prereq_name'] = k.course_name
+	if(prereq):
+		js['prereq_name'] = prereq.course_name
 	else:
 		js['prereq_name'] = 'No Prerequisite'
+
 	return JsonResponse(js, safe = False)
+
 
 # API to get list of all courses
 def allcourses(request):
@@ -375,7 +399,7 @@ def getStudentLectures(request):
 
 	kl = []
 	for kx in j:
-		print kx
+		# print kx
 		if kx.Course_Id.course_id in cids:
 			kl.append(kx)
 
@@ -387,8 +411,8 @@ def getStudentLectures(request):
 
 def getStudentNotices(request):
 	j = Notice.objects.all()
-	print "papapa"
-	print j
+	# print "papapa"
+	# print j
 	# print request.session['id']
 	u = MyUser.objects.all()
 	# print u
@@ -399,11 +423,73 @@ def getStudentNotices(request):
 	# print e
 	cids = []
 	crs = []
-	print user
+	# print user
 	for enr in e:
 		if enr.student_id.Student_Id.user_id == user.user_id:
 			cids.append(enr.course_id.course_id)
 			crs.append(enr.course_id)
+
+	kl = []
+	for kx in j:
+		# print kx
+		if kx.c_id.course_id in cids:
+			kl.append(kx)
+
+
+	a = [k.serialize() for k in kl]
+	# print a
+	return HttpResponse(a)
+
+
+def getFacultyLectures(request):
+	j = Lecture.objects.all()
+	# print request.session['id']
+	u = MyUser.objects.all()
+	# print u
+	for user in u:
+		if user.user_id == request.session['id']:
+			break
+	c = Course.objects.all()
+	# print e
+	cids = []
+	crs = []
+	for cou in c:
+		print cou.faculty.Faculty_Id.user_id
+		if cou.faculty.Faculty_Id.user_id == user.user_id:
+			cids.append(cou.course_id)
+			crs.append(cou)
+
+	kl = []
+	for kx in j:
+		# print kx
+		if kx.Course_Id.course_id in cids:
+			kl.append(kx)
+
+
+	a = [k.serialize() for k in kl]
+	# print a
+	return HttpResponse(a)
+	# print a
+
+def getFacultyNotices(request):
+	print "kbdkasbdfkb"
+	j = Notice.objects.all()
+	# print request.session['id']
+	u = MyUser.objects.all()
+	print u
+	for user in u:
+		if user.user_id == request.session['id']:
+			break
+	c = Course.objects.all()
+	# print e
+	cids = []
+	crs = []
+	print user
+	for cou in c:
+		print cou.faculty.Faculty_Id.user_id
+		if cou.faculty.Faculty_Id.user_id == user.user_id:
+			cids.append(cou.course_id)
+			crs.append(cou)
 
 	kl = []
 	for kx in j:
@@ -413,8 +499,10 @@ def getStudentNotices(request):
 
 
 	a = [k.serialize() for k in kl]
+	print "bfdasvhsvhdf"
 	print a
 	return HttpResponse(a)
+
 
 # API to get list of all courses of a faculty
 def allfacultycourses(request):
@@ -480,8 +568,11 @@ def allcourselectures(request):
 # 	return d
 
 # API for listing
-def listcourses(request):
-	return render(request, 'gentelella/listcourses.html')
+def studentlistcourses(request):
+	return render(request, 'gentelella/studentallcourses.html')
+
+def facultylistcourses(request):
+	return render(request, 'gentelella/facultyallcourses.html')
 
 # API for listing
 def listfacultycourses(request):
@@ -491,6 +582,13 @@ def listfacultycourses(request):
 def liststudentcourses(request):
 	return render(request, 'maggulater/student_course_list.html')
 
+
+def faccalender(request):
+	return render(request, 'gentelella/faccalender.html')
+
+def studcalender(request):
+	return render(request, 'gentelella/studcalender.html')
+
 # API for adding a lecture
 def addLecture(request):
 	if request.method == 'POST' :
@@ -498,10 +596,12 @@ def addLecture(request):
 		print json_data
 		json_data = json.loads(json_data)
 		# course_id = request.session['course_id']
-		course_id = 1
+
+		course_id = request.session['course_id']
 		print json_data
 		notes = json_data['Notes']
 		Date_Time = json_data['Date_Time']
+		print Date_Time
 		date = datetime.strptime(Date_Time, '%Y-%m-%d').date()
 		Topic = json_data['Topic']
 		Link = json_data['Link']
@@ -513,27 +613,47 @@ def addLecture(request):
 		NewLec.setNotes(notes)
 		NewLec.setLink(Link)
 		NewLec.save()
-		tot = json_data['totalMarks']
 		Lecture_Id= NewLec.Lecture_Id
 		Questions = json_data['Questions']
 		Answers = json_data['Answers']
-		NewTest = Test(Lecture_Id = NewLec, totalMarks = tot)
+		NewTest = Test(Lecture_Id = NewLec)
 		NewTest.setQuestions(Questions)
 		NewTest.setAnswers(Answers)
 		NewTest.save()
-		response = {'status': 1, 'message': "Confirmed!!", 'url':'/coursehome/'}
+		response = {'status': 1, 'message': "Confirmed!!", 'url':'/coursehome/' + course_id}
 		return HttpResponse(json.dumps(response), content_type='application/json')
 	if request.method == 'GET' :
 		return render(request, 'maggulater/addLecture.html')
 
+def studentallperformance(request):
+	return render(request, 'gentelella/studentallperformance.html')
 
 def studentAllTestPerformance(request):
 	sid = request.session['id']
+	# try :
+	# 	a = request.session['parentPortal']
+	# 	del request.session['id']
+	# except Exception, e:
+	# 	pass
+	print "ayayayaya"
 	user = MyUser.objects.get(user_id = sid)
+	print user
 	student = Student.objects.get(Student_Id = user)
-	PerformanceSheets = Performance_Sheet.objects.get(Student_Id = student)
-	perf = [P.serialize() for p in PerformanceSheets]
-	return HttpResponse(perf)		
+	print student
+	PerformanceSheets = Performance_Sheet.objects.all()
+	print PerformanceSheets[0].serialize()
+	p = []
+	for pr in PerformanceSheets:
+		if pr.Student_Id.Student_Id.user_id == sid:
+			p.append(pr)
+	# print PerformanceSheets[0].Student_Id.Student_Id.name
+	# print PerformanceSheets[0].serialize()
+	print "yahan1"
+	print p
+	print "yaha2"
+	perf = [q.serialize() for q in p]
+	print perf
+	return HttpResponse(perf)
 
 def studentCoursePerformance(request):
 	sid = request.session['id']
@@ -554,3 +674,7 @@ def studentCoursePerformance(request):
 
 def mailall(request):
 	return render(request,'maggulater/email.html')
+def CourseStudentsPerformance(request):
+	fac_id = request.session['id']
+	user = MyUser.objects.get(user_id = sid)
+	student = Student.objects.get(Student_Id = user)
