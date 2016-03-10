@@ -54,8 +54,8 @@ def userdetails(request):
 	user = MyUser.objects.get(user_id = request.session['id'])
 	return JsonResponse(user.serialize(),safe = False)
 
-def coursehome(request):
-
+def coursehome(request, course_id):
+	request.session['course_id'] = course_id
 	return render(request, "gentelella/courseHome.html")
 
 @ensure_csrf_cookie
@@ -233,7 +233,11 @@ def searchcourse(request):
 
 # API for enrolling a student in a course
 def enroll(request):
-	newenroll = Enrolls(student_id = request.session['id'],course_id = request.session['course_id'])
+	user = MyUser.objects.get(user_id = request.session['id'])
+	student = Student.objects.get(Student_Id = user)
+	print "Course_id = " + request.session['course_id']
+	course = Course.objects.get(course_id = request.session['course_id'])
+	newenroll = Enrolls(student_id = student, course_id = course)
 	newenroll.save()
 	response = {'status': 1, 'message': "Confirmed!!", 'url':'/coursehome/'}
 	return HttpResponse(json.dumps(response), content_type='application/json')
@@ -311,7 +315,19 @@ def coursedetails(request):
 	j = Course.objects.all()
 	for i in j:
 		if i.course_id == 1:
-			return JsonResponse(i.serialize(), safe = False)
+			break
+	flag = False
+	for k in j:
+		if i.prereq == k.course_id:
+			flag = True
+			break
+
+	js = i.serialize()
+	if(flag):
+		js['prereq_name'] = k.course_name
+	else:
+		js['prereq_name'] = 'No Prerequisite'
+	return JsonResponse(js, safe = False)
 
 # API to get list of all courses
 def allcourses(request):
