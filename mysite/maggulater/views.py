@@ -317,9 +317,9 @@ def approve(request):
 
 # API to get details of current course
 def coursedetails(request):
-	print "Course id in detail api call = " + request.session['course_id']
+	# print "Course id in detail api call = " + request.session['course_id']
 	course = Course.objects.get(course_id = request.session['course_id'])
-	print course.serialize()
+	# print course.serialize()
 	js = course.serialize()
 	try:
 		prereq = Course.objects.get(course_id = course.prereq)
