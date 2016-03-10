@@ -18,6 +18,7 @@ urlpatterns = [
 	url(r'^allcourses/$', views.allcourses , name = 'allcourses'),
 	url(r'^allfacultycourses/$', views.allfacultycourses , name = 'allfacultycourses'),
 	url(r'^allstudentcourses/$', views.allstudentcourses , name = 'allstudentcourses'),
+	url(r'^listcourses/$', views.listcourses , name = 'listcourses'),
 	url(r'^listfacultycourses/$', views.listfacultycourses , name = 'listfacultycourses'),
 	url(r'^liststudentcourses/$', views.liststudentcourses , name = 'liststudentcourses'),
 	url(r'^logout/$', views.logout , name = 'logout'),
@@ -35,6 +36,9 @@ urlpatterns = [
 	url(r'^userdetails/$', views.userdetails , name = 'userdetails'),
 	url(r'^getStudentLectures/$', views.getStudentLectures , name = 'getStudentLectures'),
 	url(r'^getStudentNotices/$', views.getStudentNotices , name = 'getStudentNotices'),
+	url(r'^getFacultyLectures/$', views.getFacultyLectures , name = 'getFacultyLectures'),
+	url(r'^faccalender/$', views.faccalender , name = 'faccalender'),
+	url(r'^studcalender/$', views.studcalender , name = 'studcalender'),
 
 
 ]

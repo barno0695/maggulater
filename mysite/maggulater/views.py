@@ -76,7 +76,7 @@ def login(request):
 		pwd = json_data['password']
 		# print email_, pwd
 		try:
-			user = MyUser.objects.get(email = email_)	
+			user = MyUser.objects.get(email = email_)
 		except Exception, e:
 			user = None
 		print "IN LOGIN"
@@ -297,11 +297,11 @@ def addcourse(request):
 		newcourse = Course(course_name = cname,prereq = pre,faculty = fac_id)
 		newcourse.setSyllabus(syllabus)
 		newcourse.save()
-		response = {'status': 1, 'message': "Confirmed!!", 'url':'/facultyhome/'}
+		response = {'status': 1, 'message': "Confirmed!!", 'url':'/home/'}
 		return HttpResponse(json.dumps(response), content_type='application/json')
 
 	if request.method == 'GET':
-		return render(request , 'maggulater/addCourse.html')		
+		return render(request , 'maggulater/addCourse.html')
 
 
 # API to approve a course
@@ -375,7 +375,7 @@ def getStudentLectures(request):
 
 	kl = []
 	for kx in j:
-		print kx
+		# print kx
 		if kx.Course_Id.course_id in cids:
 			kl.append(kx)
 
@@ -387,8 +387,8 @@ def getStudentLectures(request):
 
 def getStudentNotices(request):
 	j = Notice.objects.all()
-	print "papapa"
-	print j
+	# print "papapa"
+	# print j
 	# print request.session['id']
 	u = MyUser.objects.all()
 	# print u
@@ -399,11 +399,71 @@ def getStudentNotices(request):
 	# print e
 	cids = []
 	crs = []
-	print user
+	# print user
 	for enr in e:
 		if enr.student_id.Student_Id.user_id == user.user_id:
 			cids.append(enr.course_id.course_id)
 			crs.append(enr.course_id)
+
+	kl = []
+	for kx in j:
+		# print kx
+		if kx.c_id.course_id in cids:
+			kl.append(kx)
+
+
+	a = [k.serialize() for k in kl]
+	# print a
+	return HttpResponse(a)
+
+
+def getFacultyLectures(request):
+	j = Lecture.objects.all()
+	# print request.session['id']
+	u = MyUser.objects.all()
+	# print u
+	for user in u:
+		if user.user_id == request.session['id']:
+			break
+	c = Course.objects.all()
+	# print e
+	cids = []
+	crs = []
+	for cou in c:
+		print cou.faculty.Faculty_Id.user_id
+		if cou.faculty.Faculty_Id.user_id == user.user_id:
+			cids.append(cou.course_id)
+			crs.append(cou)
+
+	kl = []
+	for kx in j:
+		print kx
+		if kx.Course_Id.course_id in cids:
+			kl.append(kx)
+
+
+	a = [k.serialize() for k in kl]
+	print a
+	return HttpResponse(a)
+	# print a
+
+def getFacultyNotices(request):
+	j = Notice.objects.all()
+	# print request.session['id']
+	u = MyUser.objects.all()
+	# print u
+	for user in u:
+		if user.user_id == request.session['id']:
+			break
+	c = Course.objects.all()
+	# print e
+	cids = []
+	crs = []
+	for cou in c:
+		print cou.faculty.Faculty_Id.user_id
+		if cou.faculty.Faculty_Id.user_id == user.user_id:
+			cids.append(cou.course_id)
+			crs.append(cou)
 
 	kl = []
 	for kx in j:
@@ -415,6 +475,7 @@ def getStudentNotices(request):
 	a = [k.serialize() for k in kl]
 	print a
 	return HttpResponse(a)
+
 
 # API to get list of all courses of a faculty
 def allfacultycourses(request):
@@ -490,6 +551,13 @@ def listfacultycourses(request):
 # API for listing
 def liststudentcourses(request):
 	return render(request, 'maggulater/student_course_list.html')
+
+
+def faccalender(request):
+	return render(request, 'gentelella/faccalender.html')
+
+def studcalender(request):
+	return render(request, 'gentelella/studcalender.html')
 
 # API for adding a lecture
 def addLecture(request):
