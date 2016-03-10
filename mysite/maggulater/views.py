@@ -318,24 +318,21 @@ def approve(request):
 # API to get details of current course
 def coursedetails(request):
 	print "Course id in detail api call = " + request.session['course_id']
-	j = Course.objects.all()
-	course_exist_flag = False
-	for i in j:
-		if i.course_id == request.session['course_id']:
-			course_exist_flag = True
-			break
-	prereq_flag = False
-	for k in j:
-		if i.prereq == k.course_id:
-			flag = True
-			break
+	course = Course.objects.get(course_id = request.session['course_id'])
+	print course.serialize()
+	js = course.serialize()
+	try:
+		prereq = Course.objects.get(course_id = course.prereq)
+	except Exception, e:
+		prereq = None
 
-	js = i.serialize()
-	if(prereq_flag):
-		js['prereq_name'] = k.course_name
+	if(prereq):
+		js['prereq_name'] = prereq.course_name
 	else:
 		js['prereq_name'] = 'No Prerequisite'
+
 	return JsonResponse(js, safe = False)
+
 
 # API to get list of all courses
 def allcourses(request):
