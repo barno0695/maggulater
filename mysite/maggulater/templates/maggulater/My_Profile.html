@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My Profile</title>
+</head>
+<body>
+	<!-- <input type = "text" class = "text" id = "Name" name = "Full Name" > -->
+	<p id = "Name" > </p>
+	<br>
+	<class = "text" id = "User_Id" name = "User Id" >
+	<br>
+	<class = "text" id = "Email" name = "Email" >
+	<br>
+	<class = "text" id = "Type" name = "Student / Faculty" >
+	<br>
+	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script type="text/javascript">
+	var libraries = [];
+	$.ajax({
+	    url: '/ProfileDetails/',
+	    type: 'GET',
+	    success: function(response) {
+	    	libraries = response
+	      console.log("hahaha")
+	      console.log(response)
+	      console.log(response.user_id)
+	      // var names = response.split("{u\'course_name\': u\'")
+	      // var ids = response.split("u\'course_id\': ")
+	      // if(names.length <= 1)
+	      // {
+	      //   libraries.push({course_id: "0", course_name: "No Courses"});
+	      // }
+	      //   for(var i = 1; i<names.length;i++)
+	      //   {
+	      //     cname = names[i].split("\', u\'prereq")[0]
+	      //     cid = ids[i].split("L")[0]
+	      //     libraries.push({course_id: cid, course_name: cname});
+
+	      //   }
+	      //   console.log(libraries)
+	      //   console.log("logged in");
+	    },
+	    error: function(error) {
+	        console.log(error);
+	    },
+
+	});
+	document.getElementById("Name").innerHTML  = libraries
+	console.log("yo");
+	console.log(libraries);
+	</script>
+</body>
+</html>

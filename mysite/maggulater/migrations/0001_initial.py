@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+
 from __future__ import unicode_literals
 
+import datetime
 from django.db import migrations, models
 
 
@@ -30,6 +32,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Lecture',
             fields=[
+                ('Lecture_Id', models.AutoField(primary_key=True, serialize=False)),
+                ('Date_Time', models.DateTimeField(default=datetime.datetime(2016, 3, 9, 20, 15, 52, 407555))),
                 ('Lecture_Id', models.AutoField(serialize=False, primary_key=True)),
                 ('Topic', models.CharField(default='Topic Not Mentioned', max_length=100)),
                 ('Link', models.CharField(max_length=100)),
@@ -51,6 +55,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Notice',
             fields=[
+                ('notice_id', models.IntegerField(primary_key=True, serialize=False)),
+                ('timestamp', models.DateTimeField(default=datetime.datetime(2016, 3, 9, 20, 15, 52, 416852))),
                 ('notice_id', models.IntegerField(serialize=False, primary_key=True)),
                 ('message', models.CharField(max_length=500)),
                 ('c_id', models.ForeignKey(to='maggulater.Course')),
