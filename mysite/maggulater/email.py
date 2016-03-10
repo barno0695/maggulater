@@ -37,7 +37,7 @@ def sendEmail(sender, recipients, subject, body):
 	tn.write("DATA\r\n")
 	print tn.read_until("<LF>")
 
-	text = "Subject: " + subject + " \r\n" + body +"\r\n.\r\n"
+	text = "Subject: " + subject + " \r\n\r\n" + body +"\r\n.\r\n"
 	text = unicodedata.normalize('NFKD',text).encode('ascii', 'ignore')
 	tn.write(text)
 	print tn.read_all()
