@@ -56,6 +56,7 @@ def userdetails(request):
 
 def coursehome(request, course_id):
 	request.session['course_id'] = course_id
+	print "course_id = " + request.session['course_id']
 	return render(request, "gentelella/courseHome.html")
 
 @ensure_csrf_cookie
@@ -73,10 +74,7 @@ def login(request):
 		email_ = json_data['email']
 		pwd = json_data['password']
 		# print email_, pwd
-		try:
-			user = MyUser.objects.get(email = email_)	
-		except Exception, e:
-			user = None
+		user = MyUser.objects.get(email = email_)
 		print "IN LOGIN"
 		# print user and user.check_password(pwd)
 		# print make_password(pwd)
@@ -109,8 +107,7 @@ def signUp(request):
 		name = json_data['name']
 		email = json_data['email']
 		link_to_dp = "link"
-		# type_flag = json_data['flag']
-		type_flag = 0
+		type_flag = json_data['flag']
 		dob = json_data['dob']
 		password = json_data['password']
 		user = MyUser(name = name, email = email, link_to_dp = link_to_dp , type_flag = type_flag , dob = dob)
@@ -254,18 +251,17 @@ def addnotice(request):
 		json_data = json.loads(json_data)
 		if not json_data:
 			print("error")
-			response = {'status': 1, 'message': "Confirmed!!", 'url':'/addNotice/'}
+			response = {'status': 1, 'message': "Confirmed!!", 'url':'/addnotice/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
-		# cid = request.session['course_id']
-		cid =1
-		print json_data
+		cid = json_data['c_id']
 		msg = json_data['message']
-		cid = Course.objects.get(course_id = cid)
-		newnotice = Notice(timestamp = datetime.now(), message = msg, c_id = cid)
+
+		newnotice = Notice(timestamp = now(), message = msg, c_id = cid)
 		newnotice.save()
 		response = {'status': 1, 'message': "Confirmed!!", 'url':'/coursehome/'}
 		return HttpResponse(json.dumps(response), content_type='application/json')
-	if request.method == 'GET' :
+
+	if request.method == "GET":
 		return render(request, 'maggulater/addNotice.html')
 
 # API to add a new course
@@ -275,31 +271,23 @@ def addcourse(request):
 		json_data = json.loads(json_data)
 		if not json_data:
 			print("error")
-			response = {'status': 1, 'message': "Confirmed!!", 'url':'/addcourse/'}
+			response = {'status': 1, 'message': "Confirmed!!", 'url':'/searchcourse/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
-		cname = json_data['cname']
+		cid = json_data['c_id']
+		cname = json_data['course_name']
 		pre = json_data['prereq']
 		fac_id = request.session['id']
-		fac_id = Faculty.objects.get(Faculty_Id = fac_id)
-		try:
-			course = Course.objects.get(course_name = cname)
-		except Exception, e:
-			course = None
-		syllabus = json_data['syllabus']
+		course = Course.objects.get(course_id = cid)
 
 		if course:
 			perror("error")
-			response = {'status': 1, 'message': "Confirmed!!", 'url':'/searchcourse/'}
+			response = {'status': 1, 'message': "Confirmed!!", 'url':'/addcourse/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
 
-		newcourse = Course(course_name = cname,prereq = pre,faculty = fac_id)
-		newcourse.setSyllabus(syllabus)
+		newcourse = Course(course_id = cid,course_name = cname,prereq = pre,faculty = fac_id)
 		newcourse.save()
 		response = {'status': 1, 'message': "Confirmed!!", 'url':'/facultyhome/'}
 		return HttpResponse(json.dumps(response), content_type='application/json')
-
-	if request.method == 'GET':
-		return render(request , 'maggulater/addCourse.html')		
 
 
 # API to approve a course
@@ -327,18 +315,21 @@ def approve(request):
 
 # API to get details of current course
 def coursedetails(request):
+	print "Course id in detail api call = " + request.session['course_id']
 	j = Course.objects.all()
+	course_exist_flag = False
 	for i in j:
-		if i.course_id == 1:
+		if i.course_id == request.session['course_id']:
+			course_exist_flag = True
 			break
-	flag = False
+	prereq_flag = False
 	for k in j:
 		if i.prereq == k.course_id:
 			flag = True
 			break
 
 	js = i.serialize()
-	if(flag):
+	if(prereq_flag):
 		js['prereq_name'] = k.course_name
 	else:
 		js['prereq_name'] = 'No Prerequisite'
@@ -431,10 +422,12 @@ def addLecture(request):
 		json_data = request.body
 		print json_data
 		json_data = json.loads(json_data)
+		# course_id = request.session['course_id']
 		course_id = request.session['course_id']
 		print json_data
 		notes = json_data['Notes']
 		Date_Time = json_data['Date_Time']
+		print Date_Time
 		date = datetime.strptime(Date_Time, '%Y-%m-%d').date()
 		Topic = json_data['Topic']
 		Link = json_data['Link']
@@ -446,15 +439,14 @@ def addLecture(request):
 		NewLec.setNotes(notes)
 		NewLec.setLink(Link)
 		NewLec.save()
-		tot = json_data['totalMarks']
 		Lecture_Id= NewLec.Lecture_Id
 		Questions = json_data['Questions']
 		Answers = json_data['Answers']
-		NewTest = Test(Lecture_Id = NewLec, totalMarks = tot)
+		NewTest = Test(Lecture_Id = NewLec)
 		NewTest.setQuestions(Questions)
 		NewTest.setAnswers(Answers)
 		NewTest.save()
-		response = {'status': 1, 'message': "Confirmed!!", 'url':'/coursehome/'}
+		response = {'status': 1, 'message': "Confirmed!!", 'url':'/coursehome/' + course_id}
 		return HttpResponse(json.dumps(response), content_type='application/json')
 	if request.method == 'GET' :
 		return render(request, 'maggulater/addLecture.html')
