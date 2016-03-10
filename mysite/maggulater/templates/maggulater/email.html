@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-  	{% include "gentelella/includes/header.html" %}
+  	{% include "gentelella/includes/studentheader.html" %}
 
 
   <!--[if lt IE 9]>
@@ -26,7 +26,7 @@
 
     <div class="main_container">
 
-            {% include "gentelella/includes/leftandtop.html" %}
+            {% include "gentelella/includes/studentleftandtop.html" %}
 
       <!-- page content -->
       <div class="right_col" role="main">
@@ -91,7 +91,7 @@
               </div>
             </div>
           </div>
-          
+
         <!-- /page content -->
 
         <!-- footer content -->
@@ -154,7 +154,7 @@
             'recipient' : $("#inputRecipient").val(),
             'body' : $("#inputBody").val(),
             'subject' : $("#inputSubject").val(),
-            
+
         }
 
         console.log(data);
