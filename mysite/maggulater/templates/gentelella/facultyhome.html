@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	{% include "gentelella/includes/studentheader.html" %}
+	{% include "gentelella/includes/facultyheader.html" %}
 	<!--[if lt IE 9]>
 	<script src="../assets//static/gentelella/js/ie8-responsive-file-warning.js"></script>
 	<![endif]-->
@@ -89,7 +89,7 @@
 
 		<div class="main_container">
 
-			{% include "gentelella/includes/studentleftandtop.html" %}
+			{% include "gentelella/includes/facultyleftandtop.html" %}
 			<script>
 			$.ajax({
 				url: '/userdetails/',
@@ -173,7 +173,7 @@
 
 							var libraries = [];
 							$.ajax({
-								url: '/allstudentcourses/',
+								url: '/allfacultycourses/',
 								type: 'GET',
 								success: function(response) {
 									console.log("hahaha")
@@ -274,10 +274,10 @@
 
 						var libraries_c = [];
 						$.ajax({
-							url: '/getStudentNotices/',
+							url: '/getFacultyNotices/',
 							type: 'GET',
 							success: function(response) {
-								// console.log("aihaha")
+								console.log("aihaha")
 								console.log(response)
 								// var lids = response.split("u\'Lecture_Id\': ")
 								var cnames = response.split("\'course_name\': u\'")
@@ -582,7 +582,7 @@
 
 								var libraries_k = [];
 								$.ajax({
-									url: '/getStudentLectures/',
+									url: '/getFacultyLectures/',
 									type: 'GET',
 									success: function(response) {
 										// console.log("hauhauhau")
