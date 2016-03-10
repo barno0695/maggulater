@@ -11,6 +11,8 @@ from django.core.urlresolvers import reverse
 from django.core import serializers
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
+from datetime import date
+import calendar
 # from jsonify.decorators import ajax_request
 # try:
 # from django.utils import simplejson
@@ -316,8 +318,72 @@ def coursedetails(request):
 # API to get list of all courses
 def allcourses(request):
 	j = Course.objects.all()
-	return HttpResponse([i.serialize() for i in j])
+	json = []
+	for i in j:
+		json.append(i.serialize())
+	# print json
+	return HttpResponse(json)
 
+def getStudentLectures(request):
+	j = Lecture.objects.all()
+	# print request.session['id']
+	u = MyUser.objects.all()
+	# print u
+	for user in u:
+		if user.user_id == request.session['id']:
+			break
+	e = Enrolls.objects.all()
+	# print e
+	cids = []
+	crs = []
+	# print user
+	for enr in e:
+		if enr.student_id.Student_Id.user_id == user.user_id:
+			cids.append(enr.course_id.course_id)
+			crs.append(enr.course_id)
+
+	kl = []
+	for kx in j:
+		print kx
+		if kx.Course_Id.course_id in cids:
+			kl.append(kx)
+
+
+	a = [k.serialize() for k in kl]
+	# print a
+	return HttpResponse(a)
+	# print a
+
+def getStudentNotices(request):
+	j = Notice.objects.all()
+	print "papapa"
+	print j
+	# print request.session['id']
+	u = MyUser.objects.all()
+	# print u
+	for user in u:
+		if user.user_id == request.session['id']:
+			break
+	e = Enrolls.objects.all()
+	# print e
+	cids = []
+	crs = []
+	print user
+	for enr in e:
+		if enr.student_id.Student_Id.user_id == user.user_id:
+			cids.append(enr.course_id.course_id)
+			crs.append(enr.course_id)
+
+	kl = []
+	for kx in j:
+		print kx
+		if kx.c_id.course_id in cids:
+			kl.append(kx)
+
+
+	a = [k.serialize() for k in kl]
+	print a
+	return HttpResponse(a)
 
 # API to get list of all courses of a faculty
 def allfacultycourses(request):
@@ -351,15 +417,15 @@ def allcoursenotices(request):
 	return jsonify(json_data = [i.serialize for i in Notice.objects.get(c_id = request.session['course_id']).all()])
 
 
-# API to get all notices of a student
-def allstudentnotices(request):
-	enrolled_courses = []
-	for c in Enrolls.objects.get(student_id = request.session['id']).all(request):
-		p = c.course_id
-		enrolled_courses.append(p)
-
-	d = jsonify(json_data = [i.serialize for i in Notice.objects.all() if i.c_id in enrolled_courses])
-	return d
+# # API to get all notices of a student
+# def allstudentnotices(request):
+# 	enrolled_courses = []
+# 	for c in Enrolls.objects.get(student_id = request.session['id']).all(request):
+# 		p = c.course_id
+# 		enrolled_courses.append(p)
+#
+# 	d = jsonify(json_data = [i.serialize for i in Notice.objects.all() if i.c_id in enrolled_courses])
+# 	return d
 
 # API to get all lectures for all courses
 def alllectures(request):
@@ -372,15 +438,15 @@ def alllectures(request):
 def allcourselectures(request):
 	return jsonify(json_data = [i.serialize for i in Lecture.objects.get(c_id = request.session['course_id']).all()])
 
-# API to get calendar
-def allstudentlectures(request):
-	enrolled_courses = []
-	for c in Enrolls.objects.get(student_id = request.session['id']).all(request):
-		p = c.course_id
-		enrolled_courses.append(p)
-
-	d = jsonify(json_data = [i.serialize for i in Lecture.objects.all() if i.c_id in enrolled_courses])
-	return d
+# # API to get calendar
+# def allstudentlectures(request):
+# 	enrolled_courses = []
+# 	for c in Enrolls.objects.get(student_id = request.session['id']).all(request):
+# 		p = c.course_id
+# 		enrolled_courses.append(p)
+#
+# 	d = jsonify(json_data = [i.serialize for i in Lecture.objects.all() if i.c_id in enrolled_courses])
+# 	return d
 
 # API for listing
 def listcourses(request):

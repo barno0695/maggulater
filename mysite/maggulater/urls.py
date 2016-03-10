@@ -25,11 +25,13 @@ urlpatterns = [
 	# url(r'^index/$' , views.home, name = 'Index'),
 	url(r'^allnotices/$', views.allnotices , name = 'allnotices'),
 	url(r'^allcoursenotices/$', views.allcoursenotices , name = 'allcoursenotices'),
-	url(r'^allstudentnotices/$', views.allstudentnotices , name = 'allstudentnotices'),
+	# url(r'^allstudentnotices/$', views.allstudentnotices , name = 'allstudentnotices'),
 	url(r'^alllectures/$', views.alllectures , name = 'alllectures'),
 	url(r'^allcourselectures/$', views.allcourselectures , name = 'allcourselectures'),
-	url(r'^allstudentlectures/$', views.allstudentlectures , name = 'allstudentlectures'),
+	# url(r'^allstudentlectures/$', views.allstudentlectures , name = 'allstudentlectures'),
 	url(r'^userdetails/$', views.userdetails , name = 'userdetails'),
+	url(r'^getStudentLectures/$', views.getStudentLectures , name = 'getStudentLectures'),
+	url(r'^getStudentNotices/$', views.getStudentNotices , name = 'getStudentNotices'),
 
 
 ]
