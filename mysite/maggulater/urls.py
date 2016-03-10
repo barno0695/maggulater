@@ -25,6 +25,8 @@ urlpatterns = [
 	url(r'^enroll/$', views.enroll , name = 'enroll'),
 	url(r'^coursehome/(?P<course_id>[0-9]+)/$', views.coursehome , name = 'coursehome'),
 	url(r'^coursedetails/$', views.coursedetails , name = 'coursedetails'),
+	url(r'^mailall/$', views.mailall , name = 'mailall'),
+
 
 	# url(r'^index/$' , views.home, name = 'Index'),
 	url(r'^allnotices/$', views.allnotices , name = 'allnotices'),

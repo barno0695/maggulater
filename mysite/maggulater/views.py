@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from datetime import date
 import calendar
+from .email import sendEmail
 # from jsonify.decorators import ajax_request
 # try:
 # from django.utils import simplejson
@@ -106,6 +107,23 @@ def faculty(request):
 		print "faculty_id" , request.session['id']
 	if request.method == 'GET':
 		return render(request, 'gentelella/facultyhome.html')
+
+def mailall(request):
+	if request.method == 'POST':
+		json_data = request.body
+		print json_data
+		json_data = json.loads(json_data)
+		recipients = [json_data['recipient']]
+		subject = json_data['subject']
+		body = json_data['body']
+		user = MyUser.objects.get(user_id = request.session['id'])
+		sender = user.email
+		sendEmail(sender, recipients, subject, body)
+		response = {'status': 1, 'message': "Confirmed!!", 'url':'/login/'}
+		return HttpResponse(json.dumps(response), content_type='application/json')
+
+	if request.method == 'GET':
+		return render(request, 'maggulater/signup.html')
 
 def signUp(request):
 	if request.method == 'POST':
