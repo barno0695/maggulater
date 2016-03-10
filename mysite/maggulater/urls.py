@@ -28,6 +28,8 @@ urlpatterns = [
 
 	# url(r'^index/$' , views.home, name = 'Index'),
 	url(r'^allnotices/$', views.allnotices , name = 'allnotices'),
+	url(r'^studentlistcourses/$', views.studentlistcourses , name = 'studentlistcourses'),
+	url(r'^facultylistcourses/$', views.facultylistcourses , name = 'facultylistcourses'),
 	url(r'^allcoursenotices/$', views.allcoursenotices , name = 'allcoursenotices'),
 	# url(r'^allstudentnotices/$', views.allstudentnotices , name = 'allstudentnotices'),
 	url(r'^alllectures/$', views.alllectures , name = 'alllectures'),

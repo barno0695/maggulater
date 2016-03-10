@@ -543,7 +543,10 @@ def allcourselectures(request):
 
 # API for listing
 def studentlistcourses(request):
-	return render(request, 'gentelella/studentlistcourses.html')
+	return render(request, 'gentelella/studentallcourses.html')
+
+def facultylistcourses(request):
+	return render(request, 'gentelella/facultyallcourses.html')
 
 # API for listing
 def listfacultycourses(request):
