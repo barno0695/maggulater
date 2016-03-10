@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 import hashlib
 from django.db import models
+from datetime import datetime
 
 # Create your models here.
 #User
@@ -80,7 +81,7 @@ class Lecture(models.Model):
 	Lecture_Id = models.AutoField(primary_key = True)
 	Course_Id = models.ForeignKey(Course, on_delete =models.CASCADE)
 	Notes = models.TextField
-	Date_Time = models.DateTimeField
+	Date_Time = models.DateTimeField(default =datetime.now())
 	Topic = models.CharField(max_length = 100, default = "Topic Not Mentioned")
 	Link = models.CharField(max_length = 100)
 
@@ -106,7 +107,7 @@ class Test(models.Model):
 	Lecture_Id = models.ForeignKey(Lecture, on_delete = models.CASCADE)
 	Questions = models.TextField
 	Answer_Sheet = models.TextField
-
+	totalMarks = models.IntegerField(default = 100)
 	def setQuestions(self, Questions):
 		self.Questions = Questions
 
@@ -117,7 +118,8 @@ class Test(models.Model):
 			'Test_Id' : self.Test_Id,
 			'Lecture_Id' : self.Lecture_Id,
 			'Questions' : self.Questions,
-			'Answer_Sheet' : self.Answer_Sheet
+			'Answer_Sheet' : self.Answer_Sheet,
+			'totalMarks' : self.totalMarks,
 		}
 #Performance
 class Performance_Sheet(models.Model):
@@ -151,8 +153,8 @@ class Enrolls(models.Model):
 		}
 # Notice Table
 class Notice(models.Model):
-	notice_id = models.IntegerField( primary_key = True)
-	timestamp = models.DateTimeField
+	notice_id = models.AutoField( primary_key = True)
+	timestamp = models.DateTimeField(default =datetime.now())
 	message = models.CharField(max_length = 500)
 	c_id = models.ForeignKey(Course, on_delete = models.CASCADE)
 	def serialize(self):
