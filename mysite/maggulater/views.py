@@ -131,7 +131,10 @@ def faculty(request):
 	if request.method == 'GET':
 		return render(request, 'gentelella/facultyhome.html')
 
-def mailall(request):
+def mailsend(request):
+	print "reached API"
+	print request.body
+
 	if request.method == 'POST':
 		json_data = request.body
 		print json_data
@@ -147,6 +150,7 @@ def mailall(request):
 
 	if request.method == 'GET':
 		return render(request, 'maggulater/signup.html')
+
 
 def signUp(request):
 	if request.method == 'POST':
