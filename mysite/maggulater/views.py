@@ -619,12 +619,29 @@ def addLecture(request):
 	if request.method == 'GET' :
 		return render(request, 'maggulater/addLecture.html')
 
+def studentallperformance(request):
+	return render(request, 'gentelella/studentallperformance.html')
+
 def studentAllTestPerformance(request):
 	sid = request.session['id']
+	print "ayayayaya"
 	user = MyUser.objects.get(user_id = sid)
+	print user
 	student = Student.objects.get(Student_Id = user)
-	PerformanceSheets = Performance_Sheet.objects.get(Student_Id = student)
-	perf = [P.serialize() for p in PerformanceSheets]
+	print student
+	PerformanceSheets = Performance_Sheet.objects.all()
+	print PerformanceSheets[0].serialize()
+	p = []
+	for pr in PerformanceSheets:
+		if pr.Student_Id.Student_Id.user_id == sid:
+			p.append(pr)
+	# print PerformanceSheets[0].Student_Id.Student_Id.name
+	# print PerformanceSheets[0].serialize()
+	print "yahan1"
+	print p
+	print "yaha2"
+	perf = [q.serialize() for q in p]
+	print perf
 	return HttpResponse(perf)
 
 def studentCoursePerformance(request):

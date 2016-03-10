@@ -5,6 +5,22 @@
 <div class="col-md-3 left_col">
 	<div class="left_col scroll-view">
 
+		<script>
+		$.ajax({
+			url: '/userdetails/',
+			type: 'GET',
+			success: function(response) {
+				console.log(response['name'])
+				document.getElementById('name').innerHTML = response['name']
+				document.getElementById('name1').innerHTML = response['name'].split()[0]
+				document.getElementById('name2').innerHTML = response['name']
+			},
+			error: function(error) {
+				console.log(error);
+			},
+
+		});
+		</script>
 		<div class="navbar nav_title" style="border: 0;">
 			<a href="../../home" class="site_title"><i class="fa fa-paw"></i> <span>MagguLater</span></a>
 		</div>

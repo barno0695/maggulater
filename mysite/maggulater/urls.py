@@ -45,6 +45,7 @@ urlpatterns = [
 	url(r'^faccalender/$', views.faccalender , name = 'faccalender'),
 	url(r'^studcalender/$', views.studcalender , name = 'studcalender'),
 	url(r'^generalmail/$', views.generalmail , name = 'generalmail.html'),
-
+	url(r'^studentAllTestPerformance/$', views.studentAllTestPerformance , name = 'studentAllTestPerformance'),
+	url(r'^studentallperformance/$', views.studentallperformance , name = 'studentallperformance'),
 
 ]
