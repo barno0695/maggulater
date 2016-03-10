@@ -62,6 +62,9 @@ def coursehome(request, course_id):
 	print "course_id = " + request.session['course_id']
 	return render(request, "gentelella/courseHome.html")
 
+def generalmail(request):
+	return render(request, "gentelella/generalmail.html")
+
 @ensure_csrf_cookie
 def login(request):
 	print "Here in Login!!!"
