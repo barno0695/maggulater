@@ -77,6 +77,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="x_panel">
+
 								<div class="x_title">
 									<h2>Course Details</h2>
 									<ul class="nav navbar-right panel_toolbox">
@@ -164,6 +165,568 @@
 							</div>
 						</div>
 					</div>
+
+					<div class="row">
+
+						<div class="col-md-4">
+
+							<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+							<script type="text/jsx">
+
+							/** @jsx React.DOM */
+							var CalenderExample = React.createClass({
+
+								getInitialState: function(){
+									return { searchString: '' };
+								},
+
+								handleChange: function(e) {
+									this.setState( { searchString: e.target.value } );
+								},
+
+								render: function() {
+
+									var libraries = this.props.items;
+									// var searchString = this.state.searchString.trim().toLowerCase();
+									//
+									// if ( searchString.length ) {
+									// 	libraries = libraries.filter(function( lib ) {
+									// 		return lib.course_name.toLowerCase().match( searchString ) || lib.course_id.toString().toLowerCase().match( searchString );
+									// 	});
+									// }
+
+									var librariesList = libraries.map(function( lib ) {
+										// return <li>{lib.course_id}. {lib.course_name}</li>;
+										return (<article class="media event">
+											<a class="pull-left date">
+												<p class="month">April</p>
+												<p class="day">23</p>
+											</a>
+											<div class="media-body">
+												<a class="title" href="#">{lib.course_id}</a>
+												<p>{lib.course_name}</p>
+											</div>
+										</article>);
+									});
+									// console.log({librariesList})
+
+									return (
+										<div class="x_content">
+										{librariesList}
+										</div>
+									);
+
+								}
+							});
+
+							var libraries_c = [];
+							$.ajax({
+								url: '/getStudentNotices/',
+								type: 'GET',
+								success: function(response) {
+									// console.log("aihaha")
+									console.log(response)
+									// var lids = response.split("u\'Lecture_Id\': ")
+									var cnames = response.split("\'course_name\': u\'")
+									var days = response.split("\'day\': ")
+									var months = response.split("\'month\': ")
+									var years = response.split("\'year\': ")
+									var topicas = response.split("\'message\': u\'")
+
+									// console.log("akjhkasb")
+									// console.log(topics)
+
+									libraries_c = []
+									month = []
+									month[0] = "January";
+									month[1] = "February";
+									month[2] = "March";
+									month[3] = "April";
+									month[4] = "May";
+									month[5] = "June";
+									month[6] = "July";
+									month[7] = "August";
+									month[8] = "September";
+									month[9] = "October";
+									month[10] = "November";
+									month[11] = "December";
+									console.log(cnames.length)
+									console.log(topicas.length)
+									for(var i = 1; i<cnames.length;i++)
+									{
+										cname = cnames[i].split("\', u\'")[0]
+										topic = topicas[i].split("\', u\'")[0]
+										day = days[i].split("}")[0]
+										monthss = months[i].split(",")[0]
+										year = years[i].split(",")[0]
+										libraries_c.push({course_name: cname, Topic: topic, Day: day, Month: monthss, Year: year});
+
+									}
+									console.log(libraries_c)
+
+									// console.log("logged in");
+									if (libraries_c.length > 0)
+									{
+										// console.log("yayay")
+										document.getElementById("noticetime1").innerHTML = libraries_c[0]['Day'] + " " + month[libraries_c[0]['Month']-1] + " " + libraries_c[0]['Year'];
+										document.getElementById("noticecourse1").innerHTML = libraries_c[0]['course_name'];
+										document.getElementById("noticemsg1").innerHTML = libraries_c[0]['Topic'];
+									}
+									else
+									{
+										document.getElementById("noticetime1").innerHTML = "NA";
+										document.getElementById("noticecourse1").innerHTML = "No more notices";
+										document.getElementById("noticemsg1").innerHTML = "No more notices";
+									}
+									if (libraries_c.length >1)
+									{
+										document.getElementById("noticetime2").innerHTML = libraries_c[1]['Day'] + " " + month[libraries_c[1]['Month']-1] + " " + libraries_c[1]['Year'];
+										document.getElementById("noticecourse2").innerHTML = libraries_c[1]['course_name'];
+										document.getElementById("noticemsg2").innerHTML = libraries_c[1]['Topic'];
+									}
+									else
+									{
+										document.getElementById("noticetime2").innerHTML = "NA";
+										document.getElementById("noticecourse2").innerHTML = "No more notices";
+										document.getElementById("noticemsg2").innerHTML = "No more notices";
+									}
+									if (libraries_c.length >2)
+									{
+										document.getElementById("noticetime3").innerHTML = libraries_c[2]['Day'] + " " + month[libraries_c[2]['Month']-1] + " " + libraries_c[2]['Year'];
+										document.getElementById("noticecourse3").innerHTML = libraries_c[2]['course_name'];
+										document.getElementById("noticemsg3").innerHTML = libraries_c[2]['Topic'];
+									}
+									else
+									{
+										document.getElementById("noticetime3").innerHTML = "NA";
+										document.getElementById("noticecourse3").innerHTML = "No more notices";
+										document.getElementById("noticemsg3").innerHTML = "No more notices";
+									}
+									if (libraries_c.length >3)
+									{
+										document.getElementById("noticetime4").innerHTML = libraries_c[3]['Day'] + " " + month[libraries_c[3]['Month']-1] + " " + libraries_c[3]['Year'];
+										document.getElementById("noticecourse4").innerHTML = libraries_c[3]['course_name'];
+										document.getElementById("noticemsg").innerHTML = libraries_c[3]['Topic'];
+									}
+									else
+									{
+										document.getElementById("noticetime4").innerHTML = "NA";
+										document.getElementById("noticecourse4").innerHTML = "No more notices";
+										document.getElementById("noticemsg4").innerHTML = "No more notices";
+									}
+
+								},
+								error: function(error) {
+									console.log(error);
+								},
+
+							});
+
+							// console.log("yo");
+							// console.log(libraries_c);
+
+							</script>
+
+							<div class="x_panel">
+								<div class="x_title">
+									<h2>Notices </h2>
+									<ul class="nav navbar-right panel_toolbox">
+										<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+										</li>
+										<li class="dropdown">
+											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+											<ul class="dropdown-menu" role="menu">
+												<li><a href="#">Settings 1</a>
+												</li>
+												<li><a href="#">Settings 2</a>
+												</li>
+											</ul>
+										</li>
+										<li><a class="close-link"><i class="fa fa-close"></i></a>
+										</li>
+									</ul>
+									<div class="clearfix"></div>
+								</div>
+								<div class="x_content">
+									<div class="dashboard-widget-content">
+
+										<ul class="list-unstyled timeline widget">
+											<li>
+												<div class="block">
+													<div class="block_content">
+														<h2 class="title">
+												<a id="noticecourse1">Who Needs Sundance When You’ve Got&nbsp;Crowdfunding?</a>
+											</h2>
+														<div class="byline">
+															<span  id="noticetime1">13 hours ago</span>
+														</div>
+														<p class="excerpt" id="noticemsg1">Film festivals used to be do-or-die moments for movie makers. They were where you met the producers that could fund your project, and if the buyers liked your flick, they’d pay to Fast-forward and… <a>Read&nbsp;More</a>
+														</p>
+													</div>
+												</div>
+											</li>
+											<li>
+												<div class="block">
+													<div class="block_content">
+														<h2 class="title">
+												<a id="noticecourse2">Who Needs Sundance When You’ve Got&nbsp;Crowdfunding?</a>
+											</h2>
+														<div class="byline">
+															<span  id="noticetime2">13 hours ago</span>
+														</div>
+														<p class="excerpt" id="noticemsg2">Film festivals used to be do-or-die moments for movie makers. They were where you met the producers that could fund your project, and if the buyers liked your flick, they’d pay to Fast-forward and… <a>Read&nbsp;More</a>
+														</p>
+													</div>
+												</div>
+											</li>
+											<li>
+												<div class="block">
+													<div class="block_content">
+														<h2 class="title">
+												<a id="noticecourse3">Who Needs Sundance When You’ve Got&nbsp;Crowdfunding?</a>
+											</h2>
+														<div class="byline">
+															<span  id="noticetime3">13 hours ago</span>
+														</div>
+														<p class="excerpt" id="noticemsg3">Film festivals used to be do-or-die moments for movie makers. They were where you met the producers that could fund your project, and if the buyers liked your flick, they’d pay to Fast-forward and… <a>Read&nbsp;More</a>
+														</p>
+													</div>
+												</div>
+											</li>
+											<li>
+												<div class="block">
+													<div class="block_content">
+														<h2 class="title">
+												<a id="noticecourse4">Who Needs Sundance When You’ve Got&nbsp;Crowdfunding?</a>
+											</h2>
+														<div class="byline">
+															<span  id="noticetime4">13 hours ago</span>
+														</div>
+														<p class="excerpt"   id="noticemsg4">Film festivals used to be do-or-die moments for movie makers. They were where you met the producers that could fund your project, and if the buyers liked your flick, they’d pay to Fast-forward and… <a>Read&nbsp;More</a>
+														</p>
+													</div>
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="col-md-4">
+							<div class="x_panel">
+								<div class="x_title">
+									<h2>To Do List <small>Sample tasks</small></h2>
+									<ul class="nav navbar-right panel_toolbox">
+										<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+										</li>
+										<li class="dropdown">
+											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+											<ul class="dropdown-menu" role="menu">
+												<li><a href="#">Settings 1</a>
+												</li>
+												<li><a href="#">Settings 2</a>
+												</li>
+											</ul>
+										</li>
+										<li><a class="close-link"><i class="fa fa-close"></i></a>
+										</li>
+									</ul>
+									<div class="clearfix"></div>
+								</div>
+								<div class="x_content">
+
+									<div class="">
+										<ul class="to_do">
+											<li>
+												<p>
+													<input type="checkbox" class="flat"> Schedule meeting with new client </p>
+												</li>
+												<li>
+													<p>
+														<input type="checkbox" class="flat"> Create email address for new intern</p>
+													</li>
+													<li>
+														<p>
+															<input type="checkbox" class="flat"> Have IT fix the network printer
+														</p>
+														</li>
+														<li>
+															<p>
+																<input type="checkbox" class="flat"> Copy backups to offsite location</p>
+															</li>
+															<li>
+																<p>
+																	<input type="checkbox" class="flat"> Food truck fixie locavors mcsweeney</p>
+																</li>
+																<li>
+																	<p>
+																		<input type="checkbox" class="flat"> Food truck fixie locavors mcsweeney</p>
+																	</li>
+																	<li>
+																		<p>
+																			<input type="checkbox" class="flat"> Create email address for new intern</p>
+																		</li>
+																		<li>
+																			<p>
+																				<input type="checkbox" class="flat"> Have IT fix the network printer</p>
+																			</li>
+																			<li>
+																				<p>
+																					<input type="checkbox" class="flat"> Copy backups to offsite location</p>
+																				</li>
+																			</ul>
+																		</div>
+																	</div>
+																</div>
+						</div>
+
+
+						<div class="col-md-4">
+							<div class="x_panel">
+
+									<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+									<script type="text/jsx">
+
+									/** @jsx React.DOM */
+									var CalenderExample = React.createClass({
+
+										getInitialState: function(){
+											return { searchString: '' };
+										},
+
+										handleChange: function(e) {
+											this.setState( { searchString: e.target.value } );
+										},
+
+										render: function() {
+
+											var libraries = this.props.items;
+
+											var librariesList = libraries.map(function( lib ) {
+												return (<article class="media event">
+													<a class="pull-left date">
+														<p class="month">April</p>
+														<p class="day">23</p>
+													</a>
+													<div class="media-body">
+														<a class="title" href="#">{lib.course_id}</a>
+														<p>{lib.course_name}</p>
+													</div>
+												</article>);
+											});
+
+											return (
+												<div class="x_content">
+												{librariesList}
+												</div>
+											);
+
+										}
+									});
+
+									var libraries_k = [];
+									$.ajax({
+										url: '/getStudentLectures/',
+										type: 'GET',
+										success: function(response) {
+											// console.log("hauhauhau")
+											// console.log(response)
+											var lids = response.split("u\'Lecture_Id\': ")
+											var cnames = response.split("\'course_name\': u\'")
+											var days = response.split("\'Day\': ")
+											var months = response.split("\'Month\': ")
+											var years = response.split("\'Year\': ")
+											var topics = response.split("\'Topic\': u\'")
+
+											libraries_c = []
+											month = []
+											month[0] = "January";
+											month[1] = "February";
+											month[2] = "March";
+											month[3] = "April";
+											month[4] = "May";
+											month[5] = "June";
+											month[6] = "July";
+											month[7] = "August";
+											month[8] = "September";
+											month[9] = "October";
+											month[10] = "November";
+											month[11] = "December";
+											for(var i = 1; i<cnames.length;i++)
+											{
+												cname = cnames[i].split("\', u\'")[0]
+												topic = topics[i].split("\', u\'")[0]
+												day = days[i].split(",")[0]
+												monthss = months[i].split("}")[0]
+												year = years[i].split(",")[0]
+												lid = lids[i].split("L")[0]
+												libraries_c.push({id: lid, course_name: cname, Topic: topic, Day: day, Month: monthss, Year: year});
+
+											}
+											// console.log(libraries_c.length)
+
+											// console.log("logged in");
+											if (libraries_c.length > 0)
+											{
+												// console.log("yayay")
+												document.getElementById("lecmon1").innerHTML = month[libraries_c[0]['Month']-1];
+												document.getElementById("lecday1").innerHTML = libraries_c[0]['Day'];
+												document.getElementById("lectitle1").innerHTML = libraries_c[0]['course_name'];
+												document.getElementById("lecpara1").innerHTML = libraries_c[0]['Topic'];
+											}
+											else
+											{
+												document.getElementById("lecmon1").innerHTML = "NA";
+												document.getElementById("lecday1").innerHTML = "NA";
+												document.getElementById("lectitle1").innerHTML = "No more lectures";
+												document.getElementById("lecpara1").innerHTML = "No more lectures";
+											}
+											if (libraries_c.length >1)
+											{
+												document.getElementById("lecmon2").innerHTML = month[libraries_c[1]['Month']-1];
+												document.getElementById("lecday2").innerHTML = libraries_c[1]['Day'];
+												document.getElementById("lectitle2").innerHTML = libraries_c[1]['course_name'];
+												document.getElementById("lecpara2").innerHTML = libraries_c[1]['Topic'];
+											}
+											else
+											{
+												document.getElementById("lecmon2").innerHTML = "NA";
+												document.getElementById("lecday2").innerHTML = "NA";
+												document.getElementById("lectitle2").innerHTML = "No more lectures";
+												document.getElementById("lecpara2").innerHTML = "No more lectures";
+											}
+											if (libraries_c.length >2)
+											{
+												document.getElementById("lecmon3").innerHTML = month[libraries_c[2]['Month']-1];
+												document.getElementById("lecday3").innerHTML = libraries_c[2]['Day'];
+												document.getElementById("lectitle3").innerHTML = libraries_c[2]['course_name'];
+												document.getElementById("lecpara3").innerHTML = libraries_c[2]['Topic'];
+											}
+											else
+											{
+												document.getElementById("lecmon3").innerHTML = "NA";
+												document.getElementById("lecday3").innerHTML = "NA";
+												document.getElementById("lectitle3").innerHTML = "No more lectures";
+												document.getElementById("lecpara3").innerHTML = "No more lectures";
+											}
+											if (libraries_c.length >3)
+											{
+												document.getElementById("lecmon4").innerHTML = month[libraries_c[3]['Month']-1];
+												document.getElementById("lecday4").innerHTML = libraries_c[3]['Day'];
+												document.getElementById("lectitle4").innerHTML = libraries_c[3]['course_name'];
+												document.getElementById("lecpara4").innerHTML = libraries_c[3]['Topic'];
+											}
+											else
+											{
+												document.getElementById("lecmon4").innerHTML = "NA";
+												document.getElementById("lecday4").innerHTML = "NA";
+												document.getElementById("lectitle4").innerHTML = "No more lectures";
+												document.getElementById("lecpara4").innerHTML = "No more lectures";
+											}
+
+											// decoument.getElementById('')
+										},
+										error: function(error) {
+											console.log(error);
+										},
+
+									});
+
+									console.log("yo");
+									console.log(libraries_c);
+
+									</script>
+
+								<div class="x_title">
+									<h2>Lectures </h2>
+									<ul class="nav navbar-right panel_toolbox">
+										<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+										</li>
+										<li class="dropdown">
+											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+											<ul class="dropdown-menu" role="menu">
+												<li><a href="#">Settings 1</a>
+												</li>
+												<li><a href="#">Settings 2</a>
+												</li>
+											</ul>
+										</li>
+										<li><a class="close-link"><i class="fa fa-close"></i></a>
+										</li>
+									</ul>
+									<div class="clearfix"></div>
+								</div>
+								<div  id="notice_calender">
+									  <article class="media event">
+										<a class="pull-left date">
+											<p class="month" id="lecmon1">April</p>
+											<p class="day" id="lecday1">23</p>
+										</a>
+										<div class="media-body">
+											<a class="title" id="lectitle1" onclick="lec1click()">Item One Tittle</a>
+											<p id = "lecpara1">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+										</div>
+										</article>
+										<article class="media event">
+										  <a class="pull-left date">
+											  <p class="month" id="lecmon2">April</p>
+											  <p class="day" id="lecday2">23</p>
+										  </a>
+										  <div class="media-body">
+											  <a class="title" id="lectitle2" onclick="lec2click()">Item One Tittle</a>
+											  <p id = "lecpara2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+										  </div>
+									  </article>
+									  <article class="media event">
+										<a class="pull-left date">
+											<p class="month" id="lecmon3">April</p>
+											<p class="day" id="lecday3">23</p>
+										</a>
+										<div class="media-body">
+											<a class="title" id="lectitle3" onclick="lec3click()">Item One Tittle</a>
+											<p id = "lecpara3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+										</div>
+									</article>
+									<article class="media event">
+										<a class="pull-left date">
+										  <p class="month" id="lecmon4">April</p>
+										  <p class="day" id="lecday4">23</p>
+									  </a>
+									  <div class="media-body">
+										  <a class="title"  id="lectitle4" onclick="lec4click()">Item One Tittle</a>
+										  <p id = "lecpara4">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+									  </div>
+								  </article>
+								</div>
+							</div>
+							<script>
+							function lec1click()
+							{
+								if(libraries_c.length>0)
+									window.location = '../lecture/' + libraries_c[0]['id'];
+							}
+							function lec2click()
+							{
+								if(libraries_c.length>1)
+									window.location = '../lecture/' + libraries_c[1]['id'];
+							}
+							function lec3click()
+							{
+								if(libraries_c.length>2)
+									window.location = '../lecture/' + libraries_c[2]['id'];
+							}
+							function lec4click()
+							{
+								if(libraries_c.length>3)
+									window.location = '../lecture/' + libraries_c[3]['id'];
+							}
+							</script>
+						</div>
+
+					</div>
+
 				</div>
 
 				<!-- footer content -->
