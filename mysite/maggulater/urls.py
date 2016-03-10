@@ -14,6 +14,7 @@ urlpatterns = [
 	url(r'^addCourse/$',views.addcourse, name = 'addCourse'),
 	url(r'^addNotice/$',views.addnotice , name = 'addNotice'),
 	url(r'^[a-z]*/listcourses/$', views.listcourses , name = 'listcourses'),
+	url(r'^Performance=/$',views.studentAllTestPerformance, name = 'performance'),
 	url(r'^index2/$', views.index2 , name = 'index2'),
 	url(r'^allcourses/$', views.allcourses , name = 'allcourses'),
 	url(r'^allfacultycourses/$', views.allfacultycourses , name = 'allfacultycourses'),
@@ -24,7 +25,7 @@ urlpatterns = [
 	url(r'^enroll/$', views.enroll , name = 'enroll'),
 	url(r'^coursehome/(?P<course_id>[0-9]+)/$', views.coursehome , name = 'coursehome'),
 	url(r'^coursedetails/$', views.coursedetails , name = 'coursedetails'),
-
+	url(r'^mailall/$',views.mailall, name = 'mail all'),
 	# url(r'^index/$' , views.home, name = 'Index'),
 	url(r'^allnotices/$', views.allnotices , name = 'allnotices'),
 	url(r'^allcoursenotices/$', views.allcoursenotices , name = 'allcoursenotices'),

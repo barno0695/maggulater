@@ -1,39 +1,3 @@
-<!-- <!DOCTYPE html>
-<html>
-<head>
-	<title>Add A Lecture</title>
-</head>
-<body>
-	<h1>Lecture Fields</h1>
-	<input type="text" class="text" id="inputTopic" value="Topic Name " onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Topic Name ';}">
-	<input type="date" class="text" id="inputDate_Time" value="1900-01-01" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '1900-01-01';}">
-	<input type="text" class="text" id="inputLink" value="Link to file" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'None';}">
-	<input type="textarea" class="text" id="inputNotes" value="Notes" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'No Notes Yet';}">
-
-	<br>
-	<br>
-	<h1>Test Fields </h1>
-	<input type="textarea" class="text" id = "inputQuestions" value = "Questions"onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'No Questions Yet';}">
-	<input type="textarea" class="textarea" id = "inputSolutions" value = "Solutions"onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'No Solutions';}">
-
-	<div class="submit">
-                <input type="submit" id="btnSubmit" value="Create Lecture" >
-    </div>
-	
-</body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="../static/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
-<script src="../static/js/addLecture.js"></script>
-</html> -->
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -70,7 +34,7 @@
 
           <div class="page-title">
             <div class="title_left">
-              <h3>Add a Lecture</h3>
+              <h3>Send Mail</h3>
             </div>
           </div>
           <div class="clearfix"></div>
@@ -78,7 +42,7 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
                 <div class="x_title">
-                  <h2>Add Lecture Form </h2>
+                  <h2>Send mail Form </h2>
                   <ul class="nav navbar-right panel_toolbox">
                     <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                     </li>
@@ -101,141 +65,33 @@
                   <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
 
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name" >Topic<span class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name" >Recipient<span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input type="text" id="inputTopic" required="required" class="form-control col-md-7 col-xs-12">
+                        <input type="text" id="inputRecipient" required="required" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Link<span class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Subject<span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input type="text" id="inputLink" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                        <input type="text" id="inputSubject" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
                     <div class="form-group" >
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Lecture Date<span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Body<span class="required">*</span>
                         </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="date" id = "inputDate_Time" name="bday">
+                        <div  class="col-md-6 col-sm-6 col-xs-12">
+                          <textarea id = "inputBody" name="Body"> </textarea>
                         </div>
                     </div>
                   </form>
+                 <button type="submit" class="btn btn-success" id = "btnSubmit">Submit</button>
                 </div>
               </div>
-            </div>
-            <div class="x_panel">
-              <div class="x_title">
-                <h2>Notes<small>of the Lecture</small></h2>
-                <ul class="nav navbar-right panel_toolbox">
-                  <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                  </li>
-                  <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li><a href="#">Settings 1</a>
-                      </li>
-                      <li><a href="#">Settings 2</a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li><a class="close-link"><i class="fa fa-close"></i></a>
-                  </li>
-                </ul>
-                <div class="clearfix"></div>
-              </div>
-              <div class="x_content">
-
-
-               <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Notes<span class="required">*</span>
-                        </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <textarea id = "inputNotes" ></textarea>
-                      </div>  
-                    </div>
-                <div class="ln_solid"></div>
-
-              </div>
-            </div>
-            <h3> Add Test Details </h3>
-            <div class="x_panel">
-              <div class="x_title">
-                <h2>Questions<small>of the Test</small></h2>
-                <ul class="nav navbar-right panel_toolbox">
-                  <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                  </li>
-                  <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li><a href="#">Settings 1</a>
-                      </li>
-                      <li><a href="#">Settings 2</a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li><a class="close-link"><i class="fa fa-close"></i></a>
-                  </li>
-                </ul>
-                <div class="clearfix"></div>
-              </div>
-              <div class="x_content">
-                <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Questions<span class="required">*</span>
-                        </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <textarea id = "inputQuestions" ></textarea>
-                      </div>  
-                </div>
-              </div>
-            </div>
-            <div class="x_panel">
-              <div class="x_title">
-                <h2>Answers<small>of the Test</small></h2>
-                <ul class="nav navbar-right panel_toolbox">
-                  <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                  </li>
-                  <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                    <ul class="dropdown-menu" role="menu">
-                      <li><a href="#">Settings 1</a>
-                      </li>
-                      <li><a href="#">Settings 2</a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li><a class="close-link"><i class="fa fa-close"></i></a>
-                  </li>
-                </ul>
-                <div class="clearfix"></div>
-              </div>
-              <div class="x_content">
-
-
-                <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Answers<span class="required">*</span>
-                        </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <textarea id = "inputSolutions" ></textarea>
-                      </div>  
-                    </div>
-                <br />
-                <br/>
-                <div class="ln_solid"></div>
-                 
-              </div>
-              <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name" >Total Marks <span class="required">*</span>
-                      </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input type="text" id="inputMarks" required="required" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">Cancel</button>
-          <button type="submit" class="btn btn-success" id = "btnSubmit">Submit</button>
+          
         <!-- /page content -->
 
         <!-- footer content -->
@@ -295,18 +151,15 @@
      $('#btnSubmit').click(function(e) {
       e.preventDefault() ;
       data = {
-            'Notes' : $("#inputNotes").val(),
-            'Date_Time' : $("#inputDate_Time").val(),
-            'Topic' : $("#inputTopic").val(),
-            'Link' : $("#inputLink").val(), 
-            'Questions' : $("#inputQuestions").val(),
-            'Answers' : $("#inputSolutions").val(),
-            'totalMarks' : $("#inputMarks").val(),
+            'recipient' : $("#inputRecipient").val(),
+            'body' : $("#inputBody").val(),
+            'subject' : $("#inputSubject").val(),
+            
         }
 
         console.log(data);
         $.ajax({
-            url: '/addLecture/',
+            url: '/mailall/',
             dataType: 'json',
             contentType:'application/json',
             type: 'POST',

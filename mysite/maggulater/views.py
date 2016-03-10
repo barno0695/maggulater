@@ -259,7 +259,7 @@ def addnotice(request):
 			response = {'status': 1, 'message': "Confirmed!!", 'url':'/addNotice/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
 		# cid = request.session['course_id']
-		cid =1
+		cid =2
 		print json_data
 		msg = json_data['message']
 		cid = Course.objects.get(course_id = cid)
@@ -497,7 +497,8 @@ def addLecture(request):
 		json_data = request.body
 		print json_data
 		json_data = json.loads(json_data)
-		course_id = request.session['course_id']
+		# course_id = request.session['course_id']
+		course_id = 1
 		print json_data
 		notes = json_data['Notes']
 		Date_Time = json_data['Date_Time']
@@ -524,3 +525,32 @@ def addLecture(request):
 		return HttpResponse(json.dumps(response), content_type='application/json')
 	if request.method == 'GET' :
 		return render(request, 'maggulater/addLecture.html')
+
+
+def studentAllTestPerformance(request):
+	sid = request.session['id']
+	user = MyUser.objects.get(user_id = sid)
+	student = Student.objects.get(Student_Id = user)
+	PerformanceSheets = Performance_Sheet.objects.get(Student_Id = student)
+	perf = [P.serialize() for p in PerformanceSheets]
+	return HttpResponse(perf)		
+
+def studentCoursePerformance(request):
+	sid = request.session['id']
+	user = MyUser.objects.get(user_id = sid)
+	student = Student.objects.get(Student_Id = user)
+	PerformanceSheets = Performance_Sheet.objects.get(Student_Id = student)
+	course_id = request.session['course_id']
+	perf = []
+	for p in PerformanceSheets :
+		test = Test.objects.get(Test_Id = p.Test_Id)
+		lec = Lecture.objects.get(Lecture_Id = test.Lecture_Id)
+		if lec.Course_Id == course_id :
+			perf.append(p)
+	a = [p.serialize() for p in perf]
+	return HttpResponse(a)
+
+
+
+def mailall(request):
+	return render(request,'maggulater/email.html')

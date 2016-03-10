@@ -80,7 +80,7 @@ class Course(models.Model):
 class Lecture(models.Model):
 	Lecture_Id = models.AutoField(primary_key = True)
 	Course_Id = models.ForeignKey(Course, on_delete =models.CASCADE)
-	Notes = models.TextField
+	Notes = models.TextField(default = "")
 	Date_Time = models.DateTimeField(default = datetime.now())
 
 	Topic = models.CharField(max_length = 100, default = "Topic Not Mentioned")
@@ -112,8 +112,8 @@ class Lecture(models.Model):
 class Test(models.Model):
 	Test_Id = models.AutoField(primary_key = True)
 	Lecture_Id = models.ForeignKey(Lecture, on_delete = models.CASCADE)
-	Questions = models.TextField
-	Answer_Sheet = models.TextField
+	Questions = models.TextField(default = "")
+	Answer_Sheet = models.TextField(default = "")
 	totalMarks = models.IntegerField(default = 100)
 	def setQuestions(self, Questions):
 		self.Questions = Questions
@@ -130,10 +130,10 @@ class Test(models.Model):
 		}
 #Performance
 class Performance_Sheet(models.Model):
-	Student_Id = models.ForeignKey(Student, unique = True , on_delete = models.CASCADE)
-	Test_Id = models.ForeignKey(Test ,  unique = True, on_delete = models.CASCADE)
-	Marks_Obtained = models.FloatField
-	Marks_Total = models.FloatField
+	Student_Id = models.ForeignKey(Student,  on_delete = models.CASCADE)
+	Test_Id = models.ForeignKey(Test ,   on_delete = models.CASCADE)
+	Marks_Obtained = models.FloatField(default = 0)
+	Marks_Total = models.FloatField(default = 100)
 	def serialize(self):
 		"""Return object data in easily serializeable format"""
 		return {
