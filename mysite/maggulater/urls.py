@@ -42,6 +42,9 @@ urlpatterns = [
 	url(r'^getFacultyNotices/$', views.getFacultyNotices , name = 'getFacultyNotices'),
 	url(r'^faccalender/$', views.faccalender , name = 'faccalender'),
 	url(r'^studcalender/$', views.studcalender , name = 'studcalender'),
+	url(r'^studentAllTestPerformance/$', views.studentAllTestPerformance , name = 'studentAllTestPerformance'),
+	url(r'^studentallperformance/$', views.studentallperformance , name = 'studentallperformance'),
+
 
 
 ]
