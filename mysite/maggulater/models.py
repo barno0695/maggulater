@@ -112,8 +112,8 @@ class Lecture(models.Model):
 class Test(models.Model):
 	Test_Id = models.AutoField(primary_key = True)
 	Lecture_Id = models.ForeignKey(Lecture, on_delete = models.CASCADE)
-	Questions = models.TextField
-	Answer_Sheet = models.TextField
+	Questions = models.TextField(default="")
+	Answer_Sheet = models.TextField(default="")
 	totalMarks = models.IntegerField(default = 100)
 	def setQuestions(self, Questions):
 		self.Questions = Questions
@@ -123,7 +123,7 @@ class Test(models.Model):
 	def serialize(self):
 		return {
 			'Test_Id' : self.Test_Id,
-			'Lecture_Id' : self.Lecture_Id,
+			'Lecture_Id' : self.Lecture_Id.serialize(),
 			'Questions' : self.Questions,
 			'Answer_Sheet' : self.Answer_Sheet,
 			'totalMarks' : self.totalMarks,

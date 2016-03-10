@@ -116,103 +116,47 @@
 				<div class="x_panel">
 					<div class="x_title">
 						<h2>Questions</h2>
-						<ul class="nav navbar-right panel_toolbox">
-							<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-							</li>
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-								<ul class="dropdown-menu" role="menu">
-									<li><a href="#">Settings 1</a>
-									</li>
-									<li><a href="#">Settings 2</a>
-									</li>
-								</ul>
-							</li>
-							<li><a class="close-link"><i class="fa fa-close"></i></a>
-							</li>
-						</ul>
 						<div class="clearfix"></div>
 					</div>
 					<div class="x_content">
-
-
 						<div id="alerts"></div>
-						<div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor">
-							<div class="btn-group">
-								<a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa icon-font"></i><b class="caret"></b></a>
-								<ul class="dropdown-menu">
-								</ul>
-							</div>
-							<div class="btn-group">
-								<a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="icon-text-height"></i>&nbsp;<b class="caret"></b></a>
-								<ul class="dropdown-menu">
-									<li>
-										<a data-edit="fontSize 5">
-											<p style="font-size:17px">Huge</p>
-										</a>
-									</li>
-									<li>
-										<a data-edit="fontSize 3">
-											<p style="font-size:14px">Normal</p>
-										</a>
-									</li>
-									<li>
-										<a data-edit="fontSize 1">
-											<p style="font-size:11px">Small</p>
-										</a>
-									</li>
-								</ul>
-							</div>
-							<div class="btn-group">
-								<a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
-								<a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
-								<a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="icon-strikethrough"></i></a>
-								<a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
-							</div>
-							<div class="btn-group">
-								<a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="icon-list-ul"></i></a>
-								<a class="btn" data-edit="insertorderedlist" title="Number list"><i class="icon-list-ol"></i></a>
-								<a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="icon-indent-left"></i></a>
-								<a class="btn" data-edit="indent" title="Indent (Tab)"><i class="icon-indent-right"></i></a>
-							</div>
-							<div class="btn-group">
-								<a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
-								<a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
-								<a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
-								<a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
-							</div>
-							<div class="btn-group">
-								<a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="icon-link"></i></a>
-								<div class="dropdown-menu input-append">
-									<input class="span2" placeholder="URL" type="text" data-edit="createLink" />
-									<button class="btn" type="button">Add</button>
-								</div>
-								<a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="icon-cut"></i></a>
-
-							</div>
-
-							<div class="btn-group">
-								<a class="btn" title="Insert picture (or just drag & drop)" id="pictureBtn"><i class="icon-picture"></i></a>
-								<input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" />
-							</div>
-							<div class="btn-group">
-								<a class="btn" data-edit="undo" title="Undo (Ctrl/Cmd+Z)"><i class="icon-undo"></i></a>
-								<a class="btn" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="icon-repeat"></i></a>
-							</div>
+						<div>
+							<h4 id="question-box" style="width:100%;">
+							</h4	>
+						</div>
+						<div>
+							<h5>Your Answer</h5>
+							<div class="clearfix"></div>
 						</div>
 
 						<div id="editor" style="height:auto;width:100%;">
-
 						</div>
+
 						<textarea name="descr" id="descr" style="height:auto; display:block;width:100%;"></textarea>
 						<br />
-
+						<div style="text-align:center;">
+							<button type="button" id="submit-button">Submit</button>
+						</div>
 						<div class="ln_solid"></div>
 
 						<div class="form-group">
-							<div class="col-md-12">
-								<textarea class="resizable_textarea form-control" style="width: 100%; overflow: hidden; word-wrap: break-word; resize: horizontal; height: 87px;">This text area automatically resizes its height as you fill in more text courtesy of autosize-master it out...
+							<div>
+								<h5>Correct Answer</h5>
+								<div class="clearfix"></div>
+							</div>
+
+							<div class="col-md-9 col-sm-9 col-xs-12">
+								<textarea id="answer-box" class="resizable_textarea form-control" style="width: 100%; overflow: hidden; visibility:hidden; word-wrap: break-word; resize: horizontal; height: 87px;">
 								</textarea>
+							</div>
+							<div style="text-align:center; visibility:hidden" id="marks-box" class="col-md-3 col-sm-3 col-xs-12">
+								<form>
+									Marks Obtained:
+									<input type="number" id = "marks-obtained">
+									<p id = "total-marks"></p>
+									<br/>
+									<input type="submit" id="submit-marks" value="Submit Marks" >
+								</form>
 							</div>
 						</div>
 
@@ -396,18 +340,26 @@
 });
 </script>
 <script>
+var test_id;
+var marks_total;
 $.ajax({
 	url: '/lecturecontent/',
 	type: 'GET',
 	success: function(response) {
 		console.log(response);
 		// console.log(response.course_name);
-		document.getElementById("lecture-name").innerHTML = response.Topic + '<small> Spring 2016</small>';
-		var date = response.Day + "/" + response.Month + "/" + response.Year;
-		document.getElementById("lecture-date").innerHTML = date;
-		// document.getElementById("faculty_email").innerHTML = response.faculty_email;
-		document.getElementById("lecture-content").innerHTML = response.Notes;
-		document.getElementById("lecture-link").innerHTML = response.Link;
+		document.getElementById("lecture-name").innerHTML = response[0].Topic + '<small> Spring 2016</small>';
+		var date = response[0].Day + "/" + response[0].Month + "/" + response[0].Year;
+		document.getElementById("lecture-date").innerHTML = date	;
+		// document.getElementById("faculty_email").innerHTML = response[0].faculty_email;
+		document.getElementById("lecture-content").innerHTML = response[0].Notes;
+		document.getElementById("lecture-link").innerHTML = response[0].Link;
+		document.getElementById("answer-box").innerHTML = response[1].Answer_Sheet;
+		document.getElementById("question-box").innerHTML = response[1].Questions;
+		marks_total = response[1].totalMarks;
+		test_id = response[1].Test_Id;
+		var marks = "/" + response[1].totalMarks;
+		document.getElementById("total-marks").innerHTML = marks;
 	},
 	error: function(error) {
 		console.log(error);
@@ -433,8 +385,65 @@ $.ajax({
 			xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
 		}
 	}
-});</script>
-	<!-- /editor -->
+});
+
+$('#submit-button').click(function(e) {
+	e.preventDefault();
+	document.getElementById("answer-box").style.visibility= "visible";
+	document.getElementById("marks-box").style.visibility= "visible";
+
+});
+
+$('#submit-marks').click(function(e) {
+	e.preventDefault();
+	console.log($("marks-obtained").val());
+	var req = {
+		'test_id' : test_id,
+		'marks_ob' : $("marks-obtained").val(),
+		'marks_tot' : marks_total,
+	}
+
+	console.log(req);
+
+	$.ajax({
+		url: '/submitperformance/',
+		dataType: 'json',
+		contentType:'application/json',
+		type: 'POST',
+		data: JSON.stringify(req),
+		success: function(response) {
+			console.log(response);
+		},
+		error: function(error) {
+			console.log(error);
+		},
+		beforeSend: function(xhr, settings) {
+			function getCookie(name) {
+				var cookieValue = null;
+				if (document.cookie && document.cookie != '') {
+					var cookies = document.cookie.split(';');
+					for (var i = 0; i < cookies.length; i++) {
+						var cookie = jQuery.trim(cookies[i]);
+						// Does this cookie string begin with the name we want?
+						if (cookie.substring(0, name.length + 1) == (name + '=')) {
+							cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+							break;
+						}
+					}
+				}
+				return cookieValue;
+			}
+			if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+				// Only send the token to relative URLs i.e. locally.
+				xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+			}
+		}
+
+	});
+});
+
+</script>
+<!-- /editor -->
 </body>
 
 </html>

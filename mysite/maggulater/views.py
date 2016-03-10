@@ -68,7 +68,18 @@ def lecturehome(request, lecture_id):
 
 def lecturecontent(request):
 	lec = Lecture.objects.get(Lecture_Id = request.session['lecture_id'])
-	return JsonResponse(lec.serialize(), safe = False)
+	test = Test.objects.get(Lecture_Id = request.session['lecture_id'])
+	resp = [lec.serialize(), test.serialize()]
+	return JsonResponse(resp, safe = False)
+
+def submitperformance(request):
+	json_data = request.body
+	performance = Performance_Sheet(Student_Id = request.session['id'], Test_Id = json_data['test_id'], Marks_Obtained = json_data['marks_ob'], Marks_Total = json_data['marks_tot'])
+	performance.save()
+	response = {'status' : 'ok'}
+	return HttpResponse(json.dumps(response), content_type='application/json')
+
+
 
 @ensure_csrf_cookie
 def login(request):
