@@ -435,21 +435,22 @@ def getFacultyLectures(request):
 
 	kl = []
 	for kx in j:
-		print kx
+		# print kx
 		if kx.Course_Id.course_id in cids:
 			kl.append(kx)
 
 
 	a = [k.serialize() for k in kl]
-	print a
+	# print a
 	return HttpResponse(a)
 	# print a
 
 def getFacultyNotices(request):
+	print "kbdkasbdfkb"
 	j = Notice.objects.all()
 	# print request.session['id']
 	u = MyUser.objects.all()
-	# print u
+	print u
 	for user in u:
 		if user.user_id == request.session['id']:
 			break
@@ -457,6 +458,7 @@ def getFacultyNotices(request):
 	# print e
 	cids = []
 	crs = []
+	print user
 	for cou in c:
 		print cou.faculty.Faculty_Id.user_id
 		if cou.faculty.Faculty_Id.user_id == user.user_id:
@@ -471,6 +473,7 @@ def getFacultyNotices(request):
 
 
 	a = [k.serialize() for k in kl]
+	print "bfdasvhsvhdf"
 	print a
 	return HttpResponse(a)
 
@@ -539,8 +542,8 @@ def allcourselectures(request):
 # 	return d
 
 # API for listing
-def listcourses(request):
-	return render(request, 'gentelella/listcourses.html')
+def studentlistcourses(request):
+	return render(request, 'gentelella/studentlistcourses.html')
 
 # API for listing
 def listfacultycourses(request):

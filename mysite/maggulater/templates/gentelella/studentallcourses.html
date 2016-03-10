@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	{% include "gentelella/includes/facultyheader.html" %}
+	{% include "gentelella/includes/studentheader.html" %}
 	<!--[if lt IE 9]>
 	<script src="../assets//static/gentelella/js/ie8-responsive-file-warning.js"></script>
 	<![endif]-->
@@ -89,7 +89,7 @@
 
 		<div class="main_container">
 
-			{% include "gentelella/includes/facultyleftandtop.html" %}
+			{% include "gentelella/includes/studentleftandtop.html" %}
 			<script>
 			$.ajax({
 				url: '/userdetails/',
@@ -173,7 +173,7 @@
 
 							var libraries = [];
 							$.ajax({
-								url: '/allfacultycourses/',
+								url: '/allstudentcourses/',
 								type: 'GET',
 								success: function(response) {
 									console.log("hahaha")
@@ -274,10 +274,10 @@
 
 						var libraries_c = [];
 						$.ajax({
-							url: '/getFacultyNotices/',
+							url: '/getStudentNotices/',
 							type: 'GET',
 							success: function(response) {
-								console.log("aihaha")
+								// console.log("aihaha")
 								console.log(response)
 								// var lids = response.split("u\'Lecture_Id\': ")
 								var cnames = response.split("\'course_name\': u\'")
@@ -380,90 +380,6 @@
 
 						</script>
 
-						<div class="x_panel">
-                            <div class="x_title">
-                                <h2>Notices </h2>
-                                <ul class="nav navbar-right panel_toolbox">
-                                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                    </li>
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li><a href="#">Settings 1</a>
-                                            </li>
-                                            <li><a href="#">Settings 2</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li><a class="close-link"><i class="fa fa-close"></i></a>
-                                    </li>
-                                </ul>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="x_content">
-                                <div class="dashboard-widget-content">
-
-                                    <ul class="list-unstyled timeline widget">
-                                        <li>
-                                            <div class="block">
-                                                <div class="block_content">
-                                                    <h2 class="title">
-                                            <a id="noticecourse1">Who Needs Sundance When You’ve Got&nbsp;Crowdfunding?</a>
-                                        </h2>
-                                                    <div class="byline">
-                                                        <span  id="noticetime1">13 hours ago</span>
-                                                    </div>
-                                                    <p class="excerpt" id="noticemsg1">Film festivals used to be do-or-die moments for movie makers. They were where you met the producers that could fund your project, and if the buyers liked your flick, they’d pay to Fast-forward and… <a>Read&nbsp;More</a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="block">
-                                                <div class="block_content">
-                                                    <h2 class="title">
-                                            <a id="noticecourse2">Who Needs Sundance When You’ve Got&nbsp;Crowdfunding?</a>
-                                        </h2>
-                                                    <div class="byline">
-                                                        <span  id="noticetime2">13 hours ago</span>
-                                                    </div>
-                                                    <p class="excerpt" id="noticemsg2">Film festivals used to be do-or-die moments for movie makers. They were where you met the producers that could fund your project, and if the buyers liked your flick, they’d pay to Fast-forward and… <a>Read&nbsp;More</a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="block">
-                                                <div class="block_content">
-                                                    <h2 class="title">
-                                            <a id="noticecourse3">Who Needs Sundance When You’ve Got&nbsp;Crowdfunding?</a>
-                                        </h2>
-                                                    <div class="byline">
-                                                        <span  id="noticetime3">13 hours ago</span>
-                                                    </div>
-                                                    <p class="excerpt" id="noticemsg3">Film festivals used to be do-or-die moments for movie makers. They were where you met the producers that could fund your project, and if the buyers liked your flick, they’d pay to Fast-forward and… <a>Read&nbsp;More</a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="block">
-                                                <div class="block_content">
-                                                    <h2 class="title">
-                                            <a id="noticecourse4">Who Needs Sundance When You’ve Got&nbsp;Crowdfunding?</a>
-                                        </h2>
-                                                    <div class="byline">
-                                                        <span  id="noticetime4">13 hours ago</span>
-                                                    </div>
-                                                    <p class="excerpt"   id="noticemsg4">Film festivals used to be do-or-die moments for movie makers. They were where you met the producers that could fund your project, and if the buyers liked your flick, they’d pay to Fast-forward and… <a>Read&nbsp;More</a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
 
 					</div>
 
@@ -581,7 +497,7 @@
 
 								var libraries_k = [];
 								$.ajax({
-									url: '/getFacultyLectures/',
+									url: '/getStudentLectures/',
 									type: 'GET',
 									success: function(response) {
 										// console.log("hauhauhau")
