@@ -10,6 +10,7 @@ from models import *
 from django.core.urlresolvers import reverse
 from django.core import serializers
 from django.http import JsonResponse
+from django.contrib.auth import authenticate
 # from jsonify.decorators import ajax_request
 # try:
 # from django.utils import simplejson
@@ -24,7 +25,38 @@ FACULTY = 2
 
 def home(request):
 	print "Here in home "
-	return render(request, "gentelella/index.html")
+	# request.session['id'] = 19
+	if 'id' in request.session.keys():
+		print "user_id" , request.session['id']
+		user = MyUser.objects.get(user_id = request.session['id'])
+		if user.type_flag == ADMIN:
+			print "ADMIN"
+			adm = authenticate(username=user.name,password = user.password)
+			return redirect('/admin/')
+			# response = {'status': 1, 'message': "Confirmed!!", 'url':'/admin/'}
+			# return HttpResponse(json.dumps(response), content_type='application/json')
+
+		if user.type_flag == STUDENT:
+			print "STUDENT"
+			return render(request, "gentelella/studenthome.html")
+		if user.type_flag == FACULTY:
+			print "FACULTY"
+			return render(request, "gentelella/facultyhome.html")
+	else :
+		return redirect('/login/')
+	# return render(request, "gentelella/studenthome.html")
+
+# def adminhome(request):
+# 	response = {'status': 1, 'message': "Confirmed!!", 'url':'/login/'}
+# 	return HttpResponse(json.dumps(response), content_type='application/json')
+
+def userdetails(request):
+	user = MyUser.objects.get(user_id = request.session['id'])
+	return JsonResponse(user.serialize(),safe = False)
+
+def coursehome(request):
+
+	return render(request, "gentelella/courseHome.html")
 
 @ensure_csrf_cookie
 def login(request):
@@ -41,15 +73,18 @@ def login(request):
 		email_ = json_data['email']
 		pwd = json_data['password']
 		# print email_, pwd
-		user = MyUser.objects.get(email = email_)
+		try:
+			user = MyUser.objects.get(email = email_)	
+		except Exception, e:
+			user = None
 		print "IN LOGIN"
-		print user and user.check_password(pwd)
+		# print user and user.check_password(pwd)
 		# print make_password(pwd)
 		if user and user.check_password(pwd):
 			request.session['id'] = user.user_id
 			# print request.session
 			print "In profile redirect"
-			response = {'status': 1, 'message': "Confirmed!!", 'url':'/profile/'}
+			response = {'status': 1, 'message': "Confirmed!!", 'url':'/home/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
 		else:
 			print "IN login wala !! "
@@ -106,20 +141,7 @@ def signUp(request):
 
 
 def profile(request):
-	if 'id' in request.session.keys():
-		print "user_id" , request.session['id']
-		user = MyUser.objects.get(user_id = request.session['id'])
-		if user.type_flag == ADMIN:
-			print "ADMIN"
-			return render(request, "maggulater/admin.html")
-		if user.type_flag == STUDENT:
-			print "STUDENT"
-			return render(request, "maggulater/student.html")
-		if user.type_flag == FACULTY:
-			print "FACULTY"
-			return render(request, "maggulater/faculty.html")
-	else :
-		return redirect('/login/')
+	return render(request , 'gentelella/profile.html')
 
 
 def studenthome(request):
@@ -228,16 +250,19 @@ def addnotice(request):
 		json_data = json.loads(json_data)
 		if not json_data:
 			print("error")
-			response = {'status': 1, 'message': "Confirmed!!", 'url':'/addnotice/'}
+			response = {'status': 1, 'message': "Confirmed!!", 'url':'/addNotice/'}
 			return HttpResponse(json.dumps(response), content_type='application/json')
-		cid = json_data['c_id']
+		# cid = request.session['course_id']
+		cid =1
+		print json_data
 		msg = json_data['message']
-
-		newnotice = Notice(timestamp = now(), message = msg, c_id = cid)
+		cid = Course.objects.get(course_id = cid)
+		newnotice = Notice(timestamp = datetime.now(), message = msg, c_id = cid)
 		newnotice.save()
 		response = {'status': 1, 'message': "Confirmed!!", 'url':'/coursehome/'}
 		return HttpResponse(json.dumps(response), content_type='application/json')
-
+	if request.method == 'GET' :
+		return render(request, 'maggulater/addNotice.html')
 
 # API to add a new course
 def addcourse(request):
@@ -296,6 +321,13 @@ def approve(request):
 			return HttpResponse(json.dumps(response), content_type='application/json')
 
 
+# API to get details of current course
+def coursedetails(request):
+	j = Course.objects.all()
+	for i in j:
+		if i.course_id == 1:
+			return JsonResponse(i.serialize(), safe = False)
+
 # API to get list of all courses
 def allcourses(request):
 	j = Course.objects.all()
@@ -325,8 +357,8 @@ def allstudentcourses(request):
 # API to get all notices
 def allnotices(request):
 	for i in Notice.objects.all():
-		print i.serialize
-	return jsonify(json_data = [i.serialize for i in Notice.objects.all()])
+		print i.serialize()
+	return JsonResponse([i.serialize() for i in Notice.objects.all()])
 
 
 # API to get all notices of a course
@@ -344,10 +376,30 @@ def allstudentnotices(request):
 	d = jsonify(json_data = [i.serialize for i in Notice.objects.all() if i.c_id in enrolled_courses])
 	return d
 
+# API to get all lectures for all courses
+def alllectures(request):
+	for i in Notice.objects.all():
+		print i.serialize
+	return jsonify(json_data = [i.serialize for i in Lecture.objects.all()])
+
+
+# API to get all lectures of a course
+def allcourselectures(request):
+	return jsonify(json_data = [i.serialize for i in Lecture.objects.get(c_id = request.session['course_id']).all()])
+
+# API to get calendar
+def allstudentlectures(request):
+	enrolled_courses = []
+	for c in Enrolls.objects.get(student_id = request.session['id']).all(request):
+		p = c.course_id
+		enrolled_courses.append(p)
+
+	d = jsonify(json_data = [i.serialize for i in Lecture.objects.all() if i.c_id in enrolled_courses])
+	return d
 
 # API for listing
 def listcourses(request):
-	return render(request, 'maggulater/course_list.html')
+	return render(request, 'gentelella/listcourses.html')
 
 # API for listing
 def listfacultycourses(request):
@@ -363,12 +415,11 @@ def addLecture(request):
 		json_data = request.body
 		print json_data
 		json_data = json.loads(json_data)
-		# course_id = request.session['course_id']
-		course_id = 1
+		course_id = request.session['course_id']
 		print json_data
 		notes = json_data['Notes']
 		Date_Time = json_data['Date_Time']
-		date = datetime.datetime.strptime(Date_Time, '%Y-%m-%d').date()
+		date = datetime.strptime(Date_Time, '%Y-%m-%d').date()
 		Topic = json_data['Topic']
 		Link = json_data['Link']
 		print "Here!!"
@@ -379,10 +430,11 @@ def addLecture(request):
 		NewLec.setNotes(notes)
 		NewLec.setLink(Link)
 		NewLec.save()
+		tot = json_data['totalMarks']
 		Lecture_Id= NewLec.Lecture_Id
 		Questions = json_data['Questions']
 		Answers = json_data['Answers']
-		NewTest = Test(Lecture_Id = NewLec)
+		NewTest = Test(Lecture_Id = NewLec, totalMarks = tot)
 		NewTest.setQuestions(Questions)
 		NewTest.setAnswers(Answers)
 		NewTest.save()

@@ -66,7 +66,9 @@ class Course(models.Model):
 		"""Return object data in easily serializeable format"""
 		return {
 			'course_id' : self.course_id,
-			'faculty' : self.faculty,
+			'faculty_name' : self.faculty.Faculty_Id.name,
+			'faculty_email' : self.faculty.Faculty_Id.email,
+			'faculty_dp' : self.faculty.Faculty_Id.link_to_dp,
 			'course_name' : self.course_name,
 			'prereq' : self.prereq,
 			'syllabus' : self.syllabus,
@@ -84,7 +86,7 @@ class Lecture(models.Model):
 	Link = models.CharField(max_length = 100)
 
 	def setDate(self, date):
-		self.Date_Time = date 
+		self.Date_Time = date
 	def setNotes(self , notes):
 		self.Notes = notes
 
@@ -93,7 +95,7 @@ class Lecture(models.Model):
 	def serialize(self):
 		return {
 			'Lecture_Id' : self.Lecture_Id,
-			'Course_Id' : self.Course_Id ,
+			'Course_Id' : self.Course_Id.serialize() ,
 			'Notes' : self.Notes ,
 			'Date_Time' : self.Date_Time,
 			'Topic' : self.Topic,
@@ -105,7 +107,7 @@ class Test(models.Model):
 	Lecture_Id = models.ForeignKey(Lecture, on_delete = models.CASCADE)
 	Questions = models.TextField
 	Answer_Sheet = models.TextField
-
+	totalMarks = models.IntegerField(default = 100)
 	def setQuestions(self, Questions):
 		self.Questions = Questions
 
@@ -116,7 +118,8 @@ class Test(models.Model):
 			'Test_Id' : self.Test_Id,
 			'Lecture_Id' : self.Lecture_Id,
 			'Questions' : self.Questions,
-			'Answer_Sheet' : self.Answer_Sheet
+			'Answer_Sheet' : self.Answer_Sheet,
+			'totalMarks' : self.totalMarks,
 		}
 #Performance
 class Performance_Sheet(models.Model):
@@ -127,8 +130,8 @@ class Performance_Sheet(models.Model):
 	def serialize(self):
 		"""Return object data in easily serializeable format"""
 		return {
-			'Student_Id' : self.Student_Id,
-			'Test_Id' : self.Test_Id,
+			'Student_Id' : self.Student_Id.serialize(),
+			'Test_Id' : self.Test_Id.serialize(),
 			'Marks_Obtained' : self.Marks_Obtained,
 			'Marks_Total' : self.Marks_Total
 			# This is an example how to deal with Many2Many relations
@@ -150,7 +153,7 @@ class Enrolls(models.Model):
 		}
 # Notice Table
 class Notice(models.Model):
-	notice_id = models.IntegerField( primary_key = True)
+	notice_id = models.AutoField( primary_key = True)
 	timestamp = models.DateTimeField(default =datetime.now())
 	message = models.CharField(max_length = 500)
 	c_id = models.ForeignKey(Course, on_delete = models.CASCADE)
@@ -160,7 +163,8 @@ class Notice(models.Model):
 			'notice_id' : self.notice_id,
 			'timestamp' : self.timestamp,
 			'message' : self.message,
-			'c_id' : self.c_id
+			'c_id' : self.c_id,
+			'course_name' : self.c_id.course_name
 			# This is an example how to deal with Many2Many relations
 		#	'many2many'  : self.serialize_many2many
 		}

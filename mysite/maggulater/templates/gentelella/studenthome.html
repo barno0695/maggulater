@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	{% include "gentelella/includes/header.html" %}
+	{% include "gentelella/includes/studentheader.html" %}
 	<!--[if lt IE 9]>
 	<script src="../assets//static/gentelella/js/ie8-responsive-file-warning.js"></script>
 	<![endif]-->
@@ -89,7 +89,23 @@
 
 		<div class="main_container">
 
-			{% include "gentelella/includes/leftandtop.html" %}
+			{% include "gentelella/includes/studentleftandtop.html" %}
+			<script>
+			$.ajax({
+				url: '/userdetails/',
+				type: 'GET',
+				success: function(response) {
+					console.log(response['name'])
+					document.getElementById('name').innerHTML = response['name']
+					document.getElementById('name1').innerHTML = response['name'].split()[0]
+					document.getElementById('name2').innerHTML = response['name']
+				},
+				error: function(error) {
+					console.log(error);
+				},
+
+			});
+			</script>
 			<!-- page content -->
 			<div class="right_col" role="main">
 
@@ -105,14 +121,8 @@
 
 							<div class="row x_title">
 								<div class="col-md-6">
-									<h3>All Courses <small>Search for courses</small></h3>
+									<h3>My Courses <small>Search for your courses</small></h3>
 								</div>
-								<!-- <div class="col-md-6">
-									<div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
-										<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-										<span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
-									</div>
-								</div> -->
 							</div>
 
 							<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -141,8 +151,7 @@
 									}
 
 									var librariesList = libraries.map(function( lib ) {
-										var link = "/coursehome?id=" + lib.course_id.toString();
-										return <li><a href={link}> {lib.course_id}. {lib.course_name} </a></li>;
+										return <li>{lib.course_id}. {lib.course_name}</li>;
 									});
 
 									return (
@@ -324,96 +333,96 @@
 					<div class="col-md-4">
 						<div class="x_panel">
 
-											<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-											<script type="text/jsx">
+								<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+								<script type="text/jsx">
 
-											/** @jsx React.DOM */
-											var CalenderExample = React.createClass({
+								/** @jsx React.DOM */
+								var CalenderExample = React.createClass({
 
-												getInitialState: function(){
-													return { searchString: '' };
-												},
+									getInitialState: function(){
+										return { searchString: '' };
+									},
 
-												handleChange: function(e) {
-													this.setState( { searchString: e.target.value } );
-												},
+									handleChange: function(e) {
+										this.setState( { searchString: e.target.value } );
+									},
 
-												render: function() {
+									render: function() {
 
-													var libraries = this.props.items;
-													// var searchString = this.state.searchString.trim().toLowerCase();
-													//
-													// if ( searchString.length ) {
-													// 	libraries = libraries.filter(function( lib ) {
-													// 		return lib.course_name.toLowerCase().match( searchString ) || lib.course_id.toString().toLowerCase().match( searchString );
-													// 	});
-													// }
+										var libraries = this.props.items;
+										// var searchString = this.state.searchString.trim().toLowerCase();
+										//
+										// if ( searchString.length ) {
+										// 	libraries = libraries.filter(function( lib ) {
+										// 		return lib.course_name.toLowerCase().match( searchString ) || lib.course_id.toString().toLowerCase().match( searchString );
+										// 	});
+										// }
 
-													var librariesList = libraries.map(function( lib ) {
-														// return <li>{lib.course_id}. {lib.course_name}</li>;
-														return (<article class="media event">
-															<a class="pull-left date">
-																<p class="month">April</p>
-																<p class="day">23</p>
-															</a>
-															<div class="media-body">
-																<a class="title" href="#">{lib.course_id}</a>
-																<p>{lib.course_name}</p>
-															</div>
-														</article>);
-													});
-													// console.log({librariesList})
+										var librariesList = libraries.map(function( lib ) {
+											// return <li>{lib.course_id}. {lib.course_name}</li>;
+											return (<article class="media event">
+												<a class="pull-left date">
+													<p class="month">April</p>
+													<p class="day">23</p>
+												</a>
+												<div class="media-body">
+													<a class="title" href="#">{lib.course_id}</a>
+													<p>{lib.course_name}</p>
+												</div>
+											</article>);
+										});
+										// console.log({librariesList})
 
-													return (
-														<div class="x_content">
-														{librariesList}
-														</div>
-													);
+										return (
+											<div class="x_content">
+											{librariesList}
+											</div>
+										);
 
-												}
-											});
+									}
+								});
 
-											var libraries_c = [];
-											$.ajax({
-												url: '/allcourses/',
-												type: 'GET',
-												success: function(response) {
-													console.log("hahaha")
-													var names = response.split("{u\'course_name\': u\'")
-													var ids = response.split("u\'course_id\': ")
-													if(names.length <= 1)
-													{
-														libraries_c.push({course_id: "0", course_name: "No Courses"});
-													}
-													for(var i = 1; i<names.length;i++)
-													{
-														cname = names[i].split("\', u\'prereq")[0]
-														cid = ids[i].split("L")[0]
-														libraries_c.push({course_id: cid, course_name: cname});
+								var libraries_c = [];
+								$.ajax({
+									url: '/allcourses/',
+									type: 'GET',
+									success: function(response) {
+										console.log("hahaha")
+										var names = response.split("{u\'course_name\': u\'")
+										var ids = response.split("u\'course_id\': ")
+										if(names.length <= 1)
+										{
+											libraries_c.push({course_id: "0", course_name: "No Courses"});
+										}
+										for(var i = 1; i<names.length;i++)
+										{
+											cname = names[i].split("\', u\'prereq")[0]
+											cid = ids[i].split("L")[0]
+											libraries_c.push({course_id: cid, course_name: cname});
 
-													}
-													console.log(libraries_c)
-													console.log("logged in");
-													document.getElementById("mon1").innerHTML = libraries_c[0]['course_id'];
-													document.getElementById("day1").innerHTML = libraries_c[0]['course_name'];
-													// React.renderComponent(
-													// 	<CalenderExample items={libraries_c} />,
-													// 	document.getElementById('chota_calender')
-													// );
-												},
-												error: function(error) {
-													console.log(error);
-												},
+										}
+										console.log(libraries_c)
+										console.log("logged in");
+										document.getElementById("mon1").innerHTML = libraries_c[0]['course_id'];
+										document.getElementById("day1").innerHTML = libraries_c[0]['course_name'];
+										// React.renderComponent(
+										// 	<CalenderExample items={libraries_c} />,
+										// 	document.getElementById('chota_calender')
+										// );
+									},
+									error: function(error) {
+										console.log(error);
+									},
 
-											});
+								});
 
-											console.log("yo");
-											console.log(libraries_c);
+								console.log("yo");
+								console.log(libraries_c);
 
-											</script>
+								</script>
 
 							<div class="x_title">
-								<h2>Top Profiles <small>Sessions</small></h2>
+								<h2>Notices </h2>
 								<ul class="nav navbar-right panel_toolbox">
 									<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
 									</li>
@@ -431,7 +440,7 @@
 								</ul>
 								<div class="clearfix"></div>
 							</div>
-							<div  id="chota_calender">
+							<div  id="notice_calender">
 								  <article class="media event">
 									<a class="pull-left date">
 										<p class="month" id="mon1">April</p>
@@ -463,7 +472,7 @@
 									</div>
 								</article>
 								<article class="media event">
-								  <a class="pull-left date">
+									<a class="pull-left date">
 									  <p class="month" id="mon4">April</p>
 									  <p class="day" id="day4">23</p>
 								  </a>
@@ -559,9 +568,98 @@
 
 
 					<div class="col-md-4">
-						<div class="x_panel tile fixed_height_320">
+						<div class="x_panel">
+
+								<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+								<script type="text/jsx">
+
+								/** @jsx React.DOM */
+								var CalenderExample = React.createClass({
+
+									getInitialState: function(){
+										return { searchString: '' };
+									},
+
+									handleChange: function(e) {
+										this.setState( { searchString: e.target.value } );
+									},
+
+									render: function() {
+
+										var libraries = this.props.items;
+										// var searchString = this.state.searchString.trim().toLowerCase();
+										//
+										// if ( searchString.length ) {
+										// 	libraries = libraries.filter(function( lib ) {
+										// 		return lib.course_name.toLowerCase().match( searchString ) || lib.course_id.toString().toLowerCase().match( searchString );
+										// 	});
+										// }
+
+										var librariesList = libraries.map(function( lib ) {
+											// return <li>{lib.course_id}. {lib.course_name}</li>;
+											return (<article class="media event">
+												<a class="pull-left date">
+													<p class="month">April</p>
+													<p class="day">23</p>
+												</a>
+												<div class="media-body">
+													<a class="title" href="#">{lib.course_id}</a>
+													<p>{lib.course_name}</p>
+												</div>
+											</article>);
+										});
+										// console.log({librariesList})
+
+										return (
+											<div class="x_content">
+											{librariesList}
+											</div>
+										);
+
+									}
+								});
+
+								var libraries_c = [];
+								$.ajax({
+									url: '/allcourses/',
+									type: 'GET',
+									success: function(response) {
+										console.log("hahaha")
+										var names = response.split("{u\'course_name\': u\'")
+										var ids = response.split("u\'course_id\': ")
+										if(names.length <= 1)
+										{
+											libraries_c.push({course_id: "0", course_name: "No Courses"});
+										}
+										for(var i = 1; i<names.length;i++)
+										{
+											cname = names[i].split("\', u\'prereq")[0]
+											cid = ids[i].split("L")[0]
+											libraries_c.push({course_id: cid, course_name: cname});
+
+										}
+										console.log(libraries_c)
+										console.log("logged in");
+										document.getElementById("mon1").innerHTML = libraries_c[0]['course_id'];
+										document.getElementById("day1").innerHTML = libraries_c[0]['course_name'];
+										// React.renderComponent(
+										// 	<CalenderExample items={libraries_c} />,
+										// 	document.getElementById('chota_calender')
+										// );
+									},
+									error: function(error) {
+										console.log(error);
+									},
+
+								});
+
+								console.log("yo");
+								console.log(libraries_c);
+
+								</script>
+
 							<div class="x_title">
-								<h2>Quick Settings</h2>
+								<h2>Lectures </h2>
 								<ul class="nav navbar-right panel_toolbox">
 									<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
 									</li>
@@ -579,35 +677,50 @@
 								</ul>
 								<div class="clearfix"></div>
 							</div>
-							<div class="x_content">
-								<div class="dashboard-widget-content">
-									<ul class="quick-list">
-										<li><i class="fa fa-calendar-o"></i><a href="#">Settings</a>
-										</li>
-										<li><i class="fa fa-bars"></i><a href="#">Subscription</a>
-										</li>
-										<li><i class="fa fa-bar-chart"></i><a href="#">Auto Renewal</a> </li>
-										<li><i class="fa fa-line-chart"></i><a href="#">Achievements</a>
-										</li>
-										<li><i class="fa fa-bar-chart"></i><a href="#">Auto Renewal</a> </li>
-										<li><i class="fa fa-line-chart"></i><a href="#">Achievements</a>
-										</li>
-										<li><i class="fa fa-area-chart"></i><a href="#">Logout</a>
-										</li>
-									</ul>
-
-									<div class="sidebar-widget">
-										<h4>Profile Completion</h4>
-										<canvas width="150" height="80" id="foo" class="" style="width: 160px; height: 100px;"></canvas>
-										<div class="goal-wrapper">
-											<span class="gauge-value pull-left">$</span>
-											<span id="gauge-text" class="gauge-value pull-left">3,200</span>
-											<span id="goal-text" class="goal-value pull-right">$5,000</span>
-										</div>
+							<div  id="notice_calender">
+								  <article class="media event">
+									<a class="pull-left date">
+										<p class="month" id="lecmon1">April</p>
+										<p class="day" id="lecday1">23</p>
+									</a>
+									<div class="media-body">
+										<a class="title" href="#" id="lectitle1">Item One Tittle</a>
+										<p id = "lecpara1">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
 									</div>
-								</div>
+									</article>
+									<article class="media event">
+									  <a class="pull-left date">
+										  <p class="month" id="lecmon2">April</p>
+										  <p class="day" id="lecday2">23</p>
+									  </a>
+									  <div class="media-body">
+										  <a class="title" href="#" id="lectitle2">Item One Tittle</a>
+										  <p id = "lecpara2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+									  </div>
+								  </article>
+								  <article class="media event">
+									<a class="pull-left date">
+										<p class="month" id="lecmon3">April</p>
+										<p class="day" id="lecday3">23</p>
+									</a>
+									<div class="media-body">
+										<a class="title" href="#" id="lectitle3">Item One Tittle</a>
+										<p id = "lecpara3">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+									</div>
+								</article>
+								<article class="media event">
+									<a class="pull-left date">
+									  <p class="month" id="lecmon4">April</p>
+									  <p class="day" id="lecday4">23</p>
+								  </a>
+								  <div class="media-body">
+									  <a class="title" href="#" id="lectitle4">Item One Tittle</a>
+									  <p id = "lecpara4">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+								  </div>
+							  </article>
 							</div>
 						</div>
+
 					</div>
 
 				</div>

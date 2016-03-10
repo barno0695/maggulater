@@ -118,7 +118,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Lecture Date<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="date" name="bday">
+                          <input type="date" id = "inputDate_Time" name="bday">
                         </div>
                     </div>
                   </form>
@@ -413,11 +413,17 @@
                 <div id="editor2">
 
                 </div>
-                <textarea name="Answers" id="descr" style="display:none;"></textarea>
+                <textarea name="Answers" id="inputSolutions" style="display:none;"></textarea>
                 <br />
 
                 <div class="ln_solid"></div>
-
+                 <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name" >Total Marks <span class="required">*</span>
+                      </label>
+                      <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="inputMarks" required="required" class="form-control col-md-7 col-xs-12">
+                      </div>
+                    </div>
               </div>
             </div>
           </div>
@@ -488,6 +494,7 @@
             'Link' : $("#inputLink").val(), 
             'Questions' : $("#inputQuestions").val(),
             'Answers' : $("#inputSolutions").val(),
+            'totalMarks' : $("#inputMarks").val(),
         }
 
         console.log(data);
