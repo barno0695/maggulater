@@ -65,11 +65,11 @@ class Course(models.Model):
 	def serialize(self):
 		"""Return object data in easily serializeable format"""
 		return {
+			'course_name' : self.course_name,
 			'course_id' : self.course_id,
 			'faculty_name' : self.faculty.Faculty_Id.name,
 			'faculty_email' : self.faculty.Faculty_Id.email,
 			'faculty_dp' : self.faculty.Faculty_Id.link_to_dp,
-			'course_name' : self.course_name,
 			'prereq' : self.prereq,
 			'syllabus' : self.syllabus,
 			'approved' : self.approved
@@ -81,7 +81,8 @@ class Lecture(models.Model):
 	Lecture_Id = models.AutoField(primary_key = True)
 	Course_Id = models.ForeignKey(Course, on_delete =models.CASCADE)
 	Notes = models.TextField
-	Date_Time = models.DateTimeField(default =datetime.now())
+	Date_Time = models.DateTimeField(default = datetime.now())
+
 	Topic = models.CharField(max_length = 100, default = "Topic Not Mentioned")
 	Link = models.CharField(max_length = 100)
 
@@ -90,14 +91,20 @@ class Lecture(models.Model):
 	def setNotes(self , notes):
 		self.Notes = notes
 
+	def getDate(self):
+		return self.Date_Time.day
+
 	def setLink(self, link):
 		self.Link = link
 	def serialize(self):
+
 		return {
 			'Lecture_Id' : self.Lecture_Id,
 			'Course_Id' : self.Course_Id.serialize() ,
 			'Notes' : self.Notes ,
-			'Date_Time' : self.Date_Time,
+			'Day' : self.Date_Time.day,
+			'Month' : self.Date_Time.month,
+			'Year' : self.Date_Time.year,
 			'Topic' : self.Topic,
 			'Link' : self.Link,
 		}
@@ -161,10 +168,11 @@ class Notice(models.Model):
 		"""Return object data in easily serializeable format"""
 		return {
 			'notice_id' : self.notice_id,
-			'timestamp' : self.timestamp,
+			'day' : self.timestamp.day,
+			'month' : self.timestamp.month,
+			'year' : self.timestamp.year,
 			'message' : self.message,
-			'c_id' : self.c_id,
-			'course_name' : self.c_id.course_name
+			'c_id' : self.c_id.serialize()
 			# This is an example how to deal with Many2Many relations
 		#	'many2many'  : self.serialize_many2many
 		}
