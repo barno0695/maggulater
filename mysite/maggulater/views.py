@@ -62,10 +62,13 @@ def coursehome(request, course_id):
 	return render(request, "gentelella/courseHome.html")
 
 
-def lecture(request):
-	# request.session['lecture_id'] = lecture_id
-	# lec = Lecture.objects.get(lecture_id = lecture_id)
+def lecturehome(request, lecture_id):
+	request.session['lecture_id'] = lecture_id
 	return render(request, "gentelella/lecture.html")
+
+def lecturecontent(request):
+	lec = Lecture.objects.get(Lecture_Id = request.session['lecture_id'])
+	return JsonResponse(lec.serialize(), safe = False)
 
 @ensure_csrf_cookie
 def login(request):
@@ -305,10 +308,6 @@ def addcourse(request):
 
 	if request.method == 'GET':
 		return render(request , 'maggulater/addCourse.html')
-<<<<<<< HEAD
-=======
-
->>>>>>> 7aa8ba64bedd03c98d61613aa8e57d0a2e8b4efc
 
 
 # API to approve a course

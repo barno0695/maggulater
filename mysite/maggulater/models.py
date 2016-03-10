@@ -80,7 +80,7 @@ class Course(models.Model):
 class Lecture(models.Model):
 	Lecture_Id = models.AutoField(primary_key = True)
 	Course_Id = models.ForeignKey(Course, on_delete =models.CASCADE)
-	Notes = models.TextField
+	Notes = models.TextField(default = "")
 	Date_Time = models.DateTimeField(default = datetime.now())
 
 	Topic = models.CharField(max_length = 100, default = "Topic Not Mentioned")
