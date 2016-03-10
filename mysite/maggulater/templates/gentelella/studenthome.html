@@ -318,12 +318,13 @@
 								console.log(libraries_c)
 
 								// console.log("logged in");
+								leng = libraries_c.length
 								if (libraries_c.length > 0)
 								{
 									// console.log("yayay")
-									document.getElementById("noticetime1").innerHTML = libraries_c[0]['Day'] + " " + month[libraries_c[0]['Month']-1] + " " + libraries_c[0]['Year'];
-									document.getElementById("noticecourse1").innerHTML = libraries_c[0]['course_name'];
-									document.getElementById("noticemsg1").innerHTML = libraries_c[0]['Topic'];
+									document.getElementById("noticetime1").innerHTML = libraries_c[leng-1]['Day'] + " " + month[libraries_c[leng-1]['Month']-1] + " " + libraries_c[leng-1]['Year'];
+									document.getElementById("noticecourse1").innerHTML = libraries_c[leng-1]['course_name'];
+									document.getElementById("noticemsg1").innerHTML = libraries_c[leng-1]['Topic'];
 								}
 								else
 								{
@@ -333,9 +334,9 @@
 								}
 								if (libraries_c.length >1)
 								{
-									document.getElementById("noticetime2").innerHTML = libraries_c[1]['Day'] + " " + month[libraries_c[1]['Month']-1] + " " + libraries_c[1]['Year'];
-									document.getElementById("noticecourse2").innerHTML = libraries_c[1]['course_name'];
-									document.getElementById("noticemsg2").innerHTML = libraries_c[1]['Topic'];
+									document.getElementById("noticetime2").innerHTML = libraries_c[leng-2]['Day'] + " " + month[libraries_c[leng-2]['Month']-1] + " " + libraries_c[leng-2]['Year'];
+									document.getElementById("noticecourse2").innerHTML = libraries_c[leng-2]['course_name'];
+									document.getElementById("noticemsg2").innerHTML = libraries_c[leng-2]['Topic'];
 								}
 								else
 								{
@@ -345,9 +346,9 @@
 								}
 								if (libraries_c.length >2)
 								{
-									document.getElementById("noticetime3").innerHTML = libraries_c[2]['Day'] + " " + month[libraries_c[2]['Month']-1] + " " + libraries_c[2]['Year'];
-									document.getElementById("noticecourse3").innerHTML = libraries_c[2]['course_name'];
-									document.getElementById("noticemsg3").innerHTML = libraries_c[2]['Topic'];
+									document.getElementById("noticetime3").innerHTML = libraries_c[leng-3]['Day'] + " " + month[libraries_c[leng-3]['Month']-1] + " " + libraries_c[leng-3]['Year'];
+									document.getElementById("noticecourse3").innerHTML = libraries_c[leng-3]['course_name'];
+									document.getElementById("noticemsg3").innerHTML = libraries_c[leng-3]['Topic'];
 								}
 								else
 								{
@@ -357,9 +358,9 @@
 								}
 								if (libraries_c.length >3)
 								{
-									document.getElementById("noticetime4").innerHTML = libraries_c[3]['Day'] + " " + month[libraries_c[3]['Month']-1] + " " + libraries_c[3]['Year'];
-									document.getElementById("noticecourse4").innerHTML = libraries_c[3]['course_name'];
-									document.getElementById("noticemsg").innerHTML = libraries_c[3]['Topic'];
+									document.getElementById("noticetime4").innerHTML = libraries_c[leng-4]['Day'] + " " + month[libraries_c[leng-4]['Month']-1] + " " + libraries_c[leng-4]['Year'];
+									document.getElementById("noticecourse4").innerHTML = libraries_c[leng-4]['course_name'];
+									document.getElementById("noticemsg").innerHTML = libraries_c[leng-4]['Topic'];
 								}
 								else
 								{
@@ -621,13 +622,14 @@
 										// console.log(libraries_c.length)
 
 										// console.log("logged in");
+										leng = libraries_c.length
 										if (libraries_c.length > 0)
 										{
 											// console.log("yayay")
-											document.getElementById("lecmon1").innerHTML = month[libraries_c[0]['Month']-1];
-											document.getElementById("lecday1").innerHTML = libraries_c[0]['Day'];
-											document.getElementById("lectitle1").innerHTML = libraries_c[0]['course_name'];
-											document.getElementById("lecpara1").innerHTML = libraries_c[0]['Topic'];
+											document.getElementById("lecmon1").innerHTML = month[libraries_c[leng-1]['Month']-1];
+											document.getElementById("lecday1").innerHTML = libraries_c[leng-1]['Day'];
+											document.getElementById("lectitle1").innerHTML = libraries_c[leng-1]['course_name'];
+											document.getElementById("lecpara1").innerHTML = libraries_c[leng-1]['Topic'];
 										}
 										else
 										{
@@ -638,10 +640,10 @@
 										}
 										if (libraries_c.length >1)
 										{
-											document.getElementById("lecmon2").innerHTML = month[libraries_c[1]['Month']-1];
-											document.getElementById("lecday2").innerHTML = libraries_c[1]['Day'];
-											document.getElementById("lectitle2").innerHTML = libraries_c[1]['course_name'];
-											document.getElementById("lecpara2").innerHTML = libraries_c[1]['Topic'];
+											document.getElementById("lecmon2").innerHTML = month[libraries_c[leng-2]['Month']-1];
+											document.getElementById("lecday2").innerHTML = libraries_c[leng-2]['Day'];
+											document.getElementById("lectitle2").innerHTML = libraries_c[leng-2]['course_name'];
+											document.getElementById("lecpara2").innerHTML = libraries_c[leng-2]['Topic'];
 										}
 										else
 										{
@@ -652,10 +654,10 @@
 										}
 										if (libraries_c.length >2)
 										{
-											document.getElementById("lecmon3").innerHTML = month[libraries_c[2]['Month']-1];
-											document.getElementById("lecday3").innerHTML = libraries_c[2]['Day'];
-											document.getElementById("lectitle3").innerHTML = libraries_c[2]['course_name'];
-											document.getElementById("lecpara3").innerHTML = libraries_c[2]['Topic'];
+											document.getElementById("lecmon3").innerHTML = month[libraries_c[leng-3]['Month']-1];
+											document.getElementById("lecday3").innerHTML = libraries_c[leng-3]['Day'];
+											document.getElementById("lectitle3").innerHTML = libraries_c[leng-3]['course_name'];
+											document.getElementById("lecpara3").innerHTML = libraries_c[leng-3]['Topic'];
 										}
 										else
 										{
@@ -666,10 +668,10 @@
 										}
 										if (libraries_c.length >3)
 										{
-											document.getElementById("lecmon4").innerHTML = month[libraries_c[3]['Month']-1];
-											document.getElementById("lecday4").innerHTML = libraries_c[3]['Day'];
-											document.getElementById("lectitle4").innerHTML = libraries_c[3]['course_name'];
-											document.getElementById("lecpara4").innerHTML = libraries_c[3]['Topic'];
+											document.getElementById("lecmon4").innerHTML = month[libraries_c[leng-4]['Month']-1];
+											document.getElementById("lecday4").innerHTML = libraries_c[leng-4]['Day'];
+											document.getElementById("lectitle4").innerHTML = libraries_c[leng-4]['course_name'];
+											document.getElementById("lecpara4").innerHTML = libraries_c[leng-4]['Topic'];
 										}
 										else
 										{
